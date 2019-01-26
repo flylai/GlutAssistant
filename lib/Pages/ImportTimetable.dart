@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
 
-import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Common/Constant.dart';
+import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
-import 'package:glutassistant/Utility/SqliteUtil.dart';
+import 'package:glutassistant/Utility/SQLiteUtil.dart';
+import 'package:glutassistant/Widget/ProgressDialog.dart';
+import 'package:glutassistant/Widget/SnackBar.dart';
 
 class ImportTimetable extends StatefulWidget {
   _ImportTimetableState createState() => _ImportTimetableState();
@@ -12,14 +14,15 @@ class ImportTimetable extends StatefulWidget {
 
 class _ImportTimetableState extends State<ImportTimetable> {
   int _selectYearValue = 2019;
-  var _selectTermValue = 2;
+  int _selectTermValue = 2;
+  bool _isLoading = false;
   String _cookie;
 
   @override
   void initState() {
     super.initState();
     FileUtil.getFileDir();
-    SqliteUtil.init();
+    SQLiteUtil.init();
   }
 
   List<DropdownMenuItem> _generateYearList() {
@@ -76,8 +79,25 @@ class _ImportTimetableState extends State<ImportTimetable> {
     return RaisedButton(
       onPressed: () {
         _cookie = FileUtil.readFile(Constant.FILE_SESSION);
-        print(_cookie);
-        HttpUtil.importTimeTable('2019', '1', _cookie, (callback) {});
+        setState(() {
+          _isLoading = true;
+        });
+        HttpUtil.importTimeTable(
+            _selectYearValue.toString(), _selectTermValue.toString(), _cookie,
+            (callback) async {
+          if (callback.length > 0) {
+            await SQLiteUtil.dropTable();
+            await SQLiteUtil.createTable();
+            for (var item in callback) await SQLiteUtil.insertTimetable(item);
+            CommonSnackBar.buildSnackBar(context, '课表导入成功了，请前往课程表界面查看');
+          } else {
+            CommonSnackBar.buildSnackBar(
+                context, '获取得到的课表为空，请检查是否选对学年学期或者重新登录教务');
+          }
+          setState(() {
+            _isLoading = false;
+          });
+        });
       },
       color: Colors.blue,
       child: Text(
@@ -87,30 +107,34 @@ class _ImportTimetableState extends State<ImportTimetable> {
     );
   }
 
+  Widget _buildBody() {
+    if (_isLoading) return Center(child: new ProgressDialog());
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: _buildYearDropdown(),
+            ),
+            Expanded(
+              child: _buildTermDropdown(),
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: _buildImportButtom(),
+            )
+          ],
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(30, 50, 30, 50),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: _buildYearDropdown(),
-                ),
-                Expanded(
-                  child: _buildTermDropdown(),
-                )
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: _buildImportButtom(),
-                )
-              ],
-            )
-          ],
-        ));
+        padding: EdgeInsets.fromLTRB(30, 50, 30, 50), child: _buildBody());
   }
 }
