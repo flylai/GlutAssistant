@@ -11,7 +11,7 @@ class Constant {
   static final int DB_VERSION = 1;
   static final String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " +
       VAR_TABLE_NAME +
-      " ( No INTEGER NOT NULL PRIMARY KEY, course TEXT NULL DEFAULT NULL, teacher TEXT NULL DEFAULT NULL, start_week INT NOT NULL, end_week INT NOT NULL,week_type TEXT NOT NULL, weekday INT, start_time INT, end_time INT, classroom TEXT, course_type TEXT)";
+      " ( No INTEGER NOT NULL PRIMARY KEY, courseName TEXT NULL DEFAULT NULL, teacher TEXT NULL DEFAULT NULL, startWeek INT NOT NULL, endWeek INT NOT NULL,weekType TEXT NOT NULL, weekday INT, startTime INT, endTime INT, location TEXT, courseType TEXT)";
   static final String SQL_DROP_TABLE = "DROP TABLE IF EXISTS " + VAR_TABLE_NAME;
 
   static final String URL_LOGIN =
