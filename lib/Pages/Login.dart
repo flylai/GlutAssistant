@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
-import 'dart:typed_data';
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:glutassistant/Utility/HttpUtil.dart';
-import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Common/Constant.dart';
+import 'package:glutassistant/Utility/FileUtil.dart';
+import 'package:glutassistant/Utility/HttpUtil.dart';
+import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 import 'package:glutassistant/Widget/ProgressDialog.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
-import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
