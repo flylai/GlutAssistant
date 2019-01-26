@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
+
+import 'package:gbk2utf8/gbk2utf8.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:glutassistant/Common/Constant.dart';
@@ -51,7 +53,6 @@ class HttpUtil {
   static _getStudentId(String cookie, Function callback) async {
     var head = {'cookie': cookie};
     var response = await http.get(Constant.URL_GET_STUDENT_ID, headers: head);
-    print(cookie);
     RegExp exp = RegExp(r'name="stuUserId" value="(\d+?)">');
     Iterable<Match> matches = exp.allMatches(response.body);
     callback(matches.first.group(1));
@@ -62,11 +63,14 @@ class HttpUtil {
     int _year = int.parse(year) - 1980;
     var head = {'cookie': cookie};
     var response = await http.get(
-        'http://192.168.1.101/' + '?term=' + term + '&year=' + _year.toString(),
+        Constant.URL_CLASS_SCHEDULE_ALL +
+            '?term=' +
+            term +
+            '&year=' +
+            _year.toString(),
         headers: head);
     List<Map> courseList = new List();
-
-    String html = response.body.toString().replaceAll(RegExp(r'\s'), '');
+    String html = decodeGbk(response.bodyBytes).replaceAll(RegExp(r'\s'), '');
     RegExp courseListExp = RegExp(
         r'infolist_common"onmouseover="(.*?)</a></td></tr>',
         caseSensitive: false);
@@ -144,16 +148,17 @@ class HttpUtil {
                   endWeek = int.parse(weekByHyphen[1]);
                 } else
                   startWeek = endWeek = int.parse(weekByHyphen[0]);
-                Map courseDetail = new Map();
+                Map<String, dynamic> courseDetail = new Map();
                 courseDetail['courseName'] = courseName;
                 courseDetail['teacher'] = teacher;
-                courseDetail['weekday'] = weekDay;
+                courseDetail['startWeek'] = startWeek;
+                courseDetail['endWeek'] = endWeek;
                 courseDetail['weekType'] = weekType;
-                courseDetail['location'] = location;
+                courseDetail['weekday'] = weekDay;
                 courseDetail['startTime'] = startTime;
                 courseDetail['endTime'] = endTime;
+                courseDetail['location'] = location;
                 courseList.add(courseDetail);
-                //此处回调db insert
               }
             } else {
               List<String> weekByHyphen = timeListItem
@@ -166,21 +171,22 @@ class HttpUtil {
               } else
                 startWeek = endWeek =
                     int.parse(timeListItem.group(1).replaceAll("[单双]", ""));
-              Map courseDetail = new Map();
+              Map<String, dynamic> courseDetail = new Map();
               courseDetail['courseName'] = courseName;
               courseDetail['teacher'] = teacher;
-              courseDetail['weekday'] = weekDay;
+              courseDetail['startWeek'] = startWeek;
+              courseDetail['endWeek'] = endWeek;
               courseDetail['weekType'] = weekType;
-              courseDetail['location'] = location;
+              courseDetail['weekday'] = weekDay;
               courseDetail['startTime'] = startTime;
               courseDetail['endTime'] = endTime;
+              courseDetail['location'] = location;
               courseList.add(courseDetail);
-              //此处回调db insert
             }
           }
         }
       }
     }
-    print(courseList);
+    callback(courseList);
   }
 }
