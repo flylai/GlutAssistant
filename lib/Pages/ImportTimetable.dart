@@ -75,7 +75,7 @@ class _ImportTimetableState extends State<ImportTimetable> {
     );
   }
 
-  Widget _buildImportButtom() {
+  Widget _buildImportButton() {
     return RaisedButton(
       onPressed: () {
         _cookie = FileUtil.readFile(Constant.FILE_SESSION);
@@ -85,10 +85,10 @@ class _ImportTimetableState extends State<ImportTimetable> {
         HttpUtil.importTimeTable(
             _selectYearValue.toString(), _selectTermValue.toString(), _cookie,
             (callback) async {
-          if (callback.length > 0) {
+          if (callback['success'] && callback['data'].length > 0) {
             await SQLiteUtil.dropTable();
             await SQLiteUtil.createTable();
-            for (var item in callback) await SQLiteUtil.insertTimetable(item);
+            for (var item in callback['data']) await SQLiteUtil.insertTimetable(item);
             CommonSnackBar.buildSnackBar(context, '课表导入成功了，请前往课程表界面查看');
           } else {
             CommonSnackBar.buildSnackBar(
@@ -124,7 +124,7 @@ class _ImportTimetableState extends State<ImportTimetable> {
         Row(
           children: <Widget>[
             Expanded(
-              child: _buildImportButtom(),
+              child: _buildImportButton(),
             )
           ],
         )
