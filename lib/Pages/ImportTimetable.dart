@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'dart:core';
 
 import 'package:glutassistant/Common/Constant.dart';
@@ -13,7 +14,7 @@ class ImportTimetable extends StatefulWidget {
 }
 
 class _ImportTimetableState extends State<ImportTimetable> {
-  int _selectYearValue = 2019;
+  int _selectYearValue = DateTime.now().year;
   int _selectTermValue = 2;
   bool _isLoading = false;
   String _cookie;
@@ -82,13 +83,14 @@ class _ImportTimetableState extends State<ImportTimetable> {
         setState(() {
           _isLoading = true;
         });
-        HttpUtil.importTimeTable(
+        HttpUtil.importTimetable(
             _selectYearValue.toString(), _selectTermValue.toString(), _cookie,
             (callback) async {
           if (callback['success'] && callback['data'].length > 0) {
             await SQLiteUtil.dropTable();
             await SQLiteUtil.createTable();
-            for (var item in callback['data']) await SQLiteUtil.insertTimetable(item);
+            for (var item in callback['data'])
+              await SQLiteUtil.insertTimetable(item);
             CommonSnackBar.buildSnackBar(context, '课表导入成功了，请前往课程表界面查看');
           } else {
             CommonSnackBar.buildSnackBar(
