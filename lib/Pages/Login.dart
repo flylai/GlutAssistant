@@ -60,11 +60,14 @@ class _LoginState extends State<Login> {
   Future _getNewVerifyCode() async {
     String verifyCodeImageBase64;
     HttpUtil.getCode((callback) {
-      verifyCodeImageBase64 = callback['image'];
-      setState(() {
-        _verifyCodeImage = base64.decode(verifyCodeImageBase64);
-        _cookie = callback['cookie'];
-      });
+      if (callback['success']) {
+        verifyCodeImageBase64 = callback['data']['image'];
+        setState(() {
+          _verifyCodeImage = base64.decode(verifyCodeImageBase64);
+          _cookie = callback['data']['cookie'];
+        });
+      } else
+        CommonSnackBar.buildSnackBar(context, '网络有点问题，获取验证码失败啦');
     });
   }
 
@@ -140,7 +143,10 @@ class _LoginState extends State<Login> {
     if (_verifyCodeImage != null) {
       return Image.memory(_verifyCodeImage);
     }
-    return Container();
+    return Container(
+      alignment: Alignment.centerRight,
+      child: Icon(Icons.autorenew, size: 25),
+    );
   }
 
   Widget _buildVerifyCodeEdit() {
@@ -152,7 +158,7 @@ class _LoginState extends State<Login> {
       maxLength: 8,
       keyboardType: TextInputType.number,
     );
-    Widget verifyCodeBtn = InkWell(
+    Widget getNewVerifyImage = InkWell(
       child: Container(
           alignment: Alignment.centerRight,
           width: 100.0,
@@ -163,7 +169,6 @@ class _LoginState extends State<Login> {
               },
               child: _buildVerifyCodeImage())),
     );
-
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
       child: Stack(
@@ -171,7 +176,7 @@ class _LoginState extends State<Login> {
           verifyCodeEdit,
           Align(
             alignment: Alignment.topRight,
-            child: verifyCodeBtn,
+            child: getNewVerifyImage,
           ),
         ],
       ),
