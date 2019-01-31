@@ -8,7 +8,25 @@ class Constant {
   static final String VAR_COOKIE = ";x=1;";
   static final String VAR_TABLE_NAME = "classSchedule";
   static final int VAR_HTTP_TIMEOUT_MS = 2000;
-  static final int VAR_COURSE_HEIGHT = 75;
+  static final double VAR_COURSE_HEIGHT = 63.0;
+  static final double VAR_DEFAULT_OPACITY = 1.0;
+  static final List<int> VAR_COLOR = [
+    0x5CB3CC,
+    0x4F383E,
+    0xEC2D7A,
+    0xFBA414,
+    0x5BAE23,
+    0x0F95B0,
+    0x2E317C,
+    0xEF3473,
+    0x983680,
+    0x2775B6,
+    0x248067,
+    0xBEC936,
+    0xEEA08C,
+    0xAD6598,
+    0x1BA784,
+  ];
 
   static final int DB_VERSION = 1;
   static final String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " +
