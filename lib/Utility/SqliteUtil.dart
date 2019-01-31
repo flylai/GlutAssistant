@@ -39,4 +39,11 @@ class SQLiteUtil {
   static Future dropTable() async {
     await _db.execute(Constant.SQL_DROP_TABLE);
   }
+
+  static Future queryCourse(int week, int weekday) async {
+    String weektype = week % 2 == 0 ? 'D' : 'S';
+    String sql =
+        'SELECT * FROM ${Constant.VAR_TABLE_NAME} WHERE startWeek <= "$week" AND endWeek >= "$week" AND location != "" AND (weekType = "A" OR weekType = "$weektype") AND weekday = $weekday ORDER BY startTime ASC';
+    return _db.rawQuery(sql);
+  }
 }
