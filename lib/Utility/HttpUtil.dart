@@ -2,17 +2,16 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:gbk2utf8/gbk2utf8.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
+import 'package:http/http.dart' as http;
 
 class HttpUtil {
   static getCode(Function callback) async {
     try {
       var response = await http
           .post(Constant.URL_VERIFY_CODE)
-          .timeout(Duration(milliseconds: 2));
+          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       var data = {
         'cookie': response.headers['set-cookie'].split(';')[0],
         'image': base64.encode(response.bodyBytes)
@@ -21,41 +20,6 @@ class HttpUtil {
     } catch (e) {
       callback({'success': false, 'data': e});
     }
-  }
-
-  static loginJW(String studentId, String password, String verifyCode,
-      String cookie, Function callback) async {
-    try {
-      var head = {'cookie': cookie};
-      var postData = {
-        "j_username": studentId,
-        "j_password": password,
-        "j_captcha": verifyCode.trim().toString()
-      };
-      print(postData);
-      print(head);
-      var response = await http
-          .post(Constant.URL_LOGIN, body: postData, headers: head)
-          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
-      if (response.headers['location'].contains('index_new'))
-        callback({
-          'success': true,
-          'cookie': response.headers['set-cookie'].split(';')[0]
-        });
-      else
-        callback({'success': false, 'cookie': ''});
-    } catch (e) {
-      callback({'success': false, 'cookie': ''});
-      print('err' + e);
-    }
-  }
-
-  static _getStudentId(String cookie, Function callback) async {
-    var head = {'cookie': cookie};
-    var response = await http.get(Constant.URL_GET_STUDENT_ID, headers: head);
-    RegExp exp = RegExp(r'name="stuUserId" value="(\d+?)">');
-    Iterable<Match> matches = exp.allMatches(response.body);
-    callback(matches.first.group(1));
   }
 
   static importTimetable(
@@ -102,7 +66,7 @@ class HttpUtil {
             for (var timeListItem in timeMatches) {
               //详细上课时间 1为 第几周上 2为星期几 3为第几节 4为上课地点
               int startTime = 0, endTime = 0, startWeek = 0, endWeek = 0;
-              int weekDay = BaseFunctionUtil.getNumByWeekDay(timeListItem[2]);
+              int weekDay = BaseFunctionUtil.getNumByWeekday(timeListItem[2]);
               String weekType = 'A';
               String location = timeListItem.group(4);
               String courseName = teacherListItem.group(1);
@@ -197,6 +161,33 @@ class HttpUtil {
     }
   }
 
+  static loginJW(String studentId, String password, String verifyCode,
+      String cookie, Function callback) async {
+    try {
+      var head = {'cookie': cookie};
+      var postData = {
+        "j_username": studentId,
+        "j_password": password,
+        "j_captcha": verifyCode.trim().toString()
+      };
+      print(postData);
+      print(head);
+      var response = await http
+          .post(Constant.URL_LOGIN, body: postData, headers: head)
+          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
+      if (response.headers['location'].contains('index_new'))
+        callback({
+          'success': true,
+          'cookie': response.headers['set-cookie'].split(';')[0]
+        });
+      else
+        callback({'success': false, 'cookie': ''});
+    } catch (e) {
+      callback({'success': false, 'cookie': ''});
+      print('err' + e);
+    }
+  }
+
   static queryScore(
       String year, String term, String cookie, Function callback) async {
     print('queryScaore');
@@ -225,5 +216,13 @@ class HttpUtil {
     } catch (e) {
       callback({'success': false, 'data': e});
     }
+  }
+
+  static _getStudentId(String cookie, Function callback) async {
+    var head = {'cookie': cookie};
+    var response = await http.get(Constant.URL_GET_STUDENT_ID, headers: head);
+    RegExp exp = RegExp(r'name="stuUserId" value="(\d+?)">');
+    Iterable<Match> matches = exp.allMatches(response.body);
+    callback(matches.first.group(1));
   }
 }
