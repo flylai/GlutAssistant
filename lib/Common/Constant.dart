@@ -7,7 +7,7 @@ class Constant {
 
   static final String VAR_COOKIE = ";x=1;";
   static final String VAR_TABLE_NAME = "classSchedule";
-  static final int VAR_HTTP_TIMEOUT_MS = 2000;
+  static final int VAR_HTTP_TIMEOUT_MS = 6000;
   static final double VAR_COURSE_HEIGHT = 63.0;
   static final double VAR_DEFAULT_OPACITY = 1.0;
   static final List<int> VAR_COLOR = [
