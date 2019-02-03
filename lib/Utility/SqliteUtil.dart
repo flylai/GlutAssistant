@@ -28,6 +28,10 @@ class SQLiteUtil {
     _db = null;
   }
 
+  static bool dbIsOpen() {
+    return _db == null ? false : true;
+  }
+
   static insertTimetable(Map coursedetail) {
     return _db.insert(_dbTableName, coursedetail);
   }
