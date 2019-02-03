@@ -49,6 +49,10 @@ class Constant {
       "http://202.193.80.58/academic/manager/score/studentOwnScore.do?groupId=&moduleId=2020";
   static final String URL_QUERY_EXAMINATION_LOCATION =
       "http://202.193.80.58/academic/student/exam/index.jsdo?stuid=";
+  static final String URL_LOGIN_CAIWU =
+      "http://cwjf.glut.edu.cn/interface/login";
+  static final String URL_CAIWU_INTERFACE =
+      "http://cwjf.glut.edu.cn/interface/index";
 
   static final DRAWER_MAIN_LIST_TITLE = [
     '常用',

@@ -161,6 +161,27 @@ class HttpUtil {
     }
   }
 
+  static loginCW(String studentId, String password, Function callback) async {
+    try {
+      var postData = {
+        'sid': studentId,
+        'passWord': password,
+      };
+      var response = await http
+          .post(Constant.URL_LOGIN_CAIWU, body: postData)
+          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
+      if (response.headers.containsKey('set-cookie'))
+        callback({
+          'success': true,
+          'cookie': response.headers['set-cookie'].split(';')[0]
+        });
+      else
+        callback({'success': false, 'cookie': ''});
+    } catch (e) {
+      callback({'success': false, 'cookie': ''});
+    }
+  }
+
   static loginJW(String studentId, String password, String verifyCode,
       String cookie, Function callback) async {
     try {
@@ -185,6 +206,29 @@ class HttpUtil {
     } catch (e) {
       callback({'success': false, 'cookie': ''});
       print('err' + e);
+    }
+  }
+
+  static queryBalance(
+      String studentId, String cookie, Function callback) async {
+    try {
+      var head = {'cookie': cookie};
+      var postData = {
+        'method': 'getecardinfo',
+        'stuid': '0',
+        'carno': studentId
+      };
+      var response = await http
+          .post(Constant.URL_CAIWU_INTERFACE, body: postData, headers: head)
+          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
+      if (response.body.contains('true')) {
+        Map<String, dynamic> json = jsonDecode(response.body);
+        String balance = json['data']['Balance'];
+        callback({'success': true, 'balance': balance});
+      } else
+        callback({'success': false, 'balance': ''});
+    } catch (e) {
+      callback({'success': false, 'balance': ''});
     }
   }
 
