@@ -1,16 +1,17 @@
-import 'package:path_provider/path_provider.dart';
-
+import 'dart:async';
 import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
 
 class FileUtil {
   static String _dir;
+  static Future<bool> fileExist(String filename) async {
+    return await File(_dir + '/' + filename).exists();
+  }
+
   static Future<String> getFileDir() async {
     _dir = (await getApplicationDocumentsDirectory()).path;
     return _dir;
-  }
-
-  static Future<bool> fileExist(String filename) async {
-    return await File(_dir + '/' + filename).exists();
   }
 
   static String readFile(String filename) {

@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-
 import 'dart:core';
 
+import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
@@ -20,58 +19,35 @@ class _QueryScoreState extends State<QueryScore> {
   List<Widget> scoreList = [];
 
   @override
+  Widget build(BuildContext context) {
+    return Container(child: _buildBody());
+  }
+
+  @override
   void initState() {
     super.initState();
     FileUtil.getFileDir();
   }
 
-  List<DropdownMenuItem> _generateYearList() {
-    List<DropdownMenuItem> items = List();
-    int year = DateTime.now().year;
-    for (var i = 0; i < 5; i++) {
-      int _year = year - i;
-      DropdownMenuItem item =
-          DropdownMenuItem(value: _year, child: Text(_year.toString()));
-      items.add(item);
-    }
-    return items;
-  }
-
-  List<DropdownMenuItem> _generateTermList() {
-    List<DropdownMenuItem> items = List();
-    DropdownMenuItem item = DropdownMenuItem(value: 1, child: Text('春'));
-    items.add(item);
-    DropdownMenuItem item2 = DropdownMenuItem(value: 2, child: Text('秋'));
-    items.add(item2);
-    return items;
-  }
-
-  Widget _buildYearDropdown() {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton(
-        value: _selectYearValue,
-        items: _generateYearList(),
-        onChanged: (value) {
-          setState(() {
-            _selectYearValue = value;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _buildTermDropdown() {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton(
-        value: _selectTermValue,
-        items: _generateTermList(),
-        onChanged: (value) {
-          setState(() {
-            _selectTermValue = value;
-            print(value);
-          });
-        },
-      ),
+  Widget _buildBody() {
+    if (_isLoading) return Center(child: new ProgressDialog());
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
+          child: Column(
+            children: <Widget>[
+              _buildDropdownArea(),
+              _buildQueryButton(),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            children: scoreList,
+          ),
+        )
+      ],
     );
   }
 
@@ -150,30 +126,53 @@ class _QueryScoreState extends State<QueryScore> {
     );
   }
 
-  Widget _buildBody() {
-    if (_isLoading) return Center(child: new ProgressDialog());
-    return Column(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
-          child: Column(
-            children: <Widget>[
-              _buildDropdownArea(),
-              _buildQueryButton(),
-            ],
-          ),
-        ),
-        Expanded(
-          child: ListView(
-            children: scoreList,
-          ),
-        )
-      ],
+  Widget _buildTermDropdown() {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton(
+        value: _selectTermValue,
+        items: _generateTermList(),
+        onChanged: (value) {
+          setState(() {
+            _selectTermValue = value;
+            print(value);
+          });
+        },
+      ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(child: _buildBody());
+  Widget _buildYearDropdown() {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton(
+        value: _selectYearValue,
+        items: _generateYearList(),
+        onChanged: (value) {
+          setState(() {
+            _selectYearValue = value;
+          });
+        },
+      ),
+    );
+  }
+
+  List<DropdownMenuItem> _generateTermList() {
+    List<DropdownMenuItem> items = List();
+    DropdownMenuItem item = DropdownMenuItem(value: 1, child: Text('春'));
+    items.add(item);
+    DropdownMenuItem item2 = DropdownMenuItem(value: 2, child: Text('秋'));
+    items.add(item2);
+    return items;
+  }
+
+  List<DropdownMenuItem> _generateYearList() {
+    List<DropdownMenuItem> items = List();
+    int year = DateTime.now().year;
+    for (var i = 0; i < 5; i++) {
+      int _year = year - i;
+      DropdownMenuItem item =
+          DropdownMenuItem(value: _year, child: Text(_year.toString()));
+      items.add(item);
+    }
+    return items;
   }
 }

@@ -1,6 +1,7 @@
-import 'package:sqflite/sqflite.dart';
+import 'dart:async';
 
 import 'package:glutassistant/Common/Constant.dart';
+import 'package:sqflite/sqflite.dart';
 
 class SQLiteUtil {
   static final int _dbVersion = Constant.DB_VERSION;
@@ -8,6 +9,23 @@ class SQLiteUtil {
   static final String _dbTableName = Constant.VAR_TABLE_NAME;
   static String _dbPath;
   static Database _db;
+  static void closeDb() {
+    if (_db != null) _db.close();
+    _db = null;
+  }
+
+  static Future createTable() async {
+    await _db.execute(Constant.SQL_CREATE_TABLE);
+  }
+
+  static bool dbIsOpen() {
+    return _db == null ? false : true;
+  }
+
+  static Future dropTable() async {
+    await _db.execute(Constant.SQL_DROP_TABLE);
+  }
+
   static init() async {
     _dbPath = await getDatabasesPath();
     _dbPath = _dbPath + '/' + _dbFileName;
@@ -17,31 +35,14 @@ class SQLiteUtil {
     });
   }
 
-  static isTableExist() async {
-    var res = await _db.rawQuery(
-        "select * from Sqlite_master where type = 'table' and name = '$_dbTableName'");
-    return res != null && res.length > 0;
-  }
-
-  static void closeDb() {
-    if (_db != null) _db.close();
-    _db = null;
-  }
-
-  static bool dbIsOpen() {
-    return _db == null ? false : true;
-  }
-
   static insertTimetable(Map coursedetail) {
     return _db.insert(_dbTableName, coursedetail);
   }
 
-  static Future createTable() async {
-    await _db.execute(Constant.SQL_CREATE_TABLE);
-  }
-
-  static Future dropTable() async {
-    await _db.execute(Constant.SQL_DROP_TABLE);
+  static isTableExist() async {
+    var res = await _db.rawQuery(
+        "select * from Sqlite_master where type = 'table' and name = '$_dbTableName'");
+    return res != null && res.length > 0;
   }
 
   static Future queryCourse(int week, int weekday) async {
