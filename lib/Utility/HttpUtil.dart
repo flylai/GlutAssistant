@@ -209,17 +209,15 @@ class HttpUtil {
     }
   }
 
-  static queryBalance(
-      String studentId, String cookie, Function callback) async {
+  static queryBalance(String studentId, Function callback) async {
     try {
-      var head = {'cookie': cookie};
       var postData = {
         'method': 'getecardinfo',
         'stuid': '0',
         'carno': studentId
       };
       var response = await http
-          .post(Constant.URL_CAIWU_INTERFACE, body: postData, headers: head)
+          .post(Constant.URL_CAIWU_INTERFACE, body: postData)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       if (response.body.contains('true')) {
         Map<String, dynamic> json = jsonDecode(response.body);
@@ -234,7 +232,6 @@ class HttpUtil {
 
   static queryScore(
       String year, String term, String cookie, Function callback) async {
-    print('queryScaore');
     int _year = int.parse(year) - 1980;
     var head = {'cookie': cookie};
     var postData = {'year': _year.toString(), 'term': term, 'para': '0'};
