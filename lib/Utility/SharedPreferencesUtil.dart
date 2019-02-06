@@ -18,7 +18,7 @@ class SharedPreferenceUtil {
   }
 
   static Future init() async {
-    _pref = await SharedPreferences.getInstance();
+    if (_pref == null) _pref = await SharedPreferences.getInstance();
   }
 
   static Future setBool(String field, bool contents) async {

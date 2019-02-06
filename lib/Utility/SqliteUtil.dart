@@ -27,12 +27,15 @@ class SQLiteUtil {
   }
 
   static init() async {
-    _dbPath = await getDatabasesPath();
-    _dbPath = _dbPath + '/' + _dbFileName;
-    _db = await openDatabase(_dbPath, version: _dbVersion,
-        onCreate: (Database db, int version) async {
-      await db.execute(Constant.SQL_CREATE_TABLE);
-    });
+    if (_dbPath == null) {
+      _dbPath = await getDatabasesPath();
+      _dbPath = _dbPath + '/' + _dbFileName;
+    }
+    if (_db == null)
+      _db = await openDatabase(_dbPath, version: _dbVersion,
+          onCreate: (Database db, int version) async {
+        await db.execute(Constant.SQL_CREATE_TABLE);
+      });
   }
 
   static insertTimetable(Map coursedetail) {

@@ -32,7 +32,7 @@ class BalanceUtil {
     await SharedPreferenceUtil.getString('studentid').then((onValue) {
       _studentid = onValue;
     });
-    await FileUtil.getFileDir();
+    await FileUtil.init();
     _data = FileUtil.readFile(Constant.FILE_DATA_CAIWU);
   }
 

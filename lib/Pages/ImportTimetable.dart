@@ -26,9 +26,9 @@ class _ImportTimetableState extends State<ImportTimetable> {
 
   @override
   void initState() {
-    super.initState();
-    FileUtil.getFileDir();
+    FileUtil.init();
     SQLiteUtil.init();
+    super.initState();
   }
 
   Widget _buildBody() {

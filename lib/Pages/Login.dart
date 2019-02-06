@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -46,9 +47,9 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
-    super.initState();
     _init();
     _getNewVerifyCode();
+    super.initState();
   }
 
   Widget _buildBody() {
@@ -282,18 +283,17 @@ class _LoginState extends State<Login> {
   }
 
   Future _init() async {
-    await SharedPreferenceUtil.init().then((value) {
-      SharedPreferenceUtil.getBool('rememberpwd').then((onValue) {
-        if (onValue) {
-          SharedPreferenceUtil.getString('studentid').then((studentid) {
-            _studentIdController.text = studentid;
-          });
-          SharedPreferenceUtil.getString('passwordJW').then((password) {
-            _passwordController.text = password;
-          });
-        }
-      });
+    await SharedPreferenceUtil.init();
+    await SharedPreferenceUtil.getBool('rememberpwd').then((onValue) {
+      if (onValue) {
+        SharedPreferenceUtil.getString('studentid').then((studentid) {
+          _studentIdController.text = studentid;
+        });
+        SharedPreferenceUtil.getString('passwordJW').then((password) {
+          _passwordController.text = password;
+        });
+      }
     });
-    FileUtil.getFileDir();
+    FileUtil.init();
   }
 }

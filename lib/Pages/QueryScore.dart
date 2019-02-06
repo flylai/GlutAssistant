@@ -25,8 +25,8 @@ class _QueryScoreState extends State<QueryScore> {
 
   @override
   void initState() {
+    FileUtil.init();
     super.initState();
-    FileUtil.getFileDir();
   }
 
   Widget _buildBody() {

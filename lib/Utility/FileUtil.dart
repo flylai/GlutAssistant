@@ -9,9 +9,8 @@ class FileUtil {
     return await File(_dir + '/' + filename).exists();
   }
 
-  static Future<String> getFileDir() async {
-    _dir = (await getApplicationDocumentsDirectory()).path;
-    return _dir;
+  static Future init() async {
+    if (_dir == null) _dir = (await getApplicationDocumentsDirectory()).path;
   }
 
   static String readFile(String filename) {
@@ -32,7 +31,6 @@ class FileUtil {
       file.writeAsStringSync(contents);
       return true;
     } catch (e) {
-      print(e);
       return false;
     }
   }
