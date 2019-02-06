@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Constant {
   static final String FILE_SESSION = "Session";
+  static final String FILE_DATA_CAIWU = "caiwu_data";
   static final String File_DB = "db.db3";
   static final String FILE_BACKGROUND_IMG = "background";
 
