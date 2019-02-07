@@ -12,6 +12,7 @@ class BalanceUtil {
   static String _data = '';
   static String _balance = '未知';
   static String _lastupdate = '';
+
   static Map<String, dynamic> getCacheBalance() {
     Map<String, dynamic> result = {};
     if (_data != 'ERROR' && _data != '') {
@@ -29,7 +30,7 @@ class BalanceUtil {
 
   static init() async {
     await SharedPreferenceUtil.init();
-    await SharedPreferenceUtil.getString('studentid').then((onValue) {
+    await SharedPreferenceUtil.getString('student_id').then((onValue) {
       _studentid = onValue;
     });
     await FileUtil.init();

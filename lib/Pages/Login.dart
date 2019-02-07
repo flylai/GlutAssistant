@@ -106,14 +106,14 @@ class _LoginState extends State<Login> {
                             callback['cookie'], Constant.FILE_SESSION);
                         if (_savePwd) {
                           SharedPreferenceUtil.setString(
-                              'studentid', _studentIdController.text);
+                              'student_id', _studentIdController.text);
                           SharedPreferenceUtil.setString(
-                              'passwordJW', _passwordController.text);
-                          SharedPreferenceUtil.setBool('rememberpwd', true);
+                              'password_JW', _passwordController.text);
+                          SharedPreferenceUtil.setBool('remember_pwd', true);
                         } else {
-                          SharedPreferenceUtil.setString('studentid', '');
-                          SharedPreferenceUtil.setString('passwordJW', '');
-                          SharedPreferenceUtil.setBool('rememberpwd', false);
+                          SharedPreferenceUtil.setString('student_id', '');
+                          SharedPreferenceUtil.setString('password_JW', '');
+                          SharedPreferenceUtil.setBool('remember_pwd', false);
                         }
                         CommonSnackBar.buildSnackBar(
                             context, '登录成功, 该界面无需理会, 可跳转至别的界面');
@@ -284,12 +284,12 @@ class _LoginState extends State<Login> {
 
   Future _init() async {
     await SharedPreferenceUtil.init();
-    await SharedPreferenceUtil.getBool('rememberpwd').then((onValue) {
+    await SharedPreferenceUtil.getBool('remember_pwd').then((onValue) {
       if (onValue) {
-        SharedPreferenceUtil.getString('studentid').then((studentid) {
+        SharedPreferenceUtil.getString('student_id').then((studentid) {
           _studentIdController.text = studentid;
         });
-        SharedPreferenceUtil.getString('passwordJW').then((password) {
+        SharedPreferenceUtil.getString('password_JW').then((password) {
           _passwordController.text = password;
         });
       }
