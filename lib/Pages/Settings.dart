@@ -2,11 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:glutassistant/Common/Constant.dart';
+import 'package:glutassistant/Redux/State.dart';
+import 'package:glutassistant/Redux/ThemeRedux.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:redux/redux.dart';
 
 class Settings extends StatefulWidget {
   _SettingsState createState() => _SettingsState();
@@ -23,9 +27,15 @@ class _SettingsState extends State<Settings> {
   TextEditingController _passwordJWController = TextEditingController();
   TextEditingController _currentWeekController = TextEditingController();
 
+  Store<GlobalState> _store;
+  int i = 0;
+
   @override
   Widget build(BuildContext context) {
-    return _buildSettingsList();
+    return StoreBuilder<GlobalState>(builder: (context, store) {
+      _store = store;
+      return _buildSettingsList();
+    });
   }
 
   void initState() {
@@ -97,6 +107,22 @@ class _SettingsState extends State<Settings> {
             }));
   }
 
+  Widget _buildListItem(context, index) {
+    return ListTile(
+        leading: Icon(
+          Icons.remove_circle,
+          color: Constant.THEME_LIST_COLOR[index][1],
+        ),
+        title: Text(Constant.THEME_LIST_COLOR[index][0]),
+        dense: true,
+        onTap: () {
+          SharedPreferenceUtil.setString('theme_color', index);
+          _store.dispatch(
+              RefreshColorAction(Constant.THEME_LIST_COLOR[index][1]));
+          Navigator.pop(context);
+        });
+  }
+
   Widget _buildPickImage() {
     return Container(
         color: Colors.white.withOpacity(Constant.VAR_DEFAULT_OPACITY),
@@ -155,7 +181,8 @@ class _SettingsState extends State<Settings> {
         _buildPwdJW(),
         _buildCurrentWeek(),
         _buildBackgroundImage(),
-        _buildPickImage()
+        _buildPickImage(),
+        _buildThemeSetting()
       ],
     );
   }
@@ -195,12 +222,38 @@ class _SettingsState extends State<Settings> {
             }));
   }
 
+  Widget _buildThemeSetting() {
+    return Container(
+        color: Colors.white.withOpacity(Constant.VAR_DEFAULT_OPACITY),
+        child: ListTile(
+          title: Text('选择主题样式'),
+          enabled: !_usingBackgroundImage,
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext ctx) {
+                  return Dialog(
+                    child: Container(
+                      height: 500,
+                      width: 100,
+                      child: ListView.builder(
+                        itemCount: Constant.THEME_LIST_COLOR.length,
+                        itemBuilder: (context, index) =>
+                            _buildListItem(context, index),
+                      ),
+                    ),
+                  );
+                });
+          },
+        ));
+  }
+
   Future _getImage() async {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
         _image = image;
-        _image.copy(FileUtil.getDir() + '/image');
+        _image.copy(FileUtil.getDir() + '/' + Constant.FILE_BACKGROUND_IMG);
       });
       CommonSnackBar.buildSnackBar(context, '你可能需要重新启动本APP使得背景图修改生效');
     } else
