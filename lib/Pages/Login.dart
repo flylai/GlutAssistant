@@ -285,7 +285,7 @@ class _LoginState extends State<Login> {
   Future _init() async {
     await SharedPreferenceUtil.init();
     await SharedPreferenceUtil.getBool('remember_pwd').then((onValue) {
-      if (onValue) {
+      if (onValue != null && onValue) {
         SharedPreferenceUtil.getString('student_id').then((studentid) {
           _studentIdController.text = studentid;
         });
