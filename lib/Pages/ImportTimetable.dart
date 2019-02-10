@@ -21,7 +21,7 @@ class _ImportTimetableState extends State<ImportTimetable> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(30, 50, 30, 50), child: _buildBody());
+        padding: EdgeInsets.fromLTRB(30, 10, 30, 0), child: _buildBody());
   }
 
   @override
