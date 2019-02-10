@@ -121,13 +121,10 @@ class _HomeState extends State<Home> {
       child: Column(
         children: <Widget>[
           UserAccountsDrawerHeader(
-              accountEmail: Text('桂工助手'),
-              accountName: Text('让你的桂工生活更加方便'),
+              accountName: Text('桂工助手'),
+              accountEmail: Text('让你的桂工生活更为方便'),
               margin: EdgeInsets.zero,
-              currentAccountPicture: (CircleAvatar(
-                  // backgroundImage: NetworkImage(
-                  //     'https://upload.jianshu.io/users/upload_avatars/7700793/dbcf94ba-9e63-4fcf-aa77-361644dd5a87?imageMogr2/auto-orient/strip|imageView2/1/w/240/h/240'),
-                  ))),
+              currentAccountPicture: (Image.asset('assets/images/logo.png'))),
           MediaQuery.removePadding(
             context: context,
             removeTop: true,
