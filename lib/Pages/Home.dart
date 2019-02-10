@@ -1,12 +1,20 @@
 import 'dart:core';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:glutassistant/Common/Constant.dart';
+import 'package:glutassistant/Pages/Dashboard.dart';
 import 'package:glutassistant/Pages/ImportTimetable.dart';
 import 'package:glutassistant/Pages/Login.dart';
 import 'package:glutassistant/Pages/QueryScore.dart';
+import 'package:glutassistant/Pages/Settings.dart';
 import 'package:glutassistant/Pages/Timetable.dart';
+import 'package:glutassistant/Redux/State.dart';
+import 'package:glutassistant/Redux/ThemeRedux.dart';
+import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
+import 'package:redux/redux.dart';
 
 class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
@@ -14,105 +22,56 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _scaffoldKey = GlobalKey<ScaffoldState>(); //全局脚手架key
-  int _selectIndex = 0;
+  int _selectIndex = 1;
   int _selectWeek = 1;
-  int _currentWeek;
-  String firstWeek = '1';
-  String firstWeekTimestamp;
+  int _currentWeek = 1;
+  int _themeIndex = 1;
+  String _firstWeek = '1';
+  String _firstWeekTimestamp = '1';
+  String _image = '';
+  Store<GlobalState> _store;
+  bool _backgroundImageEnable = false;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("image/0.png"),
-          fit: BoxFit.cover,
+    return StoreBuilder<GlobalState>(builder: (context, store) {
+      _store = store;
+      return Container(
+        decoration: _backgroundImageEnable
+            ? BoxDecoration(
+                image: DecorationImage(
+                  image: FileImage(
+                      File(_image + '/' + Constant.FILE_BACKGROUND_IMG)),
+                  fit: BoxFit.cover,
+                ),
+              )
+            : null,
+        child: Scaffold(
+          backgroundColor:
+              _backgroundImageEnable ? Colors.transparent : Colors.white,
+          key: _scaffoldKey,
+          drawer: _buildDrawer(),
+          appBar: _buildAppBar(),
+          body: _getBodyView(),
         ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        key: _scaffoldKey,
-        drawer: _getDrawer(),
-        appBar: _getAppBar(),
-        body: _getBodyView(),
-      ),
-    );
-  }
-
-  init() async {
-    //计算今天是第几周
-    await SharedPreferenceUtil.init();
-    await SharedPreferenceUtil.getString('firstweek').then((onValue) {
-      firstWeek = onValue == null ? '1' : onValue;
+      );
     });
-    await SharedPreferenceUtil.getString('firstweektimestamp').then((onValue) {
-      firstWeekTimestamp = onValue == null ? '1' : onValue;
-    });
-    _currentWeek = (DateTime.now().millisecondsSinceEpoch ~/ 1000 -
-                int.parse(firstWeekTimestamp)) ~/
-            604800 +
-        int.parse(firstWeek);
-    _currentWeek = _currentWeek > 25 ? 1 : _currentWeek;
-    _selectWeek = _currentWeek;
   }
 
   @override
   void initState() {
+    _init();
     super.initState();
-    init();
   }
 
-  Widget _drawListItem(context, index) {
-    if (index != 0 && index != 7) {
-      return ListTile(
-          leading: Icon(Constant.DRAWER_LIST_ICON[index]),
-          title: Text(Constant.DRAWER_LIST_TITLE[index]),
-          dense: true,
-          onTap: () {
-            print(index);
-            _selectWeek = _currentWeek;
-            Navigator.pop(context);
-            setState(() {
-              _selectIndex = index;
-            });
-          });
-    }
-    return ListTile(
-      title: Text(Constant.DRAWER_LIST_TITLE[index],
-          style: TextStyle(color: Colors.blue, fontSize: 12.0)),
-    );
-  }
-
-  List<Widget> _generateGridView() {
-    List<Widget> chooser = [];
-    for (int i = 0; i < 25; i++) {
-      chooser.add(Container(
-        margin: EdgeInsets.all(3),
-        decoration:
-            BoxDecoration(border: Border.all(color: Colors.blue, width: 0.5)),
-        child: InkWell(
-          onTap: () {
-            setState(() {
-              _selectWeek = i + 1;
-            });
-            Navigator.pop(context);
-          },
-          child: Container(
-            color: i + 1 == _selectWeek ? Color(0xFFFC0484) : Colors.white,
-            alignment: Alignment.center,
-            child: Text((i + 1).toString()),
-          ),
-        ),
-      ));
-    }
-    return chooser;
-  }
-
-  Widget _getAppBar() {
+  Widget _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
+      backgroundColor: _backgroundImageEnable
+          ? Colors.transparent
+          : Theme.of(context).primaryColor,
+      elevation: _backgroundImageEnable ? 0 : 4,
       title: GestureDetector(
-        child: _getAppBarTitle(),
+        child: _buildAppBarTitle(),
         onTap: () {
           if (_selectIndex != 2) return; //是课程表界面的时候才能点
           showDialog(
@@ -150,41 +109,20 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _getAppBarTitle() {
+  Widget _buildAppBarTitle() {
     if (_selectIndex != 2)
-      return Text(Constant.DRAWER_LIST_TITLE[_selectIndex]);
+      return Text(Constant.DRAWER_LIST[_selectIndex][0]);
     else
       return Text('第$_selectWeek周');
   }
 
-  Widget _getBodyView() {
-    switch (_selectIndex) {
-      case 0:
-        break;
-      case 2:
-        return new Timetable(_selectWeek);
-        break;
-      case 3:
-        return new QueryScore();
-      case 4:
-        break;
-      case 5:
-        return new ImportTimetable();
-      case 6:
-        return new Login();
-        break;
-      default:
-        break;
-    }
-  }
-
-  Widget _getDrawer() {
+  Widget _buildDrawer() {
     return Drawer(
       child: Column(
         children: <Widget>[
           UserAccountsDrawerHeader(
-              accountEmail: Text('XX'),
-              accountName: Text('XX'),
+              accountEmail: Text('桂工助手'),
+              accountName: Text('让你的桂工生活更加方便'),
               margin: EdgeInsets.zero,
               currentAccountPicture: (CircleAvatar(
                   // backgroundImage: NetworkImage(
@@ -195,12 +133,107 @@ class _HomeState extends State<Home> {
             removeTop: true,
             child: Expanded(
                 child: ListView.builder(
-              itemCount: Constant.DRAWER_LIST_TITLE.length,
-              itemBuilder: (context, index) => _drawListItem(context, index),
+              itemCount: Constant.DRAWER_LIST.length,
+              itemBuilder: (context, index) => _buildListItem(context, index),
             )),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildListItem(BuildContext context, int index) {
+    if (index != 0 && index != 7) {
+      return ListTile(
+          leading: Icon(Constant.DRAWER_LIST[index][1]),
+          title: Text(Constant.DRAWER_LIST[index][0]),
+          dense: true,
+          onTap: () {
+            print(index);
+            _selectWeek = _currentWeek;
+            Navigator.pop(context);
+            setState(() {
+              _selectIndex = index;
+            });
+          });
+    }
+    return ListTile(
+      title: Text(Constant.DRAWER_LIST[index][0],
+          style: TextStyle(color: Colors.blue, fontSize: 12.0)),
+    );
+  }
+
+  List<Widget> _generateGridView() {
+    List<Widget> chooser = [];
+    for (int i = 0; i < 25; i++) {
+      chooser.add(Container(
+        margin: EdgeInsets.all(3),
+        decoration:
+            BoxDecoration(border: Border.all(color: Colors.blue, width: 0.5)),
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              _selectWeek = i + 1;
+            });
+            Navigator.pop(context);
+          },
+          child: Container(
+            color: i + 1 == _selectWeek ? Color(0xFFFC0484) : Colors.white,
+            alignment: Alignment.center,
+            child: Text((i + 1).toString()),
+          ),
+        ),
+      ));
+    }
+    return chooser;
+  }
+
+  Widget _getBodyView() {
+    switch (_selectIndex) {
+      case 1:
+        return Dashboard(_currentWeek);
+      case 2:
+        return Timetable(_selectWeek);
+      case 3:
+        return QueryScore();
+      case 4:
+        break;
+      case 5:
+        return ImportTimetable();
+      case 6:
+        return Login();
+        break;
+      case 8:
+        return Settings();
+      default:
+        break;
+    }
+    return Dashboard(_currentWeek);
+  }
+
+  _init() async {
+    //计算今天是第几周
+    await FileUtil.init();
+    _image = FileUtil.getDir();
+    await SharedPreferenceUtil.init();
+    _firstWeek = await SharedPreferenceUtil.getString('first_week');
+    _firstWeek ??= '1';
+    _firstWeekTimestamp =
+        await SharedPreferenceUtil.getString('first_week_timestamp');
+    _firstWeekTimestamp ??= '1';
+    _themeIndex = await SharedPreferenceUtil.getInt('theme_color');
+    _store.dispatch(
+        RefreshColorAction(Constant.THEME_LIST_COLOR[_themeIndex][1]));
+    _backgroundImageEnable =
+        await SharedPreferenceUtil.getBool('background_enable');
+    _backgroundImageEnable ??= false;
+    _currentWeek = (DateTime.now().millisecondsSinceEpoch ~/ 1000 -
+                int.parse(_firstWeekTimestamp)) ~/
+            604800 +
+        int.parse(_firstWeek);
+    setState(() {
+      _currentWeek = _currentWeek > 25 ? 1 : _currentWeek;
+    });
+    _selectWeek = _currentWeek;
   }
 }
