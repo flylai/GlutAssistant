@@ -63,6 +63,7 @@ class _SettingsState extends State<Settings> {
               _usingBackgroundImage = !_usingBackgroundImage;
               SharedPreferenceUtil.setBool(
                   'background_enable', _usingBackgroundImage);
+              CommonSnackBar.buildSnackBar(context, '背景图与主题的互相切换可能需要重启APP才能生效');
             });
           },
         ));
@@ -107,16 +108,16 @@ class _SettingsState extends State<Settings> {
             }));
   }
 
-  Widget _buildListItem(context, index) {
+  Widget _buildListItem(BuildContext context, int index) {
     return ListTile(
         leading: Icon(
-          Icons.remove_circle,
+          Icons.lens,
           color: Constant.THEME_LIST_COLOR[index][1],
         ),
         title: Text(Constant.THEME_LIST_COLOR[index][0]),
         dense: true,
         onTap: () {
-          SharedPreferenceUtil.setString('theme_color', index);
+          SharedPreferenceUtil.setInt('theme_color', index);
           _store.dispatch(
               RefreshColorAction(Constant.THEME_LIST_COLOR[index][1]));
           Navigator.pop(context);
@@ -227,6 +228,7 @@ class _SettingsState extends State<Settings> {
         color: Colors.white.withOpacity(Constant.VAR_DEFAULT_OPACITY),
         child: ListTile(
           title: Text('选择主题样式'),
+          subtitle: Text('主题样式背景图是白色，与背景图冲突'),
           enabled: !_usingBackgroundImage,
           onTap: () {
             showDialog(
@@ -265,7 +267,7 @@ class _SettingsState extends State<Settings> {
     _subtitleStudentid = await SharedPreferenceUtil.getString('student_id');
     _subtitleStudentid ??= '';
     _subtitleCurrentWeek = await SharedPreferenceUtil.getString('first_week');
-    _subtitleStudentid ??= '1';
+    _subtitleCurrentWeek ??= '1';
     _usingBackgroundImage =
         await SharedPreferenceUtil.getBool('background_enable');
     _usingBackgroundImage ??= false;
@@ -273,6 +275,7 @@ class _SettingsState extends State<Settings> {
     setState(() {
       _subtitleStudentid;
       _usingBackgroundImage;
+      _subtitleCurrentWeek;
     });
     _studentidController.text = _subtitleStudentid;
     _currentWeekController.text = _subtitleCurrentWeek;
