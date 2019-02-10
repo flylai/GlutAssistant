@@ -9,6 +9,10 @@ class FileUtil {
     return await File(_dir + '/' + filename).exists();
   }
 
+  static String getDir() {
+    return _dir;
+  }
+
   static Future init() async {
     if (_dir == null) _dir = (await getApplicationDocumentsDirectory()).path;
   }
