@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/BalanceUtil.dart';
 import 'package:glutassistant/Utility/SQLiteUtil.dart';
+import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -13,6 +15,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   int _weekday = DateTime.now().weekday;
   bool _isLoading = false;
+  double _opacity = Constant.VAR_DEFAULT_OPACITY;
 
   Map<String, dynamic> _balance = {'balance': '未知', 'lastupdate': '从未更新'};
   List<Map<String, dynamic>> _courseList = [];
@@ -30,16 +33,9 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
   }
 
-  List<Widget> _buildBody() {
-    List<Widget> mainBody = [];
-    mainBody = _getCourseList();
-    mainBody.add(_getBalance());
-    return mainBody;
-  }
-
-  Widget _getBalance() {
+  Widget _buildBalanceArea() {
     return Card(
-        color: Colors.white.withOpacity(0.7),
+        color: Colors.white.withOpacity(_opacity),
         elevation: 4.0,
         child: Container(
             margin: EdgeInsets.all(10),
@@ -53,7 +49,7 @@ class _DashboardState extends State<Dashboard> {
                   left: 0,
                   child: Text('一卡通余额'),
                 ),
-                _getBalanceText(),
+                _buildBalanceText(),
                 Positioned(
                   bottom: 0,
                   right: 0,
@@ -85,7 +81,7 @@ class _DashboardState extends State<Dashboard> {
             )));
   }
 
-  Widget _getBalanceText() {
+  Widget _buildBalanceText() {
     if (_isLoading) return CircularProgressIndicator();
     return Text(
       '￥${_balance['balance']}',
@@ -93,7 +89,14 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  List<Widget> _getCourseList() {
+  List<Widget> _buildBody() {
+    List<Widget> mainBody = [];
+    mainBody = _buildCourseList();
+    mainBody.add(_buildBalanceArea());
+    return mainBody;
+  }
+
+  List<Widget> _buildCourseList() {
     List<Widget> todayCourseList = [];
     if (_courseList.length > 0) {
       for (int i = 0; i < _courseList.length; i++) {
@@ -114,7 +117,7 @@ class _DashboardState extends State<Dashboard> {
             endTimeStr = (endTime - 2).toString();
         }
         Card course = Card(
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white.withOpacity(_opacity),
           elevation: 4.0,
           child: Container(
             margin: EdgeInsets.all(20),
@@ -180,7 +183,7 @@ class _DashboardState extends State<Dashboard> {
       }
     } else {
       todayCourseList.add(Card(
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white.withOpacity(_opacity),
           elevation: 4.0,
           child: Container(
             alignment: Alignment.center,
@@ -200,6 +203,11 @@ class _DashboardState extends State<Dashboard> {
     await BalanceUtil.init();
     setState(() {
       _balance = BalanceUtil.getCacheBalance();
+    });
+    await SharedPreferenceUtil.init();
+    _opacity = await SharedPreferenceUtil.getDouble('opacity');
+    setState(() {
+      _opacity ??= Constant.VAR_DEFAULT_OPACITY;
     });
     await SQLiteUtil.init();
     await SQLiteUtil.queryCourse(widget._week, _weekday).then((onValue) {

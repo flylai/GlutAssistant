@@ -22,10 +22,12 @@ class _SettingsState extends State<Settings> {
   String _subtitlePasswordJW = '';
   String _subtitleCurrentWeek = '1';
   String _subtitleBackgroundImage = '';
+  double _subtitleOpacity = 0.7;
   bool _usingBackgroundImage = false;
   TextEditingController _studentidController = TextEditingController();
   TextEditingController _passwordJWController = TextEditingController();
   TextEditingController _currentWeekController = TextEditingController();
+  TextEditingController _opacityController = TextEditingController();
 
   Store<GlobalState> _store;
   int i = 0;
@@ -45,7 +47,7 @@ class _SettingsState extends State<Settings> {
 
   Widget _buildBackgroundImage() {
     return Container(
-        color: Colors.white.withOpacity(Constant.VAR_DEFAULT_OPACITY),
+        color: Colors.white.withOpacity(_subtitleOpacity),
         child: ListTile(
           title: Text('启用背景图'),
           subtitle: Text(_subtitleBackgroundImage),
@@ -71,7 +73,7 @@ class _SettingsState extends State<Settings> {
 
   Widget _buildCurrentWeek() {
     return Container(
-        color: Colors.white.withOpacity(Constant.VAR_DEFAULT_OPACITY),
+        color: Colors.white.withOpacity(_subtitleOpacity),
         child: ListTile(
             title: Text('当前周'),
             subtitle: Text(_subtitleCurrentWeek),
@@ -124,9 +126,44 @@ class _SettingsState extends State<Settings> {
         });
   }
 
+  Widget _buildOpacitySetting() {
+    return Container(
+        color: Colors.white.withOpacity(_subtitleOpacity),
+        child: ListTile(
+            title: Text('控件透明度'),
+            subtitle: Text(_subtitleOpacity.toString()),
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext ctx) {
+                    return AlertDialog(
+                      title: Text('透明度修改修改'),
+                      content: TextField(
+                        decoration: InputDecoration(labelText: '透明度(0.0-1.0)'),
+                        controller: _opacityController,
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('确定'),
+                          onPressed: () {
+                            setState(() {
+                              _subtitleOpacity =
+                                  double.parse(_opacityController.text.trim());
+                            });
+                            SharedPreferenceUtil.setDouble(
+                                'opacity', _subtitleOpacity);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+            }));
+  }
+
   Widget _buildPickImage() {
     return Container(
-        color: Colors.white.withOpacity(Constant.VAR_DEFAULT_OPACITY),
+        color: Colors.white.withOpacity(_subtitleOpacity),
         child: ListTile(
           title: Text('选择背景图'),
           enabled: _usingBackgroundImage,
@@ -136,7 +173,7 @@ class _SettingsState extends State<Settings> {
 
   Widget _buildPwdJW() {
     return Container(
-      color: Colors.white.withOpacity(Constant.VAR_DEFAULT_OPACITY),
+      color: Colors.white.withOpacity(_subtitleOpacity),
       child: ListTile(
           title: Text('教务处密码'),
           subtitle: Text('密码就不告诉你啦'),
@@ -183,14 +220,15 @@ class _SettingsState extends State<Settings> {
         _buildCurrentWeek(),
         _buildBackgroundImage(),
         _buildPickImage(),
-        _buildThemeSetting()
+        _buildThemeSetting(),
+        _buildOpacitySetting()
       ],
     );
   }
 
   Widget _buildStudentId() {
     return Container(
-        color: Colors.white.withOpacity(Constant.VAR_DEFAULT_OPACITY),
+        color: Colors.white.withOpacity(_subtitleOpacity),
         child: ListTile(
             title: Text('学号'),
             subtitle: Text(_subtitleStudentid),
@@ -225,7 +263,7 @@ class _SettingsState extends State<Settings> {
 
   Widget _buildThemeSetting() {
     return Container(
-        color: Colors.white.withOpacity(Constant.VAR_DEFAULT_OPACITY),
+        color: Colors.white.withOpacity(_subtitleOpacity),
         child: ListTile(
           title: Text('选择主题样式'),
           subtitle: Text('主题样式背景图是白色，与背景图冲突'),
@@ -268,6 +306,8 @@ class _SettingsState extends State<Settings> {
     _subtitleStudentid ??= '';
     _subtitleCurrentWeek = await SharedPreferenceUtil.getString('first_week');
     _subtitleCurrentWeek ??= '1';
+    _subtitleOpacity = await SharedPreferenceUtil.getDouble('opacity');
+    _subtitleOpacity ??= _subtitleOpacity;
     _usingBackgroundImage =
         await SharedPreferenceUtil.getBool('background_enable');
     _usingBackgroundImage ??= false;
@@ -276,8 +316,10 @@ class _SettingsState extends State<Settings> {
       _subtitleStudentid;
       _usingBackgroundImage;
       _subtitleCurrentWeek;
+      _subtitleOpacity;
     });
     _studentidController.text = _subtitleStudentid;
     _currentWeekController.text = _subtitleCurrentWeek;
+    _opacityController.text = _subtitleOpacity.toString();
   }
 }

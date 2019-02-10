@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:glutassistant/Utility/SQLiteUtil.dart';
+import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 class Timetable extends StatefulWidget {
   final int _week;
@@ -15,7 +16,8 @@ class Timetable extends StatefulWidget {
 }
 
 class _TimetableState extends State<Timetable> {
-  static int _preweek = 1;
+  static int _preweek = 1; //防止死循环
+  double _opacity = Constant.VAR_DEFAULT_OPACITY;
   List<Widget> mainTimetable = [];
   List<Widget> timetableMon = [];
   List<Widget> timetableTue = [];
@@ -23,7 +25,7 @@ class _TimetableState extends State<Timetable> {
   List<Widget> timetableThu = [];
   List<Widget> timetableFri = [];
   List<Widget> timetableSat = [];
-  List<Widget> timetableSun = []; //防止死循环
+  List<Widget> timetableSun = [];
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +33,10 @@ class _TimetableState extends State<Timetable> {
     return Container(child: _buildBody());
   }
 
-  Future init() async {
-    _preweek = widget._week - 1;
-    await SQLiteUtil.init();
-    await _buildTimetable(widget._week);
-  }
-
   @override
   void initState() {
     super.initState();
-    init();
+    _init();
   }
 
   Widget _buildBody() {
@@ -78,7 +74,7 @@ class _TimetableState extends State<Timetable> {
       else
         _i = i.toString();
       Container item = Container(
-        color: Colors.white,
+        color: Colors.white.withOpacity(_opacity),
         alignment: Alignment.center,
         height: Constant.VAR_COURSE_HEIGHT,
         child: Text(
@@ -137,11 +133,13 @@ class _TimetableState extends State<Timetable> {
             Container item = Container(
               padding: EdgeInsets.all(2),
               margin: EdgeInsets.fromLTRB(0.5, 0.5, 0.5, 0.5),
-              color: Color(Constant.VAR_COLOR[colorNum]).withOpacity(0.7),
+              color: Color(Constant.VAR_COLOR[colorNum]).withOpacity(_opacity),
               alignment: Alignment.topLeft,
               height: Constant.VAR_COURSE_HEIGHT * (endTime - startTime + 1),
-              child:
-                  Text('${onValue[j]['courseName']}@${onValue[j]['location']}'),
+              child: Text(
+                '${onValue[j]['courseName']}@${onValue[j]['location']}',
+                style: TextStyle(color: Colors.white),
+              ),
             );
             list[i].add(item);
             count += endTime - startTime + 1;
@@ -190,5 +188,16 @@ class _TimetableState extends State<Timetable> {
       datelist.add(wd);
     }
     return datelist;
+  }
+
+  Future _init() async {
+    _preweek = widget._week - 1;
+    await SharedPreferenceUtil.init();
+    _opacity = await SharedPreferenceUtil.getDouble('opacity');
+    setState(() {
+      _opacity ??= Constant.VAR_DEFAULT_OPACITY;
+    });
+    await SQLiteUtil.init();
+    await _buildTimetable(widget._week);
   }
 }

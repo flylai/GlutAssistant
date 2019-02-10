@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
+import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 import 'package:glutassistant/Widget/ProgressDialog.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 
@@ -15,6 +16,7 @@ class _QueryScoreState extends State<QueryScore> {
   int _selectYearValue = DateTime.now().year;
   int _selectTermValue = 2;
   bool _isLoading = false;
+  double _opacity = Constant.VAR_DEFAULT_OPACITY;
   String _cookie;
   List<Widget> scoreList = [];
 
@@ -25,7 +27,7 @@ class _QueryScoreState extends State<QueryScore> {
 
   @override
   void initState() {
-    FileUtil.init();
+    _init();
     super.initState();
   }
 
@@ -91,21 +93,23 @@ class _QueryScoreState extends State<QueryScore> {
                           .replaceAllMapped(
                               RegExp(r'.*>(\d+)<.*'), (Match m) => '${m[1]}')
                           .replaceAll('&nbsp;', '');
-                    scoreList.add(ListTile(
-                      title: Text(item['course']),
-                      subtitle: Text(item['teacher'] +
-                          (item['teacher'] == '' ? '' : '    ') +
-                          '绩点: ' +
-                          item['gpa']),
-                      trailing: Text(
-                        score,
-                        style: TextStyle(
-                            color: double.parse(item['gpa']) == 0
-                                ? Colors.red
-                                : Colors.green),
-                      ),
-                      onTap: () {},
-                    ));
+                    scoreList.add(Container(
+                        color: Colors.white.withOpacity(_opacity),
+                        child: ListTile(
+                          title: Text(item['course']),
+                          subtitle: Text(item['teacher'] +
+                              (item['teacher'] == '' ? '' : '    ') +
+                              '绩点: ' +
+                              item['gpa']),
+                          trailing: Text(
+                            score,
+                            style: TextStyle(
+                                color: double.parse(item['gpa']) == 0
+                                    ? Colors.red
+                                    : Colors.green),
+                          ),
+                          onTap: () {},
+                        )));
                   }
                 } else
                   CommonSnackBar.buildSnackBar(
@@ -174,5 +178,14 @@ class _QueryScoreState extends State<QueryScore> {
       items.add(item);
     }
     return items;
+  }
+
+  _init() async {
+    await FileUtil.init();
+    await SharedPreferenceUtil.init();
+    _opacity = await SharedPreferenceUtil.getDouble('opacity');
+    setState(() {
+      _opacity ??= Constant.VAR_DEFAULT_OPACITY;
+    });
   }
 }
