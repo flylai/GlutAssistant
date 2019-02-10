@@ -9,6 +9,10 @@ class SharedPreferenceUtil {
     return _pref.getBool(field);
   }
 
+  static Future<double> getDouble(String field) async {
+    return _pref.getDouble(field);
+  }
+
   static Future<int> getInt(String field) async {
     return _pref.getInt(field);
   }
@@ -23,6 +27,10 @@ class SharedPreferenceUtil {
 
   static Future setBool(String field, bool contents) async {
     _pref.setBool(field, contents);
+  }
+
+  static Future setDouble(String field, double contents) async {
+    _pref.setDouble(field, contents);
   }
 
   static Future setInt(String field, int contents) async {
