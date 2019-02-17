@@ -30,7 +30,6 @@ class _SettingsState extends State<Settings> {
   TextEditingController _opacityController = TextEditingController();
 
   Store<GlobalState> _store;
-  int i = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +306,7 @@ class _SettingsState extends State<Settings> {
     _subtitleCurrentWeek = await SharedPreferenceUtil.getString('first_week');
     _subtitleCurrentWeek ??= '1';
     _subtitleOpacity = await SharedPreferenceUtil.getDouble('opacity');
-    _subtitleOpacity ??= _subtitleOpacity;
+    _subtitleOpacity ??= Constant.VAR_DEFAULT_OPACITY;
     _usingBackgroundImage =
         await SharedPreferenceUtil.getBool('background_enable');
     _usingBackgroundImage ??= false;
