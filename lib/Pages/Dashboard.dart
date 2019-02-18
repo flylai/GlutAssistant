@@ -35,6 +35,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _buildBalanceArea() {
     return Card(
+        margin: EdgeInsets.fromLTRB(13, 13, 13, 3),
         color: Colors.white.withOpacity(_opacity),
         elevation: 4.0,
         child: Container(
@@ -117,6 +118,7 @@ class _DashboardState extends State<Dashboard> {
             endTimeStr = (endTime - 2).toString();
         }
         Card course = Card(
+          margin: EdgeInsets.fromLTRB(13, 13, 13, 3),
           color: Colors.white.withOpacity(_opacity),
           elevation: 4.0,
           child: Container(
@@ -183,6 +185,7 @@ class _DashboardState extends State<Dashboard> {
       }
     } else {
       todayCourseList.add(Card(
+          margin: EdgeInsets.fromLTRB(13, 13, 13, 3),
           color: Colors.white.withOpacity(_opacity),
           elevation: 4.0,
           child: Container(
