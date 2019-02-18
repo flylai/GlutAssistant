@@ -141,7 +141,65 @@ class _TimetableState extends State<Timetable> {
                 style: TextStyle(color: Colors.white),
               ),
             );
-            list[i].add(item);
+            GestureDetector x = GestureDetector(
+              child: item,
+              onTap: () async {
+                List<Map<String, dynamic>> courselist =
+                    await SQLiteUtil.queryCourseByTime(week, i + 1,
+                        onValue[j]['startTime'], onValue[j]['endTime']);
+                List<Widget> courselist_widget = [];
+                print(courselist);
+                for (int k = 0; k < courselist.length; k++) {
+                  Container course = Container(
+                    margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                    padding: EdgeInsets.all(7),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.blue)),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.book),
+                            Text(courselist[k]['courseName'])
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.person),
+                            Text(courselist[k]['teacher'])
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.location_on),
+                            Text(courselist[k]['location'])
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.access_time),
+                            Text(
+                                "${courselist[k]['startWeek']} - ${courselist[k]['endWeek']}周")
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                  courselist_widget.add(course);
+                }
+                showDialog(
+                    context: context,
+                    builder: (BuildContext ctx) {
+                      return Dialog(
+                          child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: courselist_widget,
+                      ));
+                    });
+              },
+            );
+
+            list[i].add(x);
             count += endTime - startTime + 1;
           }
         } else {
