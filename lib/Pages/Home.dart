@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:glutassistant/Common/Constant.dart';
+import 'package:glutassistant/Pages/About.dart';
 import 'package:glutassistant/Pages/Dashboard.dart';
 import 'package:glutassistant/Pages/ImportTimetable.dart';
 import 'package:glutassistant/Pages/Login.dart';
@@ -199,13 +200,14 @@ class _HomeState extends State<Home> {
         return ImportTimetable();
       case 6:
         return Login();
-        break;
       case 8:
         return Settings();
+      case 10:
+        return About();
       default:
         break;
     }
-    return Dashboard(_currentWeek);
+    // return Dashboard(_currentWeek);
   }
 
   _init() async {
@@ -219,6 +221,7 @@ class _HomeState extends State<Home> {
         await SharedPreferenceUtil.getString('first_week_timestamp');
     _firstWeekTimestamp ??= '1';
     _themeIndex = await SharedPreferenceUtil.getInt('theme_color');
+    _themeIndex ??= 9;
     _store.dispatch(
         RefreshColorAction(Constant.THEME_LIST_COLOR[_themeIndex][1]));
     _backgroundImageEnable =
