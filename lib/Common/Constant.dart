@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Constant {
   static final String FILE_SESSION = "Session";
   static final String FILE_DATA_CAIWU = "caiwu_data";
-  static final String File_DB = "db.db3";
+  static final String FILE_DB = "db.db3";
   static final String FILE_BACKGROUND_IMG = "background";
 
   static final String VAR_COOKIE = ";x=1;";
@@ -55,7 +55,6 @@ class Constant {
       "http://cwjf.glut.edu.cn/interface/login";
   static final String URL_CAIWU_INTERFACE =
       "http://cwjf.glut.edu.cn/interface/index";
-
 
   static final DRAWER_GENERAL_LIST = [
     ['常用', Icons.book],

@@ -141,7 +141,7 @@ class _TimetableState extends State<Timetable> {
                 style: TextStyle(color: Colors.white),
               ),
             );
-            GestureDetector x = GestureDetector(
+            GestureDetector itemTap = GestureDetector(
               child: item,
               onTap: () async {
                 List<Map<String, dynamic>> courselist =
@@ -199,7 +199,7 @@ class _TimetableState extends State<Timetable> {
               },
             );
 
-            list[i].add(x);
+            list[i].add(itemTap);
             count += endTime - startTime + 1;
           }
         } else {
