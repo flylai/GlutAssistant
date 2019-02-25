@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 
 class SQLiteUtil {
   static final int _dbVersion = Constant.DB_VERSION;
-  static final String _dbFileName = Constant.File_DB;
+  static final String _dbFileName = Constant.FILE_DB;
   static final String _dbTableName = Constant.VAR_TABLE_NAME;
   static String _dbPath;
   static Database _db;
