@@ -8,6 +8,7 @@ import 'package:glutassistant/Pages/About.dart';
 import 'package:glutassistant/Pages/Dashboard.dart';
 import 'package:glutassistant/Pages/ImportTimetable.dart';
 import 'package:glutassistant/Pages/Login.dart';
+import 'package:glutassistant/Pages/QueryExaminationLocation.dart';
 import 'package:glutassistant/Pages/QueryScore.dart';
 import 'package:glutassistant/Pages/Settings.dart';
 import 'package:glutassistant/Pages/Timetable.dart';
@@ -195,7 +196,7 @@ class _HomeState extends State<Home> {
       case 3:
         return QueryScore();
       case 4:
-        break;
+        return QueryExaminationLocation();
       case 5:
         return ImportTimetable();
       case 6:
