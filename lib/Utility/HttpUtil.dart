@@ -230,6 +230,44 @@ class HttpUtil {
     }
   }
 
+  static queryExaminationLocation(String cookie, Function callback) async {
+    var head = {'cookie': cookie};
+    try {
+      var response = await http
+          .get(Constant.URL_QUERY_EXAMINATION_LOCATION, headers: head)
+          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
+      List<Map> examList = new List();
+      String html = decodeGbk(response.bodyBytes)
+          .replaceAll(RegExp(r'\s'), '')
+          .replaceAll('&nbsp;', '');
+      RegExp examHTMLExp =
+          RegExp(r'class="infolist_tab">(.*?)</table>', caseSensitive: false);
+      Iterable<Match> examHTMLMatches = examHTMLExp.allMatches(html);
+      RegExp examDetailExp = RegExp(
+          r'class="infolist_common"><td>(\d+?)</td><td>(.*?)</td><td>(\d{4}-\d{2}-\d{2})(\d{2}:\d{2}--\d{2}:\d{2})</td><td>(.*?)</td><!--<td></td>--><td>(.*?)</td>',
+          caseSensitive: false);
+      if (examHTMLMatches.length > 0) {
+        Iterable<Match> examDetailMatches =
+            examDetailExp.allMatches(examHTMLMatches.first.group(0));
+        for (var examDetail in examDetailMatches) {
+          //1课程号 2课程名 3考试时间(天) 4考试时间(区间) 5考试地点 6考核方式
+          Map<String, dynamic> exam = {};
+          exam['course'] = examDetail.group(2);
+          exam['datetime'] = examDetail.group(3);
+          exam['interval'] = examDetail.group(4);
+          exam['location'] = examDetail.group(5);
+          exam['type'] = examDetail.group(6);
+          examList.add(exam);
+        }
+        callback({'success': true, 'data': examList});
+      } else {
+        callback({'success': false, 'data': ''});
+      }
+    } catch (e) {
+      callback({'success': false, 'data': e});
+    }
+  }
+
   static queryScore(
       String year, String term, String cookie, Function callback) async {
     int _year = int.parse(year) - 1980;
