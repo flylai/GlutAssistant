@@ -37,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
     return Card(
         margin: EdgeInsets.fromLTRB(13, 13, 13, 3),
         color: Colors.white.withOpacity(_opacity),
-        elevation: 4.0,
+        elevation: 2.0,
         child: Container(
             margin: EdgeInsets.all(10),
             height: 80,
@@ -120,7 +120,7 @@ class _DashboardState extends State<Dashboard> {
         Card course = Card(
           margin: EdgeInsets.fromLTRB(13, 13, 13, 3),
           color: Colors.white.withOpacity(_opacity),
-          elevation: 4.0,
+          elevation: 2.0,
           child: Container(
             margin: EdgeInsets.all(20),
             height: 60,
@@ -187,7 +187,7 @@ class _DashboardState extends State<Dashboard> {
       todayCourseList.add(Card(
           margin: EdgeInsets.fromLTRB(13, 13, 13, 3),
           color: Colors.white.withOpacity(_opacity),
-          elevation: 4.0,
+          elevation: 2.0,
           child: Container(
             alignment: Alignment.center,
             margin: EdgeInsets.all(20),
