@@ -89,13 +89,14 @@ class HttpUtil {
                 if (int.parse(timeByDot[1]) - int.parse(timeByDot[0]) == 1) {
                   startTime = int.parse(timeByDot[0]);
                   endTime = int.parse(timeByDot[1]);
-                } else {
-                  if (timeByHyphen.length > 1) {
-                    startTime = int.parse(timeByHyphen[0]);
-                    endTime = int.parse(timeByHyphen[1]);
-                  }
+                }
+              } else {
+                if (timeByHyphen.length > 1) {
+                  startTime = int.parse(timeByHyphen[0]);
+                  endTime = int.parse(timeByHyphen[1]);
                 }
               }
+
               //对5,6节特殊处理 变7 8节
               startTime = (startTime >= 5 && startTime <= 16)
                   ? (startTime + 2)
