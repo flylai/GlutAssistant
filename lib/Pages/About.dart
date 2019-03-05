@@ -35,9 +35,10 @@ class About extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.update),
                   onTap: () {
-                    checkUpdateByCoolapk();
+                    _checkUpdateByCoolapk();
                   },
                   title: Text('检查更新'),
+                  trailing: Icon(Icons.keyboard_arrow_right),
                 ),
               ],
             ),
@@ -59,7 +60,7 @@ class About extends StatelessWidget {
     );
   }
 
-  checkUpdateByCoolapk() async {
+  _checkUpdateByCoolapk() async {
     const url = 'https://www.coolapk.com/apk/com.lkm.glutassistant';
     if (await canLaunch(url)) {
       await launch(url);
