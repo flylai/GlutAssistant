@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/BalanceUtil.dart';
 import 'package:glutassistant/Utility/SQLiteUtil.dart';
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
+import 'package:glutassistant/Widget/DetailCard.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -34,59 +37,59 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildBalanceArea() {
-    return Card(
-        margin: EdgeInsets.fromLTRB(13, 13, 13, 3),
-        color: Colors.white.withOpacity(_opacity),
-        elevation: 2.0,
-        child: Container(
-            margin: EdgeInsets.all(10),
-            height: 80,
-            width: double.infinity,
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  child: Text('一卡通余额'),
+    Widget child = Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Positioned(
+          top: 0,
+          left: 0,
+          child: Text('一卡通余额', style: TextStyle(color: Colors.white)),
+        ),
+        _buildBalanceText(),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: Row(
+            children: <Widget>[
+              Text(
+                '${_balance['lastupdate']}',
+                style: TextStyle(color: Colors.white),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  BalanceUtil.refreshBalance().then((onValue) {
+                    setState(() {
+                      _balance = onValue;
+                    });
+                    CommonSnackBar.buildSnackBar(context, _balance['msg']);
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  });
+                },
+                child: Icon(
+                  Icons.sync,
+                  color: Colors.white,
                 ),
-                _buildBalanceText(),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Row(
-                    children: <Widget>[
-                      Text('${_balance['lastupdate']}'),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          BalanceUtil.refreshBalance().then((onValue) {
-                            setState(() {
-                              _balance = onValue;
-                            });
-                            CommonSnackBar.buildSnackBar(
-                                context, _balance['msg']);
-                            setState(() {
-                              _isLoading = false;
-                            });
-                          });
-                        },
-                        child: Icon(Icons.sync),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            )));
+              )
+            ],
+          ),
+        )
+      ],
+    );
+    Color color = Color(
+        Constant.VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
+    return DetailCard(color, child);
   }
 
   Widget _buildBalanceText() {
     if (_isLoading) return CircularProgressIndicator();
     return Text(
       '￥${_balance['balance']}',
-      style: TextStyle(fontSize: 40, color: Color(0xff262626)),
+      style: TextStyle(fontSize: 40, color: Colors.white),
     );
   }
 
@@ -117,86 +120,73 @@ class _DashboardState extends State<Dashboard> {
           else
             endTimeStr = (endTime - 2).toString();
         }
-        Card course = Card(
-          margin: EdgeInsets.fromLTRB(13, 13, 13, 3),
-          color: Colors.white.withOpacity(_opacity),
-          elevation: 2.0,
-          child: Container(
-            margin: EdgeInsets.all(20),
-            height: 60,
-            width: double.infinity,
-            child: Row(
-              children: <Widget>[
-                Container(
-                    padding: EdgeInsets.fromLTRB(1, 0, 10, 0),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.access_time,
-                          color: Color(0xff4090f7),
-                          size: 25,
-                        ),
-                        Text(
-                          '$startTimeStr - $endTimeStr节',
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
-                    )),
-                Expanded(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Widget child = Row(
+          children: <Widget>[
+            Container(
+                padding: EdgeInsets.fromLTRB(1, 0, 10, 0),
+                child: Row(
                   children: <Widget>[
-                    Container(
-                      child: Row(children: <Widget>[
-                        Icon(
-                          Icons.class_,
-                          color: Color(0xff4090f7),
-                          size: 25,
-                        ),
-                        Expanded(
-                            child: Text(
-                          _courseList[i]['course'],
-                          style: TextStyle(fontSize: 20),
-                          overflow: TextOverflow.ellipsis,
-                        ))
-                      ]),
+                    Icon(
+                      Icons.access_time,
+                      color: Color(0xff4090f7),
+                      size: 25,
                     ),
-                    Container(
-                      child: Row(children: <Widget>[
-                        Icon(
-                          Icons.location_on,
-                          color: Color(0xff4090f7),
-                          size: 25,
-                        ),
-                        Text(
-                          _courseList[i]['location'],
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ]),
+                    Text(
+                      '$startTimeStr - $endTimeStr节',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
                     )
                   ],
-                ))
+                )),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  child: Row(children: <Widget>[
+                    Icon(
+                      Icons.class_,
+                      color: Color(0xff4090f7),
+                      size: 25,
+                    ),
+                    Expanded(
+                        child: Text(
+                      _courseList[i]['course'],
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                    ))
+                  ]),
+                ),
+                Container(
+                  child: Row(children: <Widget>[
+                    Icon(
+                      Icons.location_on,
+                      color: Color(0xff4090f7),
+                      size: 25,
+                    ),
+                    Text(
+                      _courseList[i]['location'],
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    )
+                  ]),
+                )
               ],
-            ),
-          ),
+            ))
+          ],
         );
+        Color color = Color(Constant
+            .VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
+        DetailCard course = DetailCard(color, child);
         todayCourseList.add(course);
       }
     } else {
-      todayCourseList.add(Card(
-          margin: EdgeInsets.fromLTRB(13, 13, 13, 3),
-          color: Colors.white.withOpacity(_opacity),
-          elevation: 2.0,
-          child: Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.all(20),
-            height: 60,
-            width: double.infinity,
-            child: Text(
-              '今天没有课上哦(๑˙ー˙๑)',
-              style: TextStyle(fontSize: 20),
-            ),
+      Color color = Color(Constant
+          .VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
+      todayCourseList.add(DetailCard(
+          color,
+          Text(
+            '今天没有课上哦(๑˙ー˙๑)',
+            style: TextStyle(fontSize: 20),
           )));
     }
     return todayCourseList;

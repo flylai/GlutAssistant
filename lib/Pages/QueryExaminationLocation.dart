@@ -6,6 +6,7 @@ import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
+import 'package:glutassistant/Widget/DetailCard.dart';
 import 'package:glutassistant/Widget/ProgressDialog.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 
@@ -54,54 +55,47 @@ class _QueryExaminationLocationState extends State<QueryExaminationLocation> {
     for (var exam in examListData) {
       Color color = Color(Constant
           .VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
-      examWidgetList.add(Card(
-          margin: EdgeInsets.fromLTRB(13, 13, 13, 3),
-          color: color.withOpacity(_opacity),
-          elevation: 2.0,
-          child: Container(
-              margin: EdgeInsets.all(10),
-              height: 80,
-              width: double.infinity,
-              child: Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    child: Text('${exam['course']}',
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('还有 ', style: TextStyle(color: Colors.white)),
-                      Text(
-                        '${(DateTime.parse(exam['datetime']).millisecondsSinceEpoch ~/ 1000 - timestamps) ~/ 86400}',
-                        style: TextStyle(color: Colors.red, fontSize: 25),
-                      ),
-                      Text(' 天', style: TextStyle(color: Colors.white)),
-                    ],
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    child: Text('${exam['datetime']} ${exam['interval']}',
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: Text('${exam['type']}',
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Text('${exam['location']}',
-                        style: TextStyle(color: Colors.white)),
-                  )
-                ],
-              ))));
+      Widget child = Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Text('${exam['course']}',
+                style: TextStyle(color: Colors.white)),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('还有 ', style: TextStyle(color: Colors.white)),
+              Text(
+                '${(DateTime.parse(exam['datetime']).millisecondsSinceEpoch ~/ 1000 - timestamps) ~/ 86400}',
+                style: TextStyle(color: Colors.red, fontSize: 25),
+              ),
+              Text(' 天', style: TextStyle(color: Colors.white)),
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Text('${exam['datetime']} ${exam['interval']}',
+                style: TextStyle(color: Colors.white)),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child:
+                Text('${exam['type']}', style: TextStyle(color: Colors.white)),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Text('${exam['location']}',
+                style: TextStyle(color: Colors.white)),
+          )
+        ],
+      );
+      examWidgetList.add(DetailCard(color, child));
     }
     setState(() {
       examList = examWidgetList;
