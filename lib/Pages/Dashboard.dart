@@ -184,10 +184,10 @@ class _DashboardState extends State<Dashboard> {
           .VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
       todayCourseList.add(DetailCard(
           color,
-          Text(
-            '今天没有课上哦(๑˙ー˙๑)',
-            style: TextStyle(fontSize: 20),
-          )));
+          Container(
+              alignment: Alignment.center,
+              child: Text('今天没有课上哦(๑˙ー˙๑)',
+                  style: TextStyle(fontSize: 20, color: Colors.white)))));
     }
     return todayCourseList;
   }
