@@ -179,7 +179,10 @@ class _HomeState extends State<Home> {
           child: Container(
             color: i + 1 == _selectWeek ? Color(0xFFFC0484) : Colors.white,
             alignment: Alignment.center,
-            child: Text((i + 1).toString()),
+            child: Text((i + 1).toString(),
+                style: TextStyle(
+                  color: i + 1 == _selectWeek ? Colors.white : Colors.black,
+                )),
           ),
         ),
       ));
