@@ -147,7 +147,7 @@ class _TimetableState extends State<Timetable> {
                 List<Map<String, dynamic>> courselist =
                     await SQLiteUtil.queryCourseByTime(week, i + 1,
                         onValue[j]['startTime'], onValue[j]['endTime']);
-                List<Widget> courselist_widget = [];
+                List<Widget> courselistwidget = [];
                 print(courselist);
                 for (int k = 0; k < courselist.length; k++) {
                   Container course = Container(
@@ -185,7 +185,7 @@ class _TimetableState extends State<Timetable> {
                       ],
                     ),
                   );
-                  courselist_widget.add(course);
+                  courselistwidget.add(course);
                 }
                 showDialog(
                     context: context,
@@ -193,7 +193,7 @@ class _TimetableState extends State<Timetable> {
                       return Dialog(
                           child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        children: courselist_widget,
+                        children: courselistwidget,
                       ));
                     });
               },
