@@ -22,7 +22,7 @@ class _SettingsState extends State<Settings> {
   String _subtitlePasswordJW = '';
   String _subtitleCurrentWeek = '1';
   String _subtitleBackgroundImage = '';
-  double _subtitleOpacity = 0.7;
+  double _subtitleOpacity = Constant.VAR_DEFAULT_OPACITY;
   bool _usingBackgroundImage = false;
   TextEditingController _studentidController = TextEditingController();
   TextEditingController _passwordJWController = TextEditingController();

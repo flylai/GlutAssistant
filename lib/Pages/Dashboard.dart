@@ -82,7 +82,11 @@ class _DashboardState extends State<Dashboard> {
     );
     Color color = Color(
         Constant.VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
-    return DetailCard(color, child);
+    return DetailCard(
+      color,
+      child,
+      opacity: _opacity,
+    );
   }
 
   Widget _buildBalanceText() {
@@ -176,32 +180,34 @@ class _DashboardState extends State<Dashboard> {
         );
         Color color = Color(Constant
             .VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
-        DetailCard course = DetailCard(color, child);
+        DetailCard course = DetailCard(
+          color,
+          child,
+          opacity: _opacity,
+        );
         todayCourseList.add(course);
       }
     } else {
       Color color = Color(Constant
           .VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
       todayCourseList.add(DetailCard(
-          color,
-          Container(
-              alignment: Alignment.center,
-              child: Text('今天没有课上哦(๑˙ー˙๑)',
-                  style: TextStyle(fontSize: 20, color: Colors.white)))));
+        color,
+        Container(
+            alignment: Alignment.center,
+            child: Text('今天没有课上哦(๑˙ー˙๑)',
+                style: TextStyle(fontSize: 20, color: Colors.white))),
+        opacity: _opacity,
+      ));
     }
     return todayCourseList;
   }
 
   void _init() async {
     await BalanceUtil.init();
-    setState(() {
-      _balance = BalanceUtil.getCacheBalance();
-    });
     await SharedPreferenceUtil.init();
     _opacity = await SharedPreferenceUtil.getDouble('opacity');
-    setState(() {
-      _opacity ??= Constant.VAR_DEFAULT_OPACITY;
-    });
+    _opacity ??= Constant.VAR_DEFAULT_OPACITY;
+
     await SQLiteUtil.init();
     await SQLiteUtil.queryCourse(widget._week, _weekday).then((onValue) {
       if (onValue.length > 0) {
@@ -215,7 +221,9 @@ class _DashboardState extends State<Dashboard> {
         }
       }
       setState(() {
+        _balance = BalanceUtil.getCacheBalance();
         _courseList;
+        _opacity;
       });
     });
   }

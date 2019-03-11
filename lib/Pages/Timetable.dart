@@ -17,6 +17,7 @@ class Timetable extends StatefulWidget {
 }
 
 class _TimetableState extends State<Timetable> {
+  //TODO: 界面和逻辑写法有点问题，得优化甚至重写
   static int _preweek = 1; //防止死循环
   double _opacity = Constant.VAR_DEFAULT_OPACITY;
   List<Widget> mainTimetable = [];
@@ -47,7 +48,6 @@ class _TimetableState extends State<Timetable> {
         Expanded(
           child: GestureDetector(
               onHorizontalDragEnd: (value) {
-                print(value);
                 if (value.velocity.pixelsPerSecond.dx > 1000 &&
                     widget._week - 1 > 0) widget.callback(widget._week - 1);
                 if (value.velocity.pixelsPerSecond.dx < -1000 &&
@@ -261,10 +261,11 @@ class _TimetableState extends State<Timetable> {
     _preweek = widget._week - 1;
     await SharedPreferenceUtil.init();
     _opacity = await SharedPreferenceUtil.getDouble('opacity');
-    setState(() {
-      _opacity ??= Constant.VAR_DEFAULT_OPACITY;
-    });
+    _opacity ??= Constant.VAR_DEFAULT_OPACITY;
     await SQLiteUtil.init();
     await _buildTimetable(widget._week);
+    setState(() {
+      _opacity;
+    });
   }
 }
