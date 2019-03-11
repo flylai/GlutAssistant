@@ -95,7 +95,7 @@ class _QueryExaminationLocationState extends State<QueryExaminationLocation> {
           )
         ],
       );
-      examWidgetList.add(DetailCard(color, child));
+      examWidgetList.add(DetailCard(color, child, opacity: _opacity));
     }
     setState(() {
       examList = examWidgetList;
