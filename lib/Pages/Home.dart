@@ -195,7 +195,11 @@ class _HomeState extends State<Home> {
       case 1:
         return Dashboard(_currentWeek);
       case 2:
-        return Timetable(_selectWeek);
+        return Timetable(_selectWeek, callback: (val) {
+          setState(() {
+            _selectWeek = val;
+          });
+        });
       case 3:
         return QueryScore();
       case 4:

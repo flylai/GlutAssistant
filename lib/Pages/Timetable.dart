@@ -10,7 +10,8 @@ import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 class Timetable extends StatefulWidget {
   final int _week;
-  Timetable(this._week);
+  final callback;
+  Timetable(this._week, {this.callback});
   @override
   _TimetableState createState() => _TimetableState();
 }
@@ -44,14 +45,22 @@ class _TimetableState extends State<Timetable> {
       children: <Widget>[
         _buildDateList(),
         Expanded(
-          child: ListView(
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: mainTimetable,
-              )
-            ],
-          ),
+          child: GestureDetector(
+              onHorizontalDragEnd: (value) {
+                print(value);
+                if (value.velocity.pixelsPerSecond.dx > 1000 &&
+                    widget._week - 1 > 0) widget.callback(widget._week - 1);
+                if (value.velocity.pixelsPerSecond.dx < -1000 &&
+                    widget._week + 1 < 26) widget.callback(widget._week + 1);
+              },
+              child: ListView(
+                children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: mainTimetable,
+                  )
+                ],
+              )),
         )
       ],
     );
