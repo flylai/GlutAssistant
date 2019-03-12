@@ -9,9 +9,10 @@ import 'package:glutassistant/Utility/SQLiteUtil.dart';
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 class Timetable extends StatefulWidget {
-  final int _week;
+  final int _selectWeek;
+  final int _currentWeek;
   final callback;
-  Timetable(this._week, {this.callback});
+  Timetable(this._currentWeek, this._selectWeek, {this.callback});
   @override
   _TimetableState createState() => _TimetableState();
 }
@@ -31,7 +32,7 @@ class _TimetableState extends State<Timetable> {
 
   @override
   Widget build(BuildContext context) {
-    _buildTimetable(widget._week);
+    _buildTimetable(widget._selectWeek);
     return Container(child: _buildBody());
   }
 
@@ -49,9 +50,11 @@ class _TimetableState extends State<Timetable> {
           child: GestureDetector(
               onHorizontalDragEnd: (value) {
                 if (value.velocity.pixelsPerSecond.dx > 1000 &&
-                    widget._week - 1 > 0) widget.callback(widget._week - 1);
+                    widget._selectWeek - 1 > 0)
+                  widget.callback(widget._selectWeek - 1);
                 if (value.velocity.pixelsPerSecond.dx < -1000 &&
-                    widget._week + 1 < 26) widget.callback(widget._week + 1);
+                    widget._selectWeek + 1 < 26)
+                  widget.callback(widget._selectWeek + 1);
               },
               child: ListView(
                 children: <Widget>[
@@ -121,7 +124,7 @@ class _TimetableState extends State<Timetable> {
     for (int i = 0; i < 7; i++) {
       list[i].clear();
       int count = 1;
-      await SQLiteUtil.queryCourse(widget._week, i + 1).then((onValue) {
+      await SQLiteUtil.queryCourse(widget._selectWeek, i + 1).then((onValue) {
         if (onValue.length > 0) {
           for (int j = 0; j < onValue.length; j++) {
             int startTime = onValue[j]['startTime'];
@@ -157,7 +160,6 @@ class _TimetableState extends State<Timetable> {
                     await SQLiteUtil.queryCourseByTime(week, i + 1,
                         onValue[j]['startTime'], onValue[j]['endTime']);
                 List<Widget> courselistwidget = [];
-                print(courselist);
                 for (int k = 0; k < courselist.length; k++) {
                   Container course = Container(
                     margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
@@ -231,10 +233,12 @@ class _TimetableState extends State<Timetable> {
 
   List<Widget> _gernerateDateText() {
     int weekday = DateTime.now().weekday;
-    DateTime day = DateTime.now().subtract(Duration(days: weekday));
+    DateTime day = DateTime.now()
+        .add(Duration(days: (widget._selectWeek - widget._currentWeek) * 7))
+        .subtract(Duration(days: weekday));
     List<Widget> datelist = [];
     var month = Expanded(
-      child: Text('${DateTime.now().month.toString()}\n月',
+      child: Text('${day.add(Duration(days: weekday)).month}\n月',
           textAlign: TextAlign.center),
       flex: 1,
     );
@@ -258,12 +262,12 @@ class _TimetableState extends State<Timetable> {
   }
 
   Future _init() async {
-    _preweek = widget._week - 1;
+    _preweek = widget._selectWeek - 1;
     await SharedPreferenceUtil.init();
     _opacity = await SharedPreferenceUtil.getDouble('opacity');
     _opacity ??= Constant.VAR_DEFAULT_OPACITY;
     await SQLiteUtil.init();
-    await _buildTimetable(widget._week);
+    await _buildTimetable(widget._selectWeek);
     setState(() {
       _opacity;
     });
