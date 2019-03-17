@@ -114,6 +114,8 @@ class _HomeState extends State<Home> {
   Widget _buildAppBarTitle() {
     if (_selectIndex != 2)
       return Text(Constant.DRAWER_LIST[_selectIndex][0]);
+    else if (_currentWeek != _selectWeek)
+      return Text('第$_selectWeek周(非本周)');
     else
       return Text('第$_selectWeek周');
   }
