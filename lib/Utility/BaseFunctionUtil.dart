@@ -38,6 +38,6 @@ class BaseFunctionUtil {
       case 7:
         return '周日';
     }
-    return '周一';
+    return '未知';
   }
 }
