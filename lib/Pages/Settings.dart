@@ -300,11 +300,20 @@ class _SettingsState extends State<Settings> {
   }
 
   _init() async {
+    String _firstWeekTimestamp =
+        await SharedPreferenceUtil.getString('first_week_timestamp');
     await SharedPreferenceUtil.init();
     _subtitleStudentid = await SharedPreferenceUtil.getString('student_id');
     _subtitleStudentid ??= '';
+
+    _firstWeekTimestamp ??= '1';
     _subtitleCurrentWeek = await SharedPreferenceUtil.getString('first_week');
     _subtitleCurrentWeek ??= '1';
+    _subtitleCurrentWeek = ((DateTime.now().millisecondsSinceEpoch ~/ 1000 -
+                    int.parse(_firstWeekTimestamp)) ~/
+                604800 +
+            int.parse(_subtitleCurrentWeek))
+        .toString();
     _subtitleOpacity = await SharedPreferenceUtil.getDouble('opacity');
     _subtitleOpacity ??= Constant.VAR_DEFAULT_OPACITY;
     _usingBackgroundImage =
