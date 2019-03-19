@@ -237,10 +237,15 @@ class _HomeState extends State<Home> {
     _backgroundImageEnable =
         await SharedPreferenceUtil.getBool('background_enable');
     _backgroundImageEnable ??= false;
-    _currentWeek = (DateTime.now().millisecondsSinceEpoch ~/ 1000 -
-                int.parse(_firstWeekTimestamp)) ~/
-            604800 +
-        int.parse(_firstWeek);
+    DateTime _now = DateTime.now();
+    DateTime _weekStart = DateTime(_now.year, _now.month, _now.day)
+        .subtract(Duration(days: _now.weekday - 1));
+    _currentWeek =
+        (((_weekStart.millisecondsSinceEpoch / 1000 - int.parse(_firstWeekTimestamp)) ~/
+                            25200 /
+                    24)
+                .ceil() +
+            int.parse(_firstWeek));
     setState(() {
       _currentWeek = _currentWeek > 25 ? 1 : _currentWeek;
     });

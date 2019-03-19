@@ -309,9 +309,14 @@ class _SettingsState extends State<Settings> {
     _firstWeekTimestamp ??= '1';
     _subtitleCurrentWeek = await SharedPreferenceUtil.getString('first_week');
     _subtitleCurrentWeek ??= '1';
-    _subtitleCurrentWeek = ((DateTime.now().millisecondsSinceEpoch ~/ 1000 -
-                    int.parse(_firstWeekTimestamp)) ~/
-                604800 +
+    DateTime _now = DateTime.now();
+    DateTime _weekStart = DateTime(_now.year, _now.month, _now.day)
+        .subtract(Duration(days: _now.weekday - 1));
+    _subtitleCurrentWeek = (((_weekStart.millisecondsSinceEpoch / 1000 -
+                        int.parse(_firstWeekTimestamp)) ~/
+                    25200 /
+                    24)
+                .ceil() +
             int.parse(_subtitleCurrentWeek))
         .toString();
     _subtitleOpacity = await SharedPreferenceUtil.getDouble('opacity');
