@@ -249,7 +249,7 @@ class _TimetableState extends State<Timetable> {
       String todayStr = today == DateTime.now().day ? '今天' : today.toString();
       var wd = Expanded(
         child: Text(
-          '${BaseFunctionUtil.getWeekdayByNum(i)}\n$todayStr',
+          '周${BaseFunctionUtil.getWeekdayByNum(i)}\n$todayStr',
           style: TextStyle(
               color: todayStr == '今天' ? Color(0xffEF3473) : Colors.black),
           textAlign: TextAlign.center,
