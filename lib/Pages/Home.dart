@@ -179,7 +179,7 @@ class _HomeState extends State<Home> {
             Navigator.pop(context);
           },
           child: Container(
-            color: i + 1 == _selectWeek ? Color(0xFFFC0484) : Colors.white,
+            color: i + 1 == _selectWeek ? Color(0xFFFC0484) : null,
             alignment: Alignment.center,
             child: Text((i + 1).toString(),
                 style: TextStyle(
@@ -238,14 +238,14 @@ class _HomeState extends State<Home> {
         await SharedPreferenceUtil.getBool('background_enable');
     _backgroundImageEnable ??= false;
     DateTime _now = DateTime.now();
-    DateTime _weekStart = DateTime(_now.year, _now.month, _now.day)
+    DateTime _startWeek = DateTime(_now.year, _now.month, _now.day)
         .subtract(Duration(days: _now.weekday - 1));
-    _currentWeek =
-        (((_weekStart.millisecondsSinceEpoch / 1000 - int.parse(_firstWeekTimestamp)) ~/
-                            25200 /
-                    24)
-                .ceil() +
-            int.parse(_firstWeek));
+    _currentWeek = (((_startWeek.millisecondsSinceEpoch / 1000 -
+                    int.parse(_firstWeekTimestamp)) ~/
+                25200 /
+                24)
+            .ceil() +
+        int.parse(_firstWeek));
     setState(() {
       _currentWeek = _currentWeek > 25 ? 1 : _currentWeek;
     });
