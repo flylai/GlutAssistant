@@ -310,9 +310,9 @@ class _SettingsState extends State<Settings> {
     _subtitleCurrentWeek = await SharedPreferenceUtil.getString('first_week');
     _subtitleCurrentWeek ??= '1';
     DateTime _now = DateTime.now();
-    DateTime _weekStart = DateTime(_now.year, _now.month, _now.day)
+    DateTime _startWeek = DateTime(_now.year, _now.month, _now.day)
         .subtract(Duration(days: _now.weekday - 1));
-    _subtitleCurrentWeek = (((_weekStart.millisecondsSinceEpoch / 1000 -
+    _subtitleCurrentWeek = (((_startWeek.millisecondsSinceEpoch / 1000 -
                         int.parse(_firstWeekTimestamp)) ~/
                     25200 /
                     24)
