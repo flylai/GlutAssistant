@@ -21,6 +21,17 @@ class BaseFunctionUtil {
     return 0;
   }
 
+  static String getTimeByNum(int i) {
+    String _i;
+    if (i > 4 && i < 7)
+      _i = '中午${i - 4}';
+    else if (i > 6)
+      _i = (i - 2).toString();
+    else
+      _i = i.toString();
+    return _i;
+  }
+
   static String getWeekdayByNum(int weekday) {
     switch (weekday) {
       case 1:

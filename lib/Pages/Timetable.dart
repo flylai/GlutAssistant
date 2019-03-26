@@ -78,19 +78,12 @@ class _TimetableState extends State<Timetable> {
   Widget _buildLeftTimeList() {
     List<Widget> timelist = [];
     for (int i = 1; i < 15; i++) {
-      String _i;
-      if (i > 4 && i < 7)
-        _i = '中午${i - 4}';
-      else if (i > 6)
-        _i = (i - 2).toString();
-      else
-        _i = i.toString();
       Container item = Container(
         color: Colors.white.withOpacity(_opacity),
         alignment: Alignment.center,
         height: Constant.VAR_COURSE_HEIGHT,
         child: Text(
-          _i,
+          BaseFunctionUtil.getTimeByNum(i),
           textAlign: TextAlign.center,
         ),
       );

@@ -7,6 +7,7 @@ import 'package:glutassistant/Utility/SQLiteUtil.dart';
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 import 'package:glutassistant/Widget/DetailCard.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
+import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 
 class Dashboard extends StatefulWidget {
   final int _week;
@@ -110,20 +111,8 @@ class _DashboardState extends State<Dashboard> {
       for (int i = 0; i < _courseList.length; i++) {
         int startTime = _courseList[i]['startTime'];
         int endTime = _courseList[i]['endTime'];
-        String startTimeStr = startTime.toString();
-        String endTimeStr = endTime.toString();
-        if (startTime > 4) {
-          if (startTime >= 5 && startTime <= 6)
-            startTimeStr = '中午' + (startTime - 4).toString();
-          else
-            startTimeStr = (startTime - 2).toString();
-        }
-        if (endTime > 4) {
-          if (endTime >= 5 && endTime <= 6)
-            endTimeStr = '中午' + (endTime - 4).toString();
-          else
-            endTimeStr = (endTime - 2).toString();
-        }
+        String startTimeStr = BaseFunctionUtil.getTimeByNum(startTime);
+        String endTimeStr = BaseFunctionUtil.getTimeByNum(endTime);
         Widget child = Row(
           children: <Widget>[
             Container(
