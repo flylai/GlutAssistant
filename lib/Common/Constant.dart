@@ -11,7 +11,7 @@ class Constant {
   static final int VAR_HTTP_TIMEOUT_MS = 6000;
   static final double VAR_COURSE_HEIGHT = 63.0;
   static final double VAR_DEFAULT_OPACITY = 0.7;
-  static final String VAR_VERSION = '1.0';
+  static final String VAR_VERSION = '1.1';
   static final List<int> VAR_COLOR = [
     0x5CB3CC,
     0x4F383E,
@@ -68,6 +68,7 @@ class Constant {
   static final DRAWER_OTHER_LIST = [
     ['其他', Icons.book],
     ['设置', Icons.build],
+    ['课程管理',Icons.create],
     ['分享', Icons.share],
     ['关于', Icons.label],
   ];

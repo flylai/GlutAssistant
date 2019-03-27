@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Pages/About.dart';
+import 'package:glutassistant/Pages/CourseModify.dart';
+import 'package:glutassistant/Pages/CoursesManage.dart';
 import 'package:glutassistant/Pages/Dashboard.dart';
 import 'package:glutassistant/Pages/ImportTimetable.dart';
 import 'package:glutassistant/Pages/Login.dart';
@@ -72,6 +74,7 @@ class _HomeState extends State<Home> {
           ? Colors.transparent
           : Theme.of(context).primaryColor,
       elevation: _backgroundImageEnable ? 0 : 4,
+      actions: _buildAppBarActions(),
       title: GestureDetector(
         child: _buildAppBarTitle(),
         onTap: () {
@@ -109,6 +112,26 @@ class _HomeState extends State<Home> {
         },
       ),
     );
+  }
+
+  List<Widget> _buildAppBarActions() {
+    if (_selectIndex == 9)
+      return <Widget>[
+        InkWell(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+            alignment: Alignment.center,
+            child: Text('添加课程'),
+          ),
+          onTap: () {
+            Navigator.push(context,
+                new MaterialPageRoute(builder: (BuildContext context) {
+              return CourseModify();
+            }));
+          },
+        ),
+      ];
+    return null;
   }
 
   Widget _buildAppBarTitle() {
@@ -212,8 +235,11 @@ class _HomeState extends State<Home> {
         return Login();
       case 8:
         return Settings();
-      case 10:
+      case 9:
+        return CoursesManage();
+      case 11:
         return About();
+
       default:
         break;
     }
