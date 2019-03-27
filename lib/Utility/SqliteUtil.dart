@@ -22,6 +22,11 @@ class SQLiteUtil {
     return _db == null ? false : true;
   }
 
+  static Future deleteCourse(int no) {
+    return _db
+        .delete(Constant.VAR_TABLE_NAME, where: 'No = ?', whereArgs: [no]);
+  }
+
   static Future dropTable() async {
     await _db.execute(Constant.SQL_DROP_TABLE);
   }
@@ -61,5 +66,15 @@ class SQLiteUtil {
     String sql =
         'SELECT * FROM ${Constant.VAR_TABLE_NAME} WHERE startWeek <= $week AND endWeek >= $week  AND location != "" AND (weekType = "A" OR weekType = "$weektype") AND weekday = $weekday AND startTime = $starttime AND endTime = $endtime ORDER BY startTime ASC';
     return _db.rawQuery(sql);
+  }
+
+  static Future queryCourseList() {
+    String sql = 'SELECT * FROM ${Constant.VAR_TABLE_NAME}';
+    return _db.rawQuery(sql);
+  }
+
+  static Future updateCourse(int no, Map coursedetail) {
+    return _db
+        .update(_dbTableName, coursedetail, where: 'No = ?', whereArgs: [no]);
   }
 }
