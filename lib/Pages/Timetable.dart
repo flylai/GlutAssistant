@@ -163,25 +163,28 @@ class _TimetableState extends State<Timetable> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Icon(Icons.book),
+                            Icon(
+                              Icons.book,
+                              color: Colors.amber,
+                            ),
                             Text(courselist[k]['courseName'])
                           ],
                         ),
                         Row(
                           children: <Widget>[
-                            Icon(Icons.person),
+                            Icon(Icons.person, color: Colors.pink),
                             Text(courselist[k]['teacher'])
                           ],
                         ),
                         Row(
                           children: <Widget>[
-                            Icon(Icons.location_on),
+                            Icon(Icons.location_on, color: Colors.teal),
                             Text(courselist[k]['location'])
                           ],
                         ),
                         Row(
                           children: <Widget>[
-                            Icon(Icons.access_time),
+                            Icon(Icons.access_time, color: Colors.cyan),
                             Text(
                                 "${courselist[k]['startWeek']} - ${courselist[k]['endWeek']}周")
                           ],
