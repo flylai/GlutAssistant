@@ -1,4 +1,25 @@
 class BaseFunctionUtil {
+  static String getDuration(DateTime t1, DateTime t2) {
+    int diff =
+        t1.millisecondsSinceEpoch ~/ 1000 - t2.millisecondsSinceEpoch ~/ 1000;
+    int day = diff ~/ 86400;
+    int hour = day == 0 ? diff ~/ 3600 : (diff - 86400 * day) ~/ 3600;
+    int minute;
+    if (day == 0 && hour == 0)
+      minute = diff ~/ 60;
+    else if (day != 0 && hour == 0)
+      minute = (diff - 86400 * day) ~/ 60;
+    else if (day != 0 && hour != 0)
+      minute = (diff - day * 86400 - hour * 3600) ~/ 60;
+    else if (day == 0 && hour != 0) minute = (diff - 3600 * hour) ~/ 60;
+
+    String duration = '';
+    if (day != 0) duration += '$day天';
+    if (hour != 0) duration += '$hour小时';
+    duration += '$minute分钟';
+    return duration;
+  }
+
   static int getNumByWeekday(String weekday) {
     switch (weekday) {
       case '星期一':
