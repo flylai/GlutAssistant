@@ -22,6 +22,7 @@ class _SettingsState extends State<Settings> {
   String _subtitlePasswordJW = '';
   String _subtitleCurrentWeek = '1';
   String _subtitleBackgroundImage = '';
+  int _dashboardDisplayType = 0;
   double _subtitleOpacity = Constant.VAR_DEFAULT_OPACITY;
   bool _usingBackgroundImage = false;
   TextEditingController _studentidController = TextEditingController();
@@ -40,8 +41,8 @@ class _SettingsState extends State<Settings> {
   }
 
   void initState() {
-    super.initState();
     _init();
+    super.initState();
   }
 
   Widget _buildBackgroundImage() {
@@ -107,6 +108,47 @@ class _SettingsState extends State<Settings> {
                     );
                   });
             }));
+  }
+
+  Widget _buildDashboardDisplayType() {
+    return Container(
+        color: Colors.white.withOpacity(_subtitleOpacity),
+        child: ListTile(
+          title: Text('一览课程显示方式'),
+          subtitle: Text('${_dashboardDisplayType == 0 ? '卡片' : '时间轴'}模式'),
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext ctx) {
+                  return Dialog(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        title: Text('卡片'),
+                        onTap: () {
+                          SharedPreferenceUtil.setInt('dashboard_type', 0);
+                          setState(() {
+                            _dashboardDisplayType = 0;
+                          });
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      ListTile(
+                        title: Text('时间轴'),
+                        onTap: () {
+                          SharedPreferenceUtil.setInt('dashboard_type', 1);
+                          setState(() {
+                            _dashboardDisplayType = 1;
+                          });
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  ));
+                });
+          },
+        ));
   }
 
   Widget _buildListItem(BuildContext context, int index) {
@@ -217,6 +259,7 @@ class _SettingsState extends State<Settings> {
         _buildStudentId(),
         _buildPwdJW(),
         _buildCurrentWeek(),
+        _buildDashboardDisplayType(),
         _buildBackgroundImage(),
         _buildPickImage(),
         _buildThemeSetting(),
@@ -305,6 +348,8 @@ class _SettingsState extends State<Settings> {
     await SharedPreferenceUtil.init();
     _subtitleStudentid = await SharedPreferenceUtil.getString('student_id');
     _subtitleStudentid ??= '';
+    _dashboardDisplayType = await SharedPreferenceUtil.getInt('dashboard_type');
+    _dashboardDisplayType ??= 0;
 
     _firstWeekTimestamp ??= '1';
     _subtitleCurrentWeek = await SharedPreferenceUtil.getString('first_week');
@@ -330,6 +375,7 @@ class _SettingsState extends State<Settings> {
       _usingBackgroundImage;
       _subtitleCurrentWeek;
       _subtitleOpacity;
+      _dashboardDisplayType;
     });
     _studentidController.text = _subtitleStudentid;
     _currentWeekController.text = _subtitleCurrentWeek;

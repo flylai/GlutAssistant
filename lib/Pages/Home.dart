@@ -218,7 +218,7 @@ class _HomeState extends State<Home> {
   Widget _getBodyView() {
     switch (_selectIndex) {
       case 1:
-        return Dashboard(_currentWeek);
+        return Dashboard();
       case 2:
         return Timetable(_currentWeek, _selectWeek, callback: (val) {
           setState(() {
@@ -251,11 +251,6 @@ class _HomeState extends State<Home> {
     await FileUtil.init();
     _image = FileUtil.getDir();
     await SharedPreferenceUtil.init();
-    _firstWeek = await SharedPreferenceUtil.getString('first_week');
-    _firstWeek ??= '1';
-    _firstWeekTimestamp =
-        await SharedPreferenceUtil.getString('first_week_timestamp');
-    _firstWeekTimestamp ??= '1';
     _themeIndex = await SharedPreferenceUtil.getInt('theme_color');
     _themeIndex ??= 9;
     _store.dispatch(
@@ -263,6 +258,13 @@ class _HomeState extends State<Home> {
     _backgroundImageEnable =
         await SharedPreferenceUtil.getBool('background_enable');
     _backgroundImageEnable ??= false;
+
+    _firstWeek = await SharedPreferenceUtil.getString('first_week');
+    _firstWeek ??= '1';
+    _firstWeekTimestamp =
+        await SharedPreferenceUtil.getString('first_week_timestamp');
+    _firstWeekTimestamp ??= '1';
+
     DateTime _now = DateTime.now();
     DateTime _startWeek = DateTime(_now.year, _now.month, _now.day)
         .subtract(Duration(days: _now.weekday - 1));
