@@ -1,9 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Pages/CourseModify.dart';
 import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:glutassistant/Utility/SQLiteUtil.dart';
+import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 import 'package:glutassistant/Widget/DetailCard.dart';
 
 class CoursesManage extends StatefulWidget {
@@ -12,18 +12,80 @@ class CoursesManage extends StatefulWidget {
 }
 
 class _CoursesManageState extends State<CoursesManage> {
-  List<Widget> _courseList = [];
+  List<Map<String, dynamic>> _courseList = [];
+  double _opacity = Constant.VAR_DEFAULT_OPACITY;
+
   @override
   Widget build(BuildContext context) {
     return Container(
         child: ListView(
-      children: _courseList,
+      children: _buildBody(),
     ));
   }
 
   void initState() {
     _init();
     super.initState();
+  }
+
+  List<Widget> _buildBody() {
+    List<Widget> mainBody = [];
+    for (var item in _courseList) {
+      Widget child = Center(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  '${item['courseName']}',
+                  style: TextStyle(fontSize: 20),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text('${item['teacher']}'),
+                Text(
+                    '${item['startWeek']} - ${item['endWeek']} ${item['weekType'] == 'A' ? '全' : item['weekType'] == 'D' ? '双' : '单'}周 星期${BaseFunctionUtil.getWeekdayByNum(item['weekday'])} ${BaseFunctionUtil.getTimeByNum(item['startTime'])} - ${BaseFunctionUtil.getTimeByNum(item['endTime'])}节'),
+                Text('${item['location'] == '' ? '未知地点' : item['location']}'),
+              ],
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              GestureDetector(
+                child: Icon(Icons.create, size: 30, color: Colors.cyan),
+                onTap: () => _modifyCourse(
+                    item['No'],
+                    item['courseName'],
+                    item['startWeek'],
+                    item['endWeek'],
+                    item['weekType'],
+                    item['weekday'],
+                    item['startTime'],
+                    item['endTime'],
+                    item['teacher'],
+                    item['location']),
+              ),
+              GestureDetector(
+                child: Icon(Icons.delete_forever,
+                    size: 30, color: Colors.redAccent),
+                onTap: () => _deleteCourse(item['No'], item['courseName']),
+              )
+            ],
+          )
+        ],
+      ));
+      mainBody.add(DetailCard(
+        Colors.white,
+        child,
+        height: 95,
+        opacity: _opacity,
+      ));
+    }
+    print(_opacity);
+    return mainBody;
   }
 
   void _deleteCourse(int no, String courseName) async {
@@ -49,72 +111,21 @@ class _CoursesManageState extends State<CoursesManage> {
         });
   }
 
-  Future _getCourseList() async {
-    List<Widget> courseList = [];
-    SQLiteUtil.queryCourseList().then((onValue) {
-      for (var item in onValue) {
-        Widget child = Center(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    '${item['courseName']}',
-                    style: TextStyle(fontSize: 20),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text('${item['teacher']}'),
-                  Text(
-                      '${item['startWeek']} - ${item['endWeek']} ${item['weekType'] == 'A' ? '全' : item['weekType'] == 'D' ? '双' : '单'}周 星期${BaseFunctionUtil.getWeekdayByNum(item['weekday'])} ${BaseFunctionUtil.getTimeByNum(item['startTime'])} - ${BaseFunctionUtil.getTimeByNum(item['endTime'])}节'),
-                  Text('${item['location'] == '' ? '未知地点' : item['location']}'),
-                ],
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                GestureDetector(
-                  child: Icon(Icons.create, size: 30, color: Colors.cyan),
-                  onTap: () => _modifyCourse(
-                      item['No'],
-                      item['courseName'],
-                      item['startWeek'],
-                      item['endWeek'],
-                      item['weekType'],
-                      item['weekday'],
-                      item['startTime'],
-                      item['endTime'],
-                      item['teacher'],
-                      item['location']),
-                ),
-                GestureDetector(
-                  child: Icon(Icons.delete_forever,
-                      size: 30, color: Colors.redAccent),
-                  onTap: () => _deleteCourse(item['No'], item['courseName']),
-                )
-              ],
-            )
-          ],
-        ));
-        courseList.add(DetailCard(
-          Colors.white,
-          child,
-          height: 95,
-          opacity: 1,
-        ));
+  _init() async {
+    await SQLiteUtil.init();
+    await SharedPreferenceUtil.init();
+    _opacity = await SharedPreferenceUtil.getDouble('opacity');
+    _opacity ??= Constant.VAR_DEFAULT_OPACITY;
+    await SQLiteUtil.queryCourseList().then((onValue) {
+      if (onValue.length > 0) {
+        for (int i = 0; i < onValue.length; i++) {
+          _courseList.add(onValue[i]);
+        }
       }
     });
     setState(() {
-      _courseList = courseList;
+      _courseList;
     });
-  }
-
-  _init() async {
-    await SQLiteUtil.init();
-    await _getCourseList();
   }
 
   void _modifyCourse(
