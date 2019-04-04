@@ -18,18 +18,10 @@ class Timetable extends StatefulWidget {
 }
 
 class _TimetableState extends State<Timetable> {
-  //TODO: 界面和逻辑写法有点问题，得优化甚至重写
   static int _preweek = 1; //防止死循环
   double _opacity = Constant.VAR_DEFAULT_OPACITY;
-  List<Widget> mainTimetable = [];
-  List<Widget> timetableMon = [];
-  List<Widget> timetableTue = [];
-  List<Widget> timetableWed = [];
-  List<Widget> timetableThu = [];
-  List<Widget> timetableFri = [];
-  List<Widget> timetableSat = [];
-  List<Widget> timetableSun = [];
-  List<Widget> leftTimeList = [];
+  List<Widget> _mainTimetable = [];
+  List<Widget> _leftTimeList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +58,14 @@ class _TimetableState extends State<Timetable> {
                         child: Container(
                             color: Colors.white.withOpacity(_opacity),
                             child: Column(
-                              children: leftTimeList,
+                              children: _leftTimeList,
                             )),
                         flex: 1,
                       ),
                       Expanded(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: mainTimetable,
+                          children: _mainTimetable,
                         ),
                         flex: 14,
                       )
@@ -102,26 +94,18 @@ class _TimetableState extends State<Timetable> {
           textAlign: TextAlign.center,
         ),
       );
-      leftTimeList.add(Divider(
+      _leftTimeList.add(Divider(
         height: 0.6,
       ));
-      leftTimeList.add(item);
+      _leftTimeList.add(item);
     }
   }
 
   Future _buildTimetable(int week) async {
     if (week == _preweek || !SQLiteUtil.dbIsOpen()) return;
     _preweek = week;
-    mainTimetable.clear();
-    List<List<Widget>> list = [
-      timetableMon,
-      timetableTue,
-      timetableWed,
-      timetableThu,
-      timetableFri,
-      timetableSat,
-      timetableSun
-    ];
+    List<List<Widget>> list = [[], [], [], [], [], [], [], []];
+    List<Widget> timetable = [];
     for (int i = 0; i < 7; i++) {
       list[i].clear();
       int count = 1;
@@ -224,15 +208,17 @@ class _TimetableState extends State<Timetable> {
           list[i].add(item);
         }
       });
-      setState(() {
-        mainTimetable.add(Expanded(
-          child: Column(
-            children: list[i],
-          ),
-          flex: 2,
-        ));
-      });
+      timetable.add(Expanded(
+        child: Column(
+          children: list[i],
+        ),
+        flex: 2,
+      ));
+      // });
     }
+    setState(() {
+      _mainTimetable = timetable;
+    });
   }
 
   List<Widget> _gernerateDateText() {
@@ -249,8 +235,11 @@ class _TimetableState extends State<Timetable> {
     datelist.add(month);
 
     for (int i = 1; i <= 7; i++) {
-      int today = day.add(Duration(days: i)).day;
-      String todayStr = today == DateTime.now().day ? '今天' : today.toString();
+      DateTime today = day.add(Duration(days: i));
+      String todayStr =
+          today.day == DateTime.now().day && today.month == DateTime.now().month
+              ? '今天'
+              : today.day.toString();
       var wd = Expanded(
         child: Text(
           '周${BaseFunctionUtil.getWeekdayByNum(i)}\n$todayStr',
