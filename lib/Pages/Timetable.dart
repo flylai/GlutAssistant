@@ -29,6 +29,7 @@ class _TimetableState extends State<Timetable> {
   List<Widget> timetableFri = [];
   List<Widget> timetableSat = [];
   List<Widget> timetableSun = [];
+  List<Widget> leftTimeList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +61,23 @@ class _TimetableState extends State<Timetable> {
                 children: <Widget>[
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: mainTimetable,
+                    children: <Widget>[
+                      Expanded(
+                        child: Container(
+                            color: Colors.white.withOpacity(_opacity),
+                            child: Column(
+                              children: leftTimeList,
+                            )),
+                        flex: 1,
+                      ),
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: mainTimetable,
+                        ),
+                        flex: 14,
+                      )
+                    ],
                   )
                 ],
               )),
@@ -75,11 +92,9 @@ class _TimetableState extends State<Timetable> {
     );
   }
 
-  Widget _buildLeftTimeList() {
-    List<Widget> timelist = [];
+  void _buildLeftTimeList() {
     for (int i = 1; i < 15; i++) {
       Container item = Container(
-        color: Colors.white.withOpacity(_opacity),
         alignment: Alignment.center,
         height: Constant.VAR_COURSE_HEIGHT,
         child: Text(
@@ -87,24 +102,17 @@ class _TimetableState extends State<Timetable> {
           textAlign: TextAlign.center,
         ),
       );
-      timelist.add(Divider(
+      leftTimeList.add(Divider(
         height: 0.6,
       ));
-      timelist.add(item);
+      leftTimeList.add(item);
     }
-    return Expanded(
-      child: Column(
-        children: timelist,
-      ),
-      flex: 1,
-    );
   }
 
   Future _buildTimetable(int week) async {
     if (week == _preweek || !SQLiteUtil.dbIsOpen()) return;
     _preweek = week;
     mainTimetable.clear();
-    mainTimetable.add(_buildLeftTimeList());
     List<List<Widget>> list = [
       timetableMon,
       timetableTue,
@@ -262,10 +270,8 @@ class _TimetableState extends State<Timetable> {
     await SharedPreferenceUtil.init();
     _opacity = await SharedPreferenceUtil.getDouble('opacity');
     _opacity ??= Constant.VAR_DEFAULT_OPACITY;
+    _buildLeftTimeList();
     await SQLiteUtil.init();
     await _buildTimetable(widget._selectWeek);
-    setState(() {
-      _opacity;
-    });
   }
 }
