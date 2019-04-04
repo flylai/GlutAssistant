@@ -153,7 +153,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Expanded(
                           child: Text(
-                        _courseList[i]['course'],
+                        _courseList[i]['courseName'],
                         style: TextStyle(fontSize: 20, color: Colors.white),
                         overflow: TextOverflow.ellipsis,
                       ))
@@ -228,7 +228,7 @@ class _DashboardState extends State<Dashboard> {
                     text: '$startTimeStr - $endTimeStr节 ',
                     style: TextStyle(color: Colors.black)),
                 TextSpan(
-                    text: '${_courseList[i]['course']}',
+                    text: '${_courseList[i]['courseName']}',
                     style: TextStyle(color: Colors.black, fontSize: 20))
               ]),
             ),
@@ -303,13 +303,7 @@ class _DashboardState extends State<Dashboard> {
     await SQLiteUtil.queryCourse(_currentWeek, _weekday).then((onValue) {
       if (onValue.length > 0) {
         for (int i = 0; i < onValue.length; i++) {
-          Map<String, dynamic> courseDetail = {};
-          courseDetail['course'] = onValue[i]['courseName'];
-          courseDetail['location'] = onValue[i]['location'];
-          courseDetail['teacher'] = onValue[i]['teacher'];
-          courseDetail['startTime'] = onValue[i]['startTime'];
-          courseDetail['endTime'] = onValue[i]['endTime'];
-          _courseList.add(courseDetail);
+          _courseList.add(onValue[i]);
         }
       }
       setState(() {

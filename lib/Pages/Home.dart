@@ -221,6 +221,7 @@ class _HomeState extends State<Home> {
         return Dashboard();
       case 2:
         return Timetable(_currentWeek, _selectWeek, callback: (val) {
+          print(val);
           setState(() {
             _selectWeek = val;
           });
