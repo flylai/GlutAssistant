@@ -80,6 +80,7 @@ class _CoursesManageState extends State<CoursesManage> {
       mainBody.add(DetailCard(
         Colors.white,
         child,
+        elevation: 0,
         height: 95,
         opacity: _opacity,
       ));
