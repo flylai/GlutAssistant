@@ -205,20 +205,40 @@ class _DashboardState extends State<Dashboard> {
               BaseFunctionUtil.getDuration(classOverTime, nowDateTime);
           print(beforeClassOverTime);
 
-          String courseText = '';
+          RichText courseText = RichText(text: null);
           StepState courseState = StepState.indexed;
           if (beforeClassBeginTime[0] == '-' && beforeClassOverTime[0] != '-') {
             count = i;
-            courseText = '还有$beforeClassOverTime才下课,认真听课哟~';
+            courseText = RichText(
+                text: TextSpan(
+                    style: TextStyle(color: Colors.black),
+                    children: <TextSpan>[
+                  TextSpan(text: '还有'),
+                  TextSpan(
+                      text: '$beforeClassOverTime',
+                      style: TextStyle(fontSize: 18, color: Colors.pink)),
+                  TextSpan(text: '才下课,认真听课哟~')
+                ]));
           } else if (beforeClassBeginTime[0] != '-' && count == -1) {
             count = i;
-            courseText = '还有$beforeClassBeginTime就要上课啦';
+            courseText = RichText(
+                text: TextSpan(
+                    style: TextStyle(color: Colors.black),
+                    children: <TextSpan>[
+                  TextSpan(text: '还有'),
+                  TextSpan(
+                      text: '$beforeClassBeginTime',
+                      style: TextStyle(fontSize: 18, color: Colors.pink)),
+                  TextSpan(text: '就要上课啦')
+                ]));
           } else if (beforeClassOverTime[0] == '-') {
             if (i == _courseList.length - 1) count = i;
-            courseText = '这节课已经过去了哦';
+            courseText = RichText(
+                text: TextSpan(
+                    style: TextStyle(color: Colors.black),
+                    children: <TextSpan>[TextSpan(text: '这节课已经过去了哦')]));
             courseState = StepState.complete;
           }
-          print(classBeginTime);
           Step course = Step(
             state: courseState,
             isActive: true,
@@ -244,7 +264,7 @@ class _DashboardState extends State<Dashboard> {
                       text: '${_courseList[i]['teacher']}',
                       style: TextStyle(color: Colors.black))
                 ])),
-            content: Center(child: Text(courseText)),
+            content: Center(child: courseText),
           );
           courseTimeline.add(course);
         }
