@@ -58,6 +58,7 @@ class _DashboardState extends State<Dashboard> {
               ),
               GestureDetector(
                 onTap: () {
+                  if (_isLoading) return;
                   setState(() {
                     _isLoading = true;
                   });
