@@ -37,24 +37,28 @@ class Constant {
   static final String SQL_DROP_TABLE = "DROP TABLE IF EXISTS " + VAR_TABLE_NAME;
 
   static final String URL_LOGIN =
-      "http://202.193.80.58/academic/j_acegi_security_check";
+      "http://jw.glut.edu.cn/academic/j_acegi_security_check";
   static final String URL_VERIFY_CODE =
-      "http://202.193.80.58/academic/getCaptcha.do";
+      "http://jw.glut.edu.cn/academic/getCaptcha.do";
   static final String URL_GET_STUDENT_ID =
-      "http://202.193.80.58/academic/student/studentinfo/studentInfoModifyIndex.do?frombase=0&wantTag=0&groupId=&moduleId=2060";
+      "http://jw.glut.edu.cn/academic/student/studentinfo/studentInfoModifyIndex.do?frombase=0&wantTag=0&groupId=&moduleId=2060";
   static final String URL_CLASS_SCHEDULE =
-      "http://202.193.80.58/academic/manager/coursearrange/showTimetable.do?timetableType=STUDENT&sectionType=BASE";
+      "http://jw.glut.edu.cn/academic/manager/coursearrange/showTimetable.do?timetableType=STUDENT&sectionType=BASE";
   static final String URL_CLASS_SCHEDULE_ALL =
-      "http://202.193.80.58/academic/student/currcourse/currcourse.jsdo";
+      "http://jw.glut.edu.cn/academic/student/currcourse/currcourse.jsdo";
   //     static final String URL_CLASS_SCHEDULE_ALL = "http://192.168.6.73/c/c.html";
   static final String URL_QUERY_SCORE =
-      "http://202.193.80.58/academic/manager/score/studentOwnScore.do?groupId=&moduleId=2020";
+      "http://jw.glut.edu.cn/academic/manager/score/studentOwnScore.do?groupId=&moduleId=2020";
   static final String URL_QUERY_EXAMINATION_LOCATION =
-      "http://202.193.80.58/academic/student/exam/index.jsdo?stuid=";
+      "http://jw.glut.edu.cn/academic/student/exam/index.jsdo?stuid=";
   static final String URL_LOGIN_CAIWU =
       "http://cwjf.glut.edu.cn/interface/login";
   static final String URL_CAIWU_INTERFACE =
       "http://cwjf.glut.edu.cn/interface/index";
+  static final String URL_FITNESS_TEST =
+      "http://tzcs.glut.edu.cn/servlet/adminservlet";
+  static final String URL_FIRNESS_TEST_INFO =
+      'http://tzcs.glut.edu.cn/student/queryHealthInfo.jsp';
 
   static final DRAWER_GENERAL_LIST = [
     ['常用', Icons.book],
