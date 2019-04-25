@@ -30,6 +30,7 @@ class _HomeState extends State<Home> {
   int _selectWeek = 1;
   int _currentWeek = 1;
   int _themeIndex = 1;
+  int _queryScoreType = 0; // 0课程 1体侧
   String _firstWeek = '1';
   String _firstWeekTimestamp = '1';
   String _image = '';
@@ -70,6 +71,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildAppBar() {
     return AppBar(
+      bottom: _buildAppBarBottom(),
       backgroundColor: _backgroundImageEnable
           ? Colors.transparent
           : Theme.of(context).primaryColor,
@@ -131,6 +133,56 @@ class _HomeState extends State<Home> {
           },
         ),
       ];
+    return null;
+  }
+
+  Widget _buildAppBarBottom() {
+    if (_selectIndex == 3)
+      return PreferredSize(
+        preferredSize: Size.fromHeight(40),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+                child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _queryScoreType = 0;
+                      });
+                    },
+                    child: Container(
+                        alignment: Alignment.center,
+                        height: 40,
+                        child: Text(
+                          '课程成绩',
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Theme.of(context).primaryColorBrightness ==
+                                      Brightness.light
+                                  ? Colors.black
+                                  : Colors.white),
+                        )))),
+            Expanded(
+                child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _queryScoreType = 1;
+                      });
+                    },
+                    child: Container(
+                        alignment: Alignment.center,
+                        height: 40,
+                        child: Text(
+                          '体侧成绩',
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Theme.of(context).primaryColorBrightness ==
+                                      Brightness.light
+                                  ? Colors.black
+                                  : Colors.white),
+                        ))))
+          ],
+        ),
+      );
     return null;
   }
 
@@ -227,7 +279,7 @@ class _HomeState extends State<Home> {
           });
         });
       case 3:
-        return QueryScore();
+        return QueryScore(_queryScoreType);
       case 4:
         return QueryExaminationLocation();
       case 5:
