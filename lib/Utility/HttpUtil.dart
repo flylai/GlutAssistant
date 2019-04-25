@@ -37,7 +37,8 @@ class HttpUtil {
               headers: head)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       List<Map> courseList = new List();
-      String html = decodeGbk(response.bodyBytes).replaceAll(RegExp(r'\s'), '');
+      String html =
+          gbk.decode(response.bodyBytes).replaceAll(RegExp(r'\s'), '');
       RegExp courseListExp = RegExp(
           r'infolist_common"onmouseover="(.*?)</a></td></tr>',
           caseSensitive: false);
@@ -238,7 +239,8 @@ class HttpUtil {
           .get(Constant.URL_QUERY_EXAMINATION_LOCATION, headers: head)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       List<Map> examList = new List();
-      String html = decodeGbk(response.bodyBytes)
+      String html = gbk
+          .decode(response.bodyBytes)
           .replaceAll(RegExp(r'\s'), '')
           .replaceAll('&nbsp;', '');
       RegExp examHTMLExp =
@@ -264,6 +266,82 @@ class HttpUtil {
       } else {
         callback({'success': false, 'data': ''});
       }
+    } catch (e) {
+      callback({'success': false, 'data': e});
+    }
+  }
+
+  static queryFitnessTestScore(String studentId, Function callback) async {
+    var postData = {
+      'operType': '911',
+      'loginflag': '0',
+      'loginType': '0',
+      'userName': studentId,
+      'passwd': studentId
+    };
+    try {
+      var response = await http
+          .post(Constant.URL_FITNESS_TEST, body: postData)
+          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
+
+      String cookie = response.headers['set-cookie'];
+      var head = {'cookie': cookie.split(';')[0]};
+
+      var res = await http
+          .get(
+              'http://tzcs.glut.edu.cn/student/studentInfo.jsp?userName=' +
+                  studentId +
+                  '&passwd=' +
+                  studentId,
+              headers: head)
+          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
+
+      var responsex = await http
+          .get(Constant.URL_FIRNESS_TEST_INFO, headers: head)
+          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
+      String html =
+          responsex.body.replaceAll(RegExp(r'\s'), '').replaceAll('&nbsp;', '');
+
+      RegExp resultExp = RegExp(
+          r'align="center"><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><tdrowspan="16">(.*?)</td><tdrowspan="16">(.*?)</td><tdalign="center"rowspan="16">(.*?)</td><tdalign="center"rowspan="16">(.*?)</td>',
+          caseSensitive: false);
+
+      List<Map> fitnessList = new List();
+      Map<String, String> result = new Map();
+
+      Iterable<Match> resultMatches = resultExp.allMatches(html);
+      for (var item in resultMatches) {
+        // 1项目 2成绩 3分数 4结论 5加分 6减分 7总成绩 8总结论
+        Map<String, String> fitnessDetail = new Map();
+        fitnessDetail['name'] = item.group(1);
+        fitnessDetail['record'] = item.group(2);
+        fitnessDetail['score'] = item.group(3);
+        fitnessDetail['result'] = item.group(4);
+        fitnessList.add(fitnessDetail);
+
+        // 结论
+        result['add'] = item.group(5);
+        result['subtraction'] = item.group(6);
+        result['total'] = item.group(7);
+        result['conclusion'] = item.group(8);
+      }
+
+      RegExp itemExp = RegExp(
+          r'<tdalign="center">(.*?)</td><tdalign="center">(.*?)</td><tdalign="center">(.*?)</td><tdalign="center">(.*?)</td>',
+          caseSensitive: false);
+      Iterable<Match> itemMatches = itemExp.allMatches(html);
+
+      for (var item in itemMatches) {
+        // 1项目 2成绩 3分数 4结论
+        Map<String, String> fitnessDetail = new Map();
+        fitnessDetail['name'] = item.group(1);
+        fitnessDetail['record'] = item.group(2);
+        fitnessDetail['score'] = item.group(3);
+        fitnessDetail['result'] = item.group(4);
+        fitnessList.add(fitnessDetail);
+      }
+
+      callback({'success': true, 'data': fitnessList, 'result': result});
     } catch (e) {
       callback({'success': false, 'data': e});
     }
