@@ -87,6 +87,7 @@ class _DashboardState extends State<Dashboard> {
     return DetailCard(
       color,
       child,
+      elevation: 0.5,
       opacity: _opacity,
     );
   }
@@ -111,7 +112,7 @@ class _DashboardState extends State<Dashboard> {
     int year = nowDateTime.year;
     int month = nowDateTime.month;
     int day = nowDateTime.day;
-    int count = -1;
+    int count = 0;
 
     List<Widget> todayCourseList = [];
     List<Step> courseTimeline = [];
@@ -131,7 +132,7 @@ class _DashboardState extends State<Dashboard> {
                     children: <Widget>[
                       Icon(
                         Icons.access_time,
-                        color: Color(0xff4090f7),
+                        color: Color(0xFFF9FF69),
                         size: 25,
                       ),
                       Text(
@@ -149,7 +150,7 @@ class _DashboardState extends State<Dashboard> {
                     child: Row(children: <Widget>[
                       Icon(
                         Icons.class_,
-                        color: Color(0xff4090f7),
+                        color: Color(0xFFF1F2FF),
                         size: 25,
                       ),
                       Expanded(
@@ -164,7 +165,7 @@ class _DashboardState extends State<Dashboard> {
                     child: Row(children: <Widget>[
                       Icon(
                         Icons.location_on,
-                        color: Color(0xff4090f7),
+                        color: Color(0xFF43E9FF),
                         size: 25,
                       ),
                       Text(
@@ -182,6 +183,7 @@ class _DashboardState extends State<Dashboard> {
           DetailCard course = DetailCard(
             color,
             child,
+            elevation: 0.5,
             opacity: _opacity,
           );
           todayCourseList.add(course);
@@ -273,7 +275,7 @@ class _DashboardState extends State<Dashboard> {
       todayCourseList.add(Container(
           child: Stepper(
             physics: ClampingScrollPhysics(),
-            currentStep: count,
+            currentStep: 0,
             controlsBuilder: (BuildContext context,
                 {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
               return Container();
@@ -290,6 +292,7 @@ class _DashboardState extends State<Dashboard> {
             alignment: Alignment.center,
             child: Text('今天没有课上哦(๑˙ー˙๑)',
                 style: TextStyle(fontSize: 20, color: Colors.white))),
+        elevation: 0.5,
         opacity: _opacity,
       ));
     }
