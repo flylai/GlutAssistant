@@ -275,7 +275,7 @@ class _DashboardState extends State<Dashboard> {
       todayCourseList.add(Container(
           child: Stepper(
             physics: ClampingScrollPhysics(),
-            currentStep: count,
+            currentStep: 0,
             controlsBuilder: (BuildContext context,
                 {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
               return Container();
