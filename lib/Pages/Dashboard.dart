@@ -112,7 +112,7 @@ class _DashboardState extends State<Dashboard> {
     int year = nowDateTime.year;
     int month = nowDateTime.month;
     int day = nowDateTime.day;
-    int count = 0;
+    int count = -1;
 
     List<Widget> todayCourseList = [];
     List<Step> courseTimeline = [];
@@ -275,7 +275,7 @@ class _DashboardState extends State<Dashboard> {
       todayCourseList.add(Container(
           child: Stepper(
             physics: ClampingScrollPhysics(),
-            currentStep: 0,
+            currentStep: count,
             controlsBuilder: (BuildContext context,
                 {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
               return Container();
