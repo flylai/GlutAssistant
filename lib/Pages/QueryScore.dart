@@ -114,7 +114,8 @@ class _QueryScoreState extends State<QueryScore> {
                       Center(
                         child: Text(
                             '成绩: ${callback['result']['total']}\n结论: ${callback['result']['conclusion']}',
-                            style: TextStyle(fontSize: 18)),
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.white)),
                       ),
                       elevation: 0,
                     ));
