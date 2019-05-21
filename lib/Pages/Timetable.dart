@@ -79,9 +79,11 @@ class _TimetableState extends State<Timetable> {
   }
 
   Widget _buildDateList() {
-    return Row(
-      children: _gernerateDateText(),
-    );
+    return Container(
+        child: Row(
+          children: _gernerateDateText(),
+        ),
+        color: Colors.white.withOpacity(_opacity));
   }
 
   void _buildLeftTimeList() {
