@@ -22,7 +22,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:text="第X周"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -33,7 +33,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:text="周X"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -50,7 +50,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="2dp"
                     android:text="桂工助手"
-                    android:textSize="12sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
             </LinearLayout>

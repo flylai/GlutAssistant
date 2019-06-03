@@ -2,7 +2,6 @@ package com.lkm.glutassistant.widget;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -15,10 +14,12 @@ import java.util.List;
 public class TodayWidgetFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private Context mContext;
+    private Intent mIntent;
     public static List<CourseDao> courseList = new ArrayList<CourseDao>();
 
     public TodayWidgetFactory(Context context, Intent intent) {
         mContext = context;
+        mIntent = intent;
     }
 
     @Override
@@ -38,11 +39,16 @@ public class TodayWidgetFactory implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public int getCount() {
+        if (courseList.isEmpty())
+            return 1;
         return courseList.size();
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
+        if (courseList.isEmpty()) {
+            return new RemoteViews(mContext.getPackageName(), R.layout.widget_today_layout_noitem);
+        }
         if (position < 0 || position >= courseList.size())
             return null;
         CourseDao course = courseList.get(position);

@@ -7,9 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.RemoteViewsService;
 
 import com.lkm.glutassistant.R;
 import com.lkm.glutassistant.dao.CourseDao;
@@ -39,7 +37,7 @@ public class TodayWidgetProvider extends AppWidgetProvider {
         Intent intent = new Intent(context, TodayWidgetService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[0]);
         remoteViews.setRemoteAdapter(R.id.lv_timetable, intent);
-        remoteViews.setEmptyView(R.id.lv_timetable, R.layout.widget_today_layout_item);
+//        remoteViews.setEmptyView(R.id.lv_timetable, R.layout.widget_today_layout_noitem);
 
         Intent refreshIntent = new Intent(context, TodayWidgetProvider.class).setAction(ACTION_REFRESH);
         context.sendBroadcast(refreshIntent);
