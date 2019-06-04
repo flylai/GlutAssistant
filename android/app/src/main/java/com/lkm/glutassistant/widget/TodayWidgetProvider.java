@@ -61,7 +61,7 @@ public class TodayWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-
+        context.stopService(new Intent(context, TodayWidgetUpdateService.class));
     }
 
     @Override

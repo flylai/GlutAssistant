@@ -97,6 +97,6 @@ public class TodayWidgetFactory implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 }
