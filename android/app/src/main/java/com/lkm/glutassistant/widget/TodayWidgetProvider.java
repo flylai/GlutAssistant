@@ -76,6 +76,7 @@ public class TodayWidgetProvider extends AppWidgetProvider {
         int weekday = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         if (weekday == 0)
             weekday = 7;
+        String[] weekdayStr = {"", "一", "二", "三", "四", "五", "六", "日"};
         calendar.set(Calendar.DAY_OF_WEEK, 2);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -88,7 +89,7 @@ public class TodayWidgetProvider extends AppWidgetProvider {
 
         RemoteViews mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_today_layout);
         mRemoteViews.setTextViewText(R.id.tv_week, "第 " + week + " 周");
-        mRemoteViews.setTextViewText(R.id.tv_weekday, "周" + weekday);
+        mRemoteViews.setTextViewText(R.id.tv_weekday, "周" + weekdayStr[weekday]);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         ComponentName componentName = new ComponentName(context, TodayWidgetProvider.class);
 
