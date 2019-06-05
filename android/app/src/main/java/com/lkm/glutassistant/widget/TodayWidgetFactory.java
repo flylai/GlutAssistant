@@ -49,8 +49,6 @@ public class TodayWidgetFactory implements RemoteViewsService.RemoteViewsFactory
         if (courseList.isEmpty()) {
             return new RemoteViews(mContext.getPackageName(), R.layout.widget_today_layout_noitem);
         }
-        if (position < 0 || position >= courseList.size())
-            return null;
         CourseDao course = courseList.get(position);
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_today_layout_item);
         remoteViews.setTextViewText(R.id.tv_course_name, course.getCourseName());
@@ -87,7 +85,7 @@ public class TodayWidgetFactory implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public int getViewTypeCount() {
-        return 1;
+        return 2; // return 1 就loading return 2 就 能跑...
     }
 
     @Override
