@@ -36,21 +36,24 @@ class Constant {
       " ( No INTEGER NOT NULL PRIMARY KEY, courseName TEXT NULL DEFAULT NULL, teacher TEXT NULL DEFAULT NULL, startWeek INT NOT NULL, endWeek INT NOT NULL,weekType TEXT NOT NULL, weekday INT, startTime INT, endTime INT, location TEXT, courseType TEXT)";
   static final String SQL_DROP_TABLE = "DROP TABLE IF EXISTS " + VAR_TABLE_NAME;
 
-  static final String URL_LOGIN =
-      "http://jw.glut.edu.cn/academic/j_acegi_security_check";
-  static final String URL_VERIFY_CODE =
-      "http://jw.glut.edu.cn/academic/getCaptcha.do";
+  static final String URL_JW_GLUT = "http://jw.glut.edu.cn";
+  static final String URL_JW_GLUT_NN = "http://jw.glutnn.cn";
+
+  static String URL_JW = URL_JW_GLUT; //教务全局变量 可更改
+
+  static final String URL_LOGIN = "/academic/j_acegi_security_check";
+  static final String URL_VERIFY_CODE = "/academic/getCaptcha.do";
   static final String URL_GET_STUDENT_ID =
-      "http://jw.glut.edu.cn/academic/student/studentinfo/studentInfoModifyIndex.do?frombase=0&wantTag=0&groupId=&moduleId=2060";
+      "/academic/student/studentinfo/studentInfoModifyIndex.do?frombase=0&wantTag=0&groupId=&moduleId=2060";
   static final String URL_CLASS_SCHEDULE =
-      "http://jw.glut.edu.cn/academic/manager/coursearrange/showTimetable.do?timetableType=STUDENT&sectionType=BASE";
+      "/academic/manager/coursearrange/showTimetable.do?timetableType=STUDENT&sectionType=BASE";
   static final String URL_CLASS_SCHEDULE_ALL =
-      "http://jw.glut.edu.cn/academic/student/currcourse/currcourse.jsdo";
+      "/academic/student/currcourse/currcourse.jsdo";
   //     static final String URL_CLASS_SCHEDULE_ALL = "http://192.168.6.73/c/c.html";
   static final String URL_QUERY_SCORE =
-      "http://jw.glut.edu.cn/academic/manager/score/studentOwnScore.do?groupId=&moduleId=2020";
+      "/academic/manager/score/studentOwnScore.do?groupId=&moduleId=2020";
   static final String URL_QUERY_EXAMINATION_LOCATION =
-      "http://jw.glut.edu.cn/academic/student/exam/index.jsdo?stuid=";
+      "/academic/student/exam/index.jsdo?stuid=";
   static final String URL_LOGIN_CAIWU =
       "http://cwjf.glut.edu.cn/interface/login";
   static final String URL_CAIWU_INTERFACE =
