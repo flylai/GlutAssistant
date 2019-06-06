@@ -18,6 +18,7 @@ class _LoginState extends State<Login> {
   var _studentIdController = TextEditingController();
   var _passwordController = TextEditingController();
   var _verifyCodeController = TextEditingController();
+  var _selectCampusValue = 1; // 1桂林 2南宁
   bool _obscure = true; //密码的明文控制
   bool _savePwd = true; //记住密码开关控制
   bool _isLoading = false; //登录加载动画显示控制
@@ -67,6 +68,7 @@ class _LoginState extends State<Login> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              _buildCampusDropdown(),
               _buildStudentIdTextFiled(),
               _buildPasswordTextFiled(),
               _buildVerifyCodeEdit(),
@@ -77,6 +79,22 @@ class _LoginState extends State<Login> {
         )
       ],
     );
+  }
+
+  Widget _buildCampusDropdown() {
+    return Container(
+        margin: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 3.0),
+        child: DropdownButtonHideUnderline(
+            child: DropdownButton(
+          value: _selectCampusValue,
+          items: _generateCampusList(),
+          isDense: true,
+          isExpanded: true,
+          onChanged: (value) {
+            _changeCampus(value);
+            _getNewVerifyCode();
+          },
+        )));
   }
 
   Widget _buildCommitButton() {
@@ -268,6 +286,29 @@ class _LoginState extends State<Login> {
     );
   }
 
+  void _changeCampus(int campus) {
+    setState(() {
+      if (campus != null) {
+        if (campus == 1)
+          Constant.URL_JW = Constant.URL_JW_GLUT;
+        else
+          Constant.URL_JW = Constant.URL_JW_GLUT_NN;
+        _selectCampusValue = campus;
+      }
+    });
+    SharedPreferenceUtil.setInt('campus', _selectCampusValue);
+  }
+
+  List<DropdownMenuItem> _generateCampusList() {
+    List<DropdownMenuItem> items = List();
+    DropdownMenuItem item = DropdownMenuItem(value: 1, child: Text('桂林理工大学'));
+    items.add(item);
+    DropdownMenuItem item2 =
+        DropdownMenuItem(value: 2, child: Text('桂林理工大学南宁分校'));
+    items.add(item2);
+    return items;
+  }
+
   Future _getNewVerifyCode() async {
     String verifyCodeImageBase64;
     HttpUtil.getCode((callback) {
@@ -295,5 +336,8 @@ class _LoginState extends State<Login> {
       }
     });
     FileUtil.init();
+    SharedPreferenceUtil.getInt('campus').then((onValue) {
+      _changeCampus(onValue);
+    });
   }
 }
