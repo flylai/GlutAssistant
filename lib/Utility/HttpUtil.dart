@@ -10,7 +10,7 @@ class HttpUtil {
   static getCode(Function callback) async {
     try {
       var response = await http
-          .post(Constant.URL_VERIFY_CODE)
+          .post(Constant.URL_JW + Constant.URL_VERIFY_CODE)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       var data = {
         'cookie': response.headers['set-cookie'].split(';')[0],
@@ -29,7 +29,8 @@ class HttpUtil {
     try {
       var response = await http
           .get(
-              Constant.URL_CLASS_SCHEDULE_ALL +
+              Constant.URL_JW +
+                  Constant.URL_CLASS_SCHEDULE_ALL +
                   '?term=' +
                   term +
                   '&year=' +
@@ -196,7 +197,8 @@ class HttpUtil {
       print(postData);
       print(head);
       var response = await http
-          .post(Constant.URL_LOGIN, body: postData, headers: head)
+          .post(Constant.URL_JW + Constant.URL_LOGIN,
+              body: postData, headers: head)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       if (response.headers['location'].contains('index_new'))
         callback({
@@ -236,7 +238,8 @@ class HttpUtil {
     var head = {'cookie': cookie};
     try {
       var response = await http
-          .get(Constant.URL_QUERY_EXAMINATION_LOCATION, headers: head)
+          .get(Constant.URL_JW + Constant.URL_QUERY_EXAMINATION_LOCATION,
+              headers: head)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       List<Map> examList = new List();
       String html = gbk
@@ -354,7 +357,8 @@ class HttpUtil {
     var postData = {'year': _year.toString(), 'term': term, 'para': '0'};
     try {
       var response = await http
-          .post(Constant.URL_QUERY_SCORE, body: postData, headers: head)
+          .post(Constant.URL_JW + Constant.URL_QUERY_SCORE,
+              body: postData, headers: head)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       List<Map> scoreList = new List();
       String html = response.body.replaceAll(RegExp(r'\s'), '');
