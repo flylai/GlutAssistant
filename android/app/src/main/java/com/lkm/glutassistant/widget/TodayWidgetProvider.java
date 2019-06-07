@@ -86,7 +86,7 @@ public class TodayWidgetProvider extends AppWidgetProvider {
         String firstweekTimestamp = mSharedPerf.getString("flutter.first_week_timestamp", "0");
         String firstweek = mSharedPerf.getString("flutter.first_week", "1");
         int week = (int) (Math.ceil((calendar.getTimeInMillis() / 1000 - (Long.parseLong(firstweekTimestamp))) / 25200 / 24.0)) + Integer.parseInt(firstweek);
-
+        week = week > 25 ? 1 : week;
         RemoteViews mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_today_layout);
         mRemoteViews.setTextViewText(R.id.tv_week, "第 " + week + " 周");
         mRemoteViews.setTextViewText(R.id.tv_weekday, "周" + weekdayStr[weekday]);
