@@ -141,13 +141,18 @@ class _QueryScoreState extends State<QueryScore> {
                     _selectTermValue.toString(), _cookie, (callback) async {
                   scoreList.clear();
                   if (callback['success'] && callback['data'].length > 0) {
+                    int campusType =
+                        Constant.URL_JW == Constant.URL_JW_GLUT ? 1 : 2;
                     for (var item in callback['data']) {
                       String score;
                       if (item['score'].contains(RegExp(r'[优中良格]'))) {
                         score = item['score'] +
-                            '(' +
-                            ((5 + double.parse(item['gpa'])) * 10).toString() +
-                            ')';
+                            (campusType == 1
+                                ? ('(' +
+                                    ((5 + double.parse(item['gpa'])) * 10)
+                                        .toString() +
+                                    ')')
+                                : '');
                       } else
                         score = item['score']
                             .toString()
@@ -160,7 +165,7 @@ class _QueryScoreState extends State<QueryScore> {
                             title: Text(item['course']),
                             subtitle: Text(item['teacher'] +
                                 (item['teacher'] == '' ? '' : '    ') +
-                                '绩点: ' +
+                                (campusType == 1 ? '绩点: ' : '学分: ') +
                                 item['gpa']),
                             trailing: Text(
                               score,
