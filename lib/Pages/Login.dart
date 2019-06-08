@@ -294,7 +294,8 @@ class _LoginState extends State<Login> {
         else
           Constant.URL_JW = Constant.URL_JW_GLUT_NN;
         _selectCampusValue = campus;
-      }
+      } else
+        Constant.URL_JW = Constant.URL_JW_GLUT;
     });
     SharedPreferenceUtil.setInt('campus', _selectCampusValue);
   }
