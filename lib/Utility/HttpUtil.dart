@@ -354,24 +354,30 @@ class HttpUtil {
       String year, String term, String cookie, Function callback) async {
     int _year = int.parse(year) - 1980;
     var head = {'cookie': cookie};
-    var postData = {'year': _year.toString(), 'term': term, 'para': '0'};
-    try {
-      var response = await http
-          .post(Constant.URL_JW + Constant.URL_QUERY_SCORE,
-              body: postData, headers: head)
-          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
-      List<Map> scoreList = new List();
-      String html = response.body.replaceAll(RegExp(r'\s'), '');
-      RegExp scoreExp = RegExp(
+    RegExp scoreExp = RegExp(r'');
+    if (Constant.URL_JW == Constant.URL_JW_GLUT)
+      scoreExp = RegExp(
           r'<td>[春秋]</td>.*?<td>\d+?</td><td>(.*?)</td><td>\d+?</td><td>(.*?)</td><td>(.*?)</td><td>(\d?\.\d?)</td>',
           caseSensitive: false);
+    else {
+      scoreExp = RegExp(
+          r'<td>[春秋]</td><td>.*?</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>',
+          caseSensitive: false);
+      term = term == '2' ? '3' : '1'; // 南宁分校秋季学期是3
+    }
+    var postData = {'year': _year.toString(), 'term': term, 'para': '0'};
+    try {
+      var response = await http.post(Constant.URL_JW + Constant.URL_QUERY_SCORE,
+          body: postData, headers: head);
+      List<Map> scoreList = new List();
+      String html = response.body.replaceAll(RegExp(r'\s'), '');
       Iterable<Match> scoreMatches = scoreExp.allMatches(html);
       for (var scoreListItem in scoreMatches) {
         Map<String, String> scoredetail = new Map();
         scoredetail['course'] = scoreListItem.group(1);
         scoredetail['teacher'] = scoreListItem.group(2);
         scoredetail['score'] = scoreListItem.group(3);
-        scoredetail['gpa'] = scoreListItem.group(4);
+        scoredetail['gpa'] = scoreListItem.group(4); // 南宁分校此处是学分
         scoreList.add(scoredetail);
       }
       callback({'success': true, 'data': scoreList});
