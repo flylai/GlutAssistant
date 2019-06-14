@@ -357,13 +357,14 @@ class _SettingsState extends State<Settings> {
     DateTime _now = DateTime.now();
     DateTime _startWeek = DateTime(_now.year, _now.month, _now.day)
         .subtract(Duration(days: _now.weekday - 1));
-    _subtitleCurrentWeek = (((_startWeek.millisecondsSinceEpoch / 1000 -
-                        int.parse(_firstWeekTimestamp)) ~/
-                    25200 /
-                    24)
-                .ceil() +
-            int.parse(_subtitleCurrentWeek))
-        .toString();
+    int _subtitleCurrentWeekInt = (((_startWeek.millisecondsSinceEpoch / 1000 -
+                    int.parse(_firstWeekTimestamp)) ~/
+                25200 /
+                24)
+            .ceil() +
+        int.parse(_subtitleCurrentWeek));
+    _subtitleCurrentWeek =
+        _subtitleCurrentWeekInt > 25 ? '1' : _subtitleCurrentWeekInt.toString();
     _subtitleOpacity = await SharedPreferenceUtil.getDouble('opacity');
     _subtitleOpacity ??= Constant.VAR_DEFAULT_OPACITY;
     _usingBackgroundImage =
