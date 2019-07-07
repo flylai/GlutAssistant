@@ -51,8 +51,16 @@ class _QueryExaminationLocationState extends State<QueryExaminationLocation> {
 
   _buildExamWidgetList(examListData) {
     List<Widget> examWidgetList = [];
-    int timestamps = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    DateTime now = DateTime.now();
     for (var exam in examListData) {
+      DateTime examTime = DateTime.parse(exam['datetime']);
+      int days = examTime.difference(now).inDays;
+      int hours = examTime.difference(now).inHours - days * 24;
+      int minutes =
+          examTime.difference(now).inMinutes - days * 24 * 60 - hours * 60;
+
+      print('$days $hours $minutes');
+
       Color color = Color(Constant
           .VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
       Widget child = Stack(
@@ -64,17 +72,29 @@ class _QueryExaminationLocationState extends State<QueryExaminationLocation> {
             child: Text('${exam['course']}',
                 style: TextStyle(color: Colors.white)),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('还有 ', style: TextStyle(color: Colors.white)),
-              Text(
-                '${(DateTime.parse(exam['datetime']).millisecondsSinceEpoch ~/ 1000 - timestamps) ~/ 86400}',
-                style: TextStyle(color: Colors.red, fontSize: 25),
-              ),
-              Text(' 天', style: TextStyle(color: Colors.white)),
-            ],
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            RichText(
+                text: TextSpan(
+                    style: TextStyle(color: Colors.white),
+                    children: <TextSpan>[
+                  TextSpan(text: '还有'),
+                  TextSpan(
+                      text: '${days > 0 ? '$days' : ''}',
+                      style: TextStyle(color: Colors.red, fontSize: 25)),
+                  TextSpan(text: '${days > 0 ? '天' : ''}'),
+                  TextSpan(
+                      text:
+                          '${days > 0 || (days == 0 && hours > 0) ? '$hours' : ''}',
+                      style: TextStyle(color: Colors.red, fontSize: 25)),
+                  TextSpan(
+                      text:
+                          '${days > 0 || (days == 0 && hours > 0) ? '小时' : ''}'),
+                  TextSpan(
+                      text: '$minutes',
+                      style: TextStyle(color: Colors.red, fontSize: 25)),
+                  TextSpan(text: '分钟')
+                ]))
+          ]),
           Positioned(
             bottom: 0,
             left: 0,
