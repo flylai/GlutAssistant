@@ -145,7 +145,7 @@ class _QueryScoreState extends State<QueryScore> {
                         Constant.URL_JW == Constant.URL_JW_GLUT ? 1 : 2;
                     for (var item in callback['data']) {
                       String score;
-                      if (item['score'].contains(RegExp(r'[优中良格]'))) {
+                      if (item['score'].contains(RegExp(r'(?!不)[秀中良格]$'))) {
                         score = item['score'] +
                             (campusType == 1
                                 ? ('(' +
@@ -153,12 +153,13 @@ class _QueryScoreState extends State<QueryScore> {
                                         .toString() +
                                     ')')
                                 : '');
-                      } else
+                      } else {
                         score = item['score']
                             .toString()
-                            .replaceAllMapped(
-                                RegExp(r'.*>(\d+)<.*'), (Match m) => '${m[1]}')
+                            .replaceAllMapped(RegExp(r'.*>(\d+|不及格)<.*'),
+                                (Match m) => '${m[1]}')
                             .replaceAll('&nbsp;', '');
+                      }
                       scoreList.add(Container(
                           color: Colors.white.withOpacity(_opacity),
                           child: ListTile(
