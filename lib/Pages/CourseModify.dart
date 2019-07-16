@@ -151,7 +151,7 @@ class _CourseModifyState extends State<CourseModify> {
                 alignment: Alignment.centerLeft,
                 height: 48,
                 child: Text(
-                    '星期${BaseFunctionUtil.getWeekdayByNum(_weekday)}  第 ${BaseFunctionUtil.getTimeByNum(_startTime)} 至 ${BaseFunctionUtil.getTimeByNum(_endTime)} 节'),
+                    '星期${BaseFunctionUtil().getWeekdayByNum(_weekday)}  第 ${BaseFunctionUtil().getTimeByNum(_startTime)} 至 ${BaseFunctionUtil().getTimeByNum(_endTime)} 节'),
               ),
               onTap: () => {
                     TimePicker.showTimePicker(

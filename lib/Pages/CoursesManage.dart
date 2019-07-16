@@ -46,7 +46,7 @@ class _CoursesManageState extends State<CoursesManage> {
                 ),
                 Text('${item['teacher']}'),
                 Text(
-                    '${item['startWeek']} - ${item['endWeek']} ${item['weekType'] == 'A' ? '全' : item['weekType'] == 'D' ? '双' : '单'}周 星期${BaseFunctionUtil.getWeekdayByNum(item['weekday'])} ${BaseFunctionUtil.getTimeByNum(item['startTime'])} - ${BaseFunctionUtil.getTimeByNum(item['endTime'])}节'),
+                    '${item['startWeek']} - ${item['endWeek']} ${item['weekType'] == 'A' ? '全' : item['weekType'] == 'D' ? '双' : '单'}周 星期${BaseFunctionUtil().getWeekdayByNum(item['weekday'])} ${BaseFunctionUtil().getTimeByNum(item['startTime'])} - ${BaseFunctionUtil().getTimeByNum(item['endTime'])}节'),
                 Text('${item['location'] == '' ? '未知地点' : item['location']}'),
               ],
             ),

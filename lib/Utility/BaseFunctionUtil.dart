@@ -1,5 +1,5 @@
 class BaseFunctionUtil {
-  static String getDuration(DateTime t1, DateTime t2) {
+  String getDuration(DateTime t1, DateTime t2) {
     int diff =
         t1.millisecondsSinceEpoch ~/ 1000 - t2.millisecondsSinceEpoch ~/ 1000;
     int day = diff ~/ 86400;
@@ -20,7 +20,7 @@ class BaseFunctionUtil {
     return duration;
   }
 
-  static int getNumByWeekday(String weekday) {
+  int getNumByWeekday(String weekday) {
     switch (weekday) {
       case '星期一':
         return 1;
@@ -42,7 +42,7 @@ class BaseFunctionUtil {
     return 0;
   }
 
-  static String getTimeByNum(int i) {
+  String getTimeByNum(int i) {
     String _i;
     if (i > 4 && i < 7)
       _i = '中午${i - 4}';
@@ -53,7 +53,7 @@ class BaseFunctionUtil {
     return _i;
   }
 
-  static String getWeekdayByNum(int weekday) {
+  String getWeekdayByNum(int weekday) {
     switch (weekday) {
       case 1:
         return '一';

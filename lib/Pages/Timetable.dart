@@ -12,7 +12,9 @@ class Timetable extends StatefulWidget {
   final int _selectWeek;
   final int _currentWeek;
   final callback;
+
   Timetable(this._currentWeek, this._selectWeek, {this.callback});
+
   @override
   _TimetableState createState() => _TimetableState();
 }
@@ -92,7 +94,7 @@ class _TimetableState extends State<Timetable> {
         alignment: Alignment.center,
         height: Constant.VAR_COURSE_HEIGHT,
         child: Text(
-          BaseFunctionUtil.getTimeByNum(i),
+          BaseFunctionUtil().getTimeByNum(i),
           textAlign: TextAlign.center,
         ),
       );
@@ -157,10 +159,7 @@ class _TimetableState extends State<Timetable> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Icon(
-                              Icons.book,
-                              color: Colors.amber,
-                            ),
+                            Icon(Icons.book, color: Colors.amber),
                             Text(courselist[k]['courseName'])
                           ],
                         ),
@@ -244,7 +243,7 @@ class _TimetableState extends State<Timetable> {
               : today.day.toString();
       var wd = Expanded(
         child: Text(
-          '周${BaseFunctionUtil.getWeekdayByNum(i)}\n$todayStr',
+          '周${BaseFunctionUtil().getWeekdayByNum(i)}\n$todayStr',
           style: TextStyle(
               color: todayStr == '今天' ? Color(0xffEF3473) : Colors.black),
           textAlign: TextAlign.center,
