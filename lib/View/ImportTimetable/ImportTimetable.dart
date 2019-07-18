@@ -1,7 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:glutassistant/Model/ImportTimetableModel.dart';
+import 'package:glutassistant/Model/ImportTimetable/ImportTimetableModel.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 import 'package:provider/provider.dart';
 
