@@ -1,28 +1,23 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
 import 'package:glutassistant/Model/QueryScore/ExamScoreModel.dart';
 import 'package:glutassistant/Model/QueryScore/FitnessScoreModel.dart';
-import 'package:glutassistant/Utility/FileUtil.dart';
-import 'package:glutassistant/Utility/HttpUtil.dart';
-import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 import 'package:glutassistant/View/QueryScore/ExamScore.dart';
 import 'package:glutassistant/View/QueryScore/FitnessScore.dart';
-import 'package:glutassistant/Widget/DetailCard.dart';
-import 'package:glutassistant/Widget/ProgressDialog.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 import 'package:provider/provider.dart';
 
 class QueryScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ExamScoreList examScore = ExamScoreList();
-    FitnessScoreList fitnessScore = FitnessScoreList();
     return MultiProvider(providers: [
-      ChangeNotifierProvider<ExamScoreList>.value(value: examScore),
-      ChangeNotifierProvider<FitnessScoreList>.value(value: fitnessScore)
+      ChangeNotifierProvider<ExamScoreList>(
+        builder: (_) => ExamScoreList(),
+      ),
+      ChangeNotifierProvider<FitnessScoreList>(
+          builder: (_) => FitnessScoreList())
     ], child: Container(child: _buildBody()));
   }
 
