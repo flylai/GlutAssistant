@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:glutassistant/Utility/SQLiteUtil2.dart';
 import 'package:glutassistant/Utility/SPUtil.dart';
 
-class CourseList with ChangeNotifier {
+class TodayCourseList with ChangeNotifier {
   int _dashboardType = 0;
   int _firstWeek;
   String _firstWeekTimestamps;

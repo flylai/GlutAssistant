@@ -2,7 +2,6 @@ import 'dart:core';
 
 import 'package:flutter/foundation.dart';
 import 'package:glutassistant/Utility/BalanceUtil.dart';
-import 'package:glutassistant/Utility/FileUtil2.dart';
 
 class Balance with ChangeNotifier {
   bool _status = false;

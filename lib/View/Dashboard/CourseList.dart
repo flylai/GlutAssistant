@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
-import 'package:glutassistant/Model/Dashboard/CourseListModel.dart';
+import 'package:glutassistant/Model/Dashboard/TodayCourseListModel.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
 import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:glutassistant/Widget/DetailCard.dart';
@@ -12,16 +12,16 @@ class DashboardCourseList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      builder: (context) => CourseList(),
+      builder: (context) => TodayCourseList(),
       child: Container(child: _buildCourseList()),
     );
   }
 
   Widget _buildCourseListByCard() {
-    return Consumer2<CourseList, GlobalData>(
-        builder: (context, courseList, globalData, _) {
-      List<Widget> todayCourseList = [];
-      for (var course in courseList.courseList) {
+    return Consumer2<TodayCourseList, GlobalData>(
+        builder: (context, todayCourseList, globalData, _) {
+      List<Widget> courseListWidget = [];
+      for (var course in todayCourseList.courseList) {
         int startTime = course['startTime'];
         int endTime = course['endTime'];
         String startTimeStr = BaseFunctionUtil().getTimeByNum(startTime);
@@ -82,7 +82,7 @@ class DashboardCourseList extends StatelessWidget {
         );
         Color color = Color(Constant
             .VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
-        todayCourseList.add(DetailCard(
+        courseListWidget.add(DetailCard(
           color,
           child,
           elevation: 0.5,
@@ -90,7 +90,7 @@ class DashboardCourseList extends StatelessWidget {
         ));
       }
 
-      return ListView(shrinkWrap: true, children: todayCourseList);
+      return ListView(shrinkWrap: true, children: courseListWidget);
     });
   }
 
@@ -100,7 +100,7 @@ class DashboardCourseList extends StatelessWidget {
     int month = nowDateTime.month;
     int day = nowDateTime.day;
 
-    return Consumer<CourseList>(builder: (context, courseList, _) {
+    return Consumer<TodayCourseList>(builder: (context, courseList, _) {
       List<Step> todayCourseList = [];
       int stepPosition = 0;
       bool isCheck = false; // 时间早于第一节课的判定
@@ -211,10 +211,10 @@ class DashboardCourseList extends StatelessWidget {
   }
 
   Widget _buildCourseList() {
-    return Consumer2<CourseList, GlobalData>(
-        builder: (context, courseList, globalData, _) {
-      courseList.init();
-      if (courseList.courseList.length > 0) {
+    return Consumer2<TodayCourseList, GlobalData>(
+        builder: (context, todayCourseList, globalData, _) {
+      todayCourseList.init();
+      if (todayCourseList.courseList.length > 0) {
         if (globalData.dashboardType == 0)
           return _buildCourseListByCard();
         else
