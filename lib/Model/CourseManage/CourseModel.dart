@@ -1,22 +1,27 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 
 class SingleCourse with ChangeNotifier {
   int _courseNo;
   String _courseName;
   String _teacher;
-  int _startWeek;
-  int _endWeek;
-  int _weekday;
-  String _weekType;
-  int _startTime;
-  int _endTime;
+  int _startWeek = 1;
+  int _endWeek = 1;
+  int _weekday = 1;
+  String _weekType = 'A';
+  int _startTime = 1;
+  int _endTime = 1;
   String _location;
 
-  String _weekTypeStr = '';
-  String _weekdayStr = '';
-  String _startTimeStr = '';
-  String _endTimeStr = '';
+  String _weekTypeStr = '全';
+  String _weekdayStr = '一';
+  String _startTimeStr = '1';
+  String _endTimeStr = '1';
+
+  TextEditingController _courseNameController = TextEditingController();
+  TextEditingController _teacherController = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
 
   int get courseNo => _courseNo;
   String get courseName => _courseName;
@@ -34,6 +39,10 @@ class SingleCourse with ChangeNotifier {
   String get startTimeStr => _startTimeStr;
   String get endTimeStr => _endTimeStr;
 
+  TextEditingController get courseNameController => _courseNameController;
+  TextEditingController get teacherController => _teacherController;
+  TextEditingController get locationController => _locationController;
+
   set courseNo(int courseNo) {
     if (_courseNo == courseNo) return;
     _courseNo = courseNo;
@@ -43,12 +52,14 @@ class SingleCourse with ChangeNotifier {
   set courseName(String courseName) {
     if (_courseName == courseName) return;
     _courseName = courseName;
+    _courseNameController.text = _courseName;
     notifyListeners();
   }
 
   set teacher(String teacher) {
     if (_teacher == teacher) return;
     _teacher = teacher;
+    _teacherController.text = _teacher;
     notifyListeners();
   }
 
@@ -87,20 +98,21 @@ class SingleCourse with ChangeNotifier {
   set startTime(int startTime) {
     if (_startTime == startTime) return;
     _startTime = startTime;
-    _startTimeStr = BaseFunctionUtil().getWeekdayByNum(_startTime);
+    _startTimeStr = BaseFunctionUtil().getTimeByNum(_startTime);
     notifyListeners();
   }
 
   set endTime(int endTime) {
     if (_endTime == endTime) return;
     _endTime = endTime;
-    _endTimeStr = BaseFunctionUtil().getWeekdayByNum(_endTime);
+    _endTimeStr = BaseFunctionUtil().getTimeByNum(_endTime);
     notifyListeners();
   }
 
   set location(String location) {
     if (_location == location) return;
     _location = location == '' ? '未知地点' : location;
+    _locationController.text = _location;
     notifyListeners();
   }
 
@@ -115,6 +127,9 @@ class SingleCourse with ChangeNotifier {
     startTime = course['startTime'];
     endTime = course['endTime'];
     _location = course['location'];
+    _courseNameController.text = _courseName;
+    _teacherController.text = _teacher;
+    _locationController.text = _location;
     notifyListeners();
   }
 }
