@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:glutassistant/Model/CourseManage/CourseModel.dart';
 import 'package:glutassistant/Model/CourseManage/CoursePoolModel.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
-import 'package:glutassistant/Pages/CourseModify.dart';
 import 'package:glutassistant/Utility/SQLiteUtil2.dart';
+import 'package:glutassistant/View/CourseManage/CourseModify.dart';
 import 'package:glutassistant/Widget/DetailCard.dart';
 import 'package:provider/provider.dart';
 
@@ -24,9 +23,9 @@ class CoursesManage extends StatelessWidget {
       return ListView.builder(
           itemCount: coursePool.courses.length,
           itemBuilder: (context, index) {
-            SingleCourse sc = coursePool.courses[index];
+            SingleCourse singleCourse = coursePool.courses[index];
             return ChangeNotifierProvider<SingleCourse>.value(
-              value: sc,
+              value: singleCourse,
               child: _buildCourseItem(),
             );
           });
@@ -51,7 +50,7 @@ class CoursesManage extends StatelessWidget {
                 ),
                 Text('${singleCourse.teacher}'),
                 Text(
-                    '${singleCourse.startWeek} - ${singleCourse.endWeek} ${singleCourse.weekTypeStr}周 星期${singleCourse.weekdayStr} ${singleCourse.startTime} - ${singleCourse.endTime}节'),
+                    '${singleCourse.startWeek} - ${singleCourse.endWeek} ${singleCourse.weekTypeStr}周 星期${singleCourse.weekdayStr} ${singleCourse.startTimeStr} - ${singleCourse.endTimeStr}节'),
                 Text('${singleCourse.location}'),
               ],
             ),
@@ -61,18 +60,7 @@ class CoursesManage extends StatelessWidget {
             children: <Widget>[
               GestureDetector(
                 child: Icon(Icons.create, size: 30, color: Colors.cyan),
-                onTap: () => _modifyCourse(
-                    context,
-                    singleCourse.courseNo,
-                    singleCourse.courseName,
-                    singleCourse.startWeek,
-                    singleCourse.endWeek,
-                    singleCourse.weekType,
-                    singleCourse.weekday,
-                    singleCourse.startTime,
-                    singleCourse.endTime,
-                    singleCourse.teacher,
-                    singleCourse.location),
+                onTap: () => _modifyCourse(context, singleCourse),
               ),
               GestureDetector(
                 child: Icon(Icons.delete_forever,
@@ -115,30 +103,9 @@ class CoursesManage extends StatelessWidget {
         });
   }
 
-  void _modifyCourse(
-      BuildContext context,
-      int no,
-      String courseName,
-      int startWeek,
-      int endWeek,
-      String weekType,
-      int weekday,
-      int startTime,
-      int endTime,
-      String teacher,
-      String location) {
+  void _modifyCourse(BuildContext context, SingleCourse singleCourse) {
     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-      return CourseModify(
-          no: no,
-          courseName: courseName,
-          startWeek: startWeek,
-          endWeek: endWeek,
-          weekType: weekType,
-          weekday: weekday,
-          startTime: startTime,
-          endTime: endTime,
-          teacher: teacher,
-          location: location);
+      return CourseModify(singleCourse);
     }));
   }
 }
