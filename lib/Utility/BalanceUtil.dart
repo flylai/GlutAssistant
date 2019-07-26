@@ -56,7 +56,7 @@ class BalanceUtil {
         //cookie没过期有结果
         _lastupdate =
             '${DateTime.now().month}-${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}';
-        _balance = returnResult['balance'];
+        _balance = queryResult['balance'];
         returnResult['success'] = true;
         returnResult['msg'] = '查询成功';
         returnResult['balance'] = _balance;
