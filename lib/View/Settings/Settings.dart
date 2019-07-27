@@ -217,7 +217,7 @@ class Settings extends StatelessWidget {
                       title: Text('学号修改'),
                       content: TextField(
                         decoration: InputDecoration(labelText: "学号"),
-                        controller: globalData.studentidController,
+                        controller: globalData.studentIdController,
                       ),
                       actions: <Widget>[
                         FlatButton(
