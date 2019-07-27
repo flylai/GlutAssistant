@@ -16,7 +16,6 @@ class LoginInfo with ChangeNotifier {
   bool _isLoading = false;
   bool _obscure = true; //密码的明文控制
   bool _savePwd = true; //记住密码开关控制
-  bool _isFirst = true;
 
   CampusType _campusType = CampusType.guilinJW;
 
@@ -91,7 +90,6 @@ class LoginInfo with ChangeNotifier {
   }
 
   Future<void> init() async {
-    if (!_isFirst) return;
     SharedPreferenceUtil su = await SharedPreferenceUtil.getInstance();
     _campusType = CampusType.values[await su.getInt('campus')];
     await refreshVerifyCodeImage();
