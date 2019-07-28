@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
-import 'package:glutassistant/Model/Login/LoginInfo.dart';
+import 'package:glutassistant/Model/Login/LoginInfoModel.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 import 'package:provider/provider.dart';
 
