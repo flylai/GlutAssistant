@@ -5,39 +5,63 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPreferenceUtil {
   static SharedPreferences _pref;
 
-  static Future<bool> getBool(String field) async {
-    return _pref.getBool(field);
+  static SharedPreferenceUtil _instance;
+
+  static Future<SharedPreferenceUtil> get instance async {
+    return await getInstance();
   }
 
-  static Future<double> getDouble(String field) async {
-    return _pref.getDouble(field);
+  SharedPreferenceUtil._();
+
+  Future<bool> getBool(String field) async {
+    var res = _pref.getBool(field);
+    if (res == null) return false;
+    return res;
   }
 
-  static Future<int> getInt(String field) async {
-    return _pref.getInt(field);
+  Future<double> getDouble(String field) async {
+    var res = _pref.getDouble(field);
+    if (res == null) return 0.7;
+    return res;
   }
 
-  static Future<String> getString(String field) async {
-    return _pref.getString(field);
+  Future<int> getInt(String field) async {
+    var res = _pref.getInt(field);
+    if (res == null) return 1;
+    return res;
   }
 
-  static Future init() async {
+  Future<String> getString(String field) async {
+    var res = _pref.getString(field);
+    if (res == null) return '';
+    return res;
+  }
+
+  Future init() async {
     if (_pref == null) _pref = await SharedPreferences.getInstance();
   }
 
-  static Future setBool(String field, bool contents) async {
+  Future setBool(String field, bool contents) async {
     _pref.setBool(field, contents);
   }
 
-  static Future setDouble(String field, double contents) async {
+  Future setDouble(String field, double contents) async {
     _pref.setDouble(field, contents);
   }
 
-  static Future setInt(String field, int contents) async {
+  Future setInt(String field, int contents) async {
     _pref.setInt(field, contents);
   }
 
-  static Future setString(String field, String contents) async {
+  Future setString(String field, String contents) async {
     _pref.setString(field, contents);
+  }
+
+  static Future<SharedPreferenceUtil> getInstance() async {
+    if (_instance == null) {
+      _instance = new SharedPreferenceUtil._();
+      await _instance.init();
+    }
+    return _instance;
   }
 }
