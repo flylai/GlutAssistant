@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistant/Model/CourseManage/CourseModel.dart';
 import 'package:glutassistant/Model/CourseManage/CoursePoolModel.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
-import 'package:glutassistant/Utility/SQLiteUtil2.dart';
+import 'package:glutassistant/Utility/SQLiteUtil.dart';
 import 'package:glutassistant/View/CourseManage/CourseModify.dart';
 import 'package:glutassistant/Widget/DetailCard.dart';
 import 'package:provider/provider.dart';

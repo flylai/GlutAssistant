@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:glutassistant/Model/CourseManage/CourseModel.dart';
-import 'package:glutassistant/Utility/SQLiteUtil2.dart';
+import 'package:glutassistant/Utility/SQLiteUtil.dart';
 
 class CoursePool with ChangeNotifier {
   List<SingleCourse> _courses = [];

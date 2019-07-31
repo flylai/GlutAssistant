@@ -5,19 +5,25 @@ import 'package:path_provider/path_provider.dart';
 
 class FileUtil {
   static String _dir;
-  static Future<bool> fileExist(String filename) async {
+  static FileUtil _instance;
+  static Future<FileUtil> get instance async {
+    return await getInstance();
+  }
+
+  FileUtil._();
+  Future<bool> fileExist(String filename) async {
     return await File(_dir + '/' + filename).exists();
   }
 
-  static String getDir() {
+  String getDir() {
     return _dir;
   }
 
-  static Future init() async {
+  Future init() async {
     if (_dir == null) _dir = (await getApplicationDocumentsDirectory()).path;
   }
 
-  static String readFile(String filename) {
+  String readFile(String filename) {
     String content;
     try {
       File file = new File(_dir + '/' + filename);
@@ -29,7 +35,7 @@ class FileUtil {
     return content;
   }
 
-  static bool writeFile(String contents, String filename) {
+  bool writeFile(String contents, String filename) {
     try {
       File file = new File(_dir + '/' + filename);
       file.writeAsStringSync(contents);
@@ -37,5 +43,13 @@ class FileUtil {
     } catch (e) {
       return false;
     }
+  }
+
+  static Future<FileUtil> getInstance() async {
+    if (_instance == null) {
+      _instance = new FileUtil._();
+      await _instance.init();
+    }
+    return _instance;
   }
 }

@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
-import 'package:glutassistant/Utility/FileUtil2.dart';
+import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
 import 'package:glutassistant/Utility/SPUtil.dart';
 

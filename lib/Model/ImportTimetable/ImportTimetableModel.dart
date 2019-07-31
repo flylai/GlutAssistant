@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
-import 'package:glutassistant/Utility/FileUtil2.dart';
+import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
-import 'package:glutassistant/Utility/SQLiteUtil2.dart';
+import 'package:glutassistant/Utility/SQLiteUtil.dart';
 
 class ImportTimetableModel with ChangeNotifier {
   int _year = DateTime.now().year;

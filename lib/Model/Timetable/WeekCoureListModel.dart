@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
-import 'package:glutassistant/Utility/SQLiteUtil2.dart';
+import 'package:glutassistant/Utility/SQLiteUtil.dart';
 
 class WeekCourseList with ChangeNotifier {
   List<dynamic> _dateList = [];

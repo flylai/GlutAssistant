@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:glutassistant/Utility/SQLiteUtil2.dart';
+import 'package:glutassistant/Utility/SQLiteUtil.dart';
 import 'package:glutassistant/Utility/SPUtil.dart';
 
 class TodayCourseList with ChangeNotifier {

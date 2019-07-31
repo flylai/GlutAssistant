@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:glutassistant/Common/Constant.dart';
-import 'package:glutassistant/Utility/FileUtil2.dart';
+import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
 
 class ExamLocation with ChangeNotifier {
@@ -22,6 +22,7 @@ class ExamLocation with ChangeNotifier {
     String cookie = fp.readFile(Constant.FILE_SESSION);
     _examList.clear();
     Map<String, dynamic> result = await HttpUtil().queryExamLocation(cookie);
+    print(result);
     if (!result['success']) {
       _status = false;
       _msg = '未查到考试信息, 也许是你没登入教务或者最近没有考试';
@@ -29,7 +30,7 @@ class ExamLocation with ChangeNotifier {
       _status = true;
       _msg = '查询成功';
       DateTime now = DateTime.now();
-      List<Map<String, dynamic>> tmpList = result['data'];
+      List<Map<dynamic, dynamic>> tmpList = result['data'];
       for (var exam in tmpList) {
         DateTime examTime = DateTime.parse(exam['datetime']);
         int days = examTime.difference(now).inDays;

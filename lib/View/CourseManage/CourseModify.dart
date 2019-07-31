@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Model/CourseManage/CourseModel.dart';
-import 'package:glutassistant/Utility/SQLiteUtil2.dart';
+import 'package:glutassistant/Utility/SQLiteUtil.dart';
 import 'package:glutassistant/Widget/TimePicker.dart';
 import 'package:glutassistant/Widget/WeekPicker.dart';
 import 'package:provider/provider.dart';
