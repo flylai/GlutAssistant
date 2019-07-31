@@ -7,7 +7,7 @@ import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:http/http.dart' as http;
 
 class HttpUtil {
-  static getCode(Function callback) async {
+  Future<Map<String, dynamic>> getCode() async {
     try {
       var response = await http
           .post(Constant.URL_JW + Constant.URL_VERIFY_CODE)
@@ -16,14 +16,14 @@ class HttpUtil {
         'cookie': response.headers['set-cookie'].split(';')[0],
         'image': base64.encode(response.bodyBytes)
       };
-      callback({'success': true, 'data': data});
+      return {'success': true, 'data': data};
     } catch (e) {
-      callback({'success': false, 'data': e});
+      return {'success': false, 'data': e};
     }
   }
 
-  static importTimetable(
-      String year, String term, String cookie, Function callback) async {
+  Future<Map<String, dynamic>> importTimetable(
+      String year, String term, String cookie) async {
     int _year = int.parse(year) - 1980;
     var head = {'cookie': cookie};
     try {
@@ -158,13 +158,14 @@ class HttpUtil {
           }
         }
       }
-      callback({'success': true, 'data': courseList});
+      return {'success': true, 'data': courseList};
     } catch (e) {
-      callback({'success': false, 'data': e});
+      return {'success': false, 'data': e};
     }
   }
 
-  static loginCW(String studentId, String password, Function callback) async {
+  Future<Map<String, dynamic>> loginCW(
+      String studentId, String password) async {
     try {
       var postData = {
         'sid': studentId,
@@ -174,19 +175,19 @@ class HttpUtil {
           .post(Constant.URL_LOGIN_CAIWU, body: postData)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       if (response.headers.containsKey('set-cookie'))
-        callback({
+        return {
           'success': true,
           'cookie': response.headers['set-cookie'].split(';')[0]
-        });
+        };
       else
-        callback({'success': false, 'cookie': ''});
+        return {'success': false, 'cookie': ''};
     } catch (e) {
-      callback({'success': false, 'cookie': ''});
+      return {'success': false, 'cookie': ''};
     }
   }
 
-  static loginJW(String studentId, String password, String verifyCode,
-      String cookie, Function callback) async {
+  Future<Map<String, dynamic>> loginJW(String studentId, String password,
+      String verifyCode, String cookie) async {
     try {
       var head = {'cookie': cookie};
       var postData = {
@@ -201,19 +202,18 @@ class HttpUtil {
               body: postData, headers: head)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       if (response.headers['location'].contains('index_new'))
-        callback({
+        return {
           'success': true,
           'cookie': response.headers['set-cookie'].split(';')[0]
-        });
+        };
       else
-        callback({'success': false, 'cookie': ''});
+        return {'success': false, 'cookie': ''};
     } catch (e) {
-      callback({'success': false, 'cookie': ''});
-      print('err' + e);
+      return {'success': false, 'cookie': ''};
     }
   }
 
-  static queryBalance(String studentId, Function callback) async {
+  Future<Map<String, dynamic>> queryBalance(String studentId) async {
     try {
       var postData = {
         'method': 'getecardinfo',
@@ -226,15 +226,15 @@ class HttpUtil {
       if (response.body.contains('true')) {
         Map<String, dynamic> json = jsonDecode(response.body);
         String balance = json['data']['Balance'];
-        callback({'success': true, 'balance': balance});
+        return {'success': true, 'balance': balance};
       } else
-        callback({'success': false, 'balance': ''});
+        return {'success': false, 'balance': ''};
     } catch (e) {
-      callback({'success': false, 'balance': ''});
+      return {'success': false, 'balance': ''};
     }
   }
 
-  static queryExaminationLocation(String cookie, Function callback) async {
+  Future<Map<String, dynamic>> queryExamLocation(String cookie) async {
     var head = {'cookie': cookie};
     try {
       var response = await http
@@ -252,29 +252,30 @@ class HttpUtil {
       RegExp examDetailExp = RegExp(
           r'class="infolist_common"><td>(\d+?)</td><td>(.*?)</td><td>(\d{4}-\d{2}-\d{2})(\d{2}:\d{2}--\d{2}:\d{2})</td><td>(.*?)</td><!--<td></td>--><td>(.*?)</td>',
           caseSensitive: false);
-      if (examHTMLMatches.length > 0) {
-        Iterable<Match> examDetailMatches =
-            examDetailExp.allMatches(examHTMLMatches.first.group(0));
-        for (var examDetail in examDetailMatches) {
-          //1课程号 2课程名 3考试时间(天) 4考试时间(区间) 5考试地点 6考核方式
-          Map<String, dynamic> exam = {};
-          exam['course'] = examDetail.group(2);
-          exam['datetime'] = examDetail.group(3);
-          exam['interval'] = examDetail.group(4);
-          exam['location'] = examDetail.group(5);
-          exam['type'] = examDetail.group(6);
-          examList.add(exam);
-        }
-        callback({'success': true, 'data': examList});
+      // if (examHTMLMatches.length > 0) {
+      Iterable<Match> examDetailMatches =
+          examDetailExp.allMatches(examHTMLMatches.first.group(0));
+      for (var examDetail in examDetailMatches) {
+        //1课程号 2课程名 3考试时间(天) 4考试时间(区间) 5考试地点 6考核方式
+        Map<String, dynamic> exam = {};
+        exam['course'] = examDetail.group(2);
+        exam['datetime'] = examDetail.group(3);
+        exam['interval'] = examDetail.group(4);
+        exam['location'] = examDetail.group(5);
+        exam['type'] = examDetail.group(6);
+        examList.add(exam);
+      }
+      if (examList.length > 0) {
+        return {'success': true, 'data': examList};
       } else {
-        callback({'success': false, 'data': ''});
+        return {'success': false, 'data': ''};
       }
     } catch (e) {
-      callback({'success': false, 'data': e});
+      return {'success': false, 'data': e};
     }
   }
 
-  static queryFitnessTestScore(String studentId, Function callback) async {
+  Future<Map<String, dynamic>> queryFitnessTestScore(String studentId) async {
     var postData = {
       'operType': '911',
       'loginflag': '0',
@@ -310,12 +311,12 @@ class HttpUtil {
           caseSensitive: false);
 
       List<Map> fitnessList = new List();
-      Map<String, String> result = new Map();
+      Map<String, String> result = {};
 
       Iterable<Match> resultMatches = resultExp.allMatches(html);
       for (var item in resultMatches) {
         // 1项目 2成绩 3分数 4结论 5加分 6减分 7总成绩 8总结论
-        Map<String, String> fitnessDetail = new Map();
+        Map<String, String> fitnessDetail = {};
         fitnessDetail['name'] = item.group(1);
         fitnessDetail['record'] = item.group(2);
         fitnessDetail['score'] = item.group(3);
@@ -336,7 +337,7 @@ class HttpUtil {
 
       for (var item in itemMatches) {
         // 1项目 2成绩 3分数 4结论
-        Map<String, String> fitnessDetail = new Map();
+        Map<String, String> fitnessDetail = {};
         fitnessDetail['name'] = item.group(1);
         fitnessDetail['record'] = item.group(2);
         fitnessDetail['score'] = item.group(3);
@@ -344,14 +345,14 @@ class HttpUtil {
         fitnessList.add(fitnessDetail);
       }
 
-      callback({'success': true, 'data': fitnessList, 'result': result});
+      return {'success': true, 'data': fitnessList, 'result': result};
     } catch (e) {
-      callback({'success': false, 'data': e});
+      return {'success': false, 'data': e};
     }
   }
 
-  static queryScore(
-      String year, String term, String cookie, Function callback) async {
+  Future<Map<String, dynamic>> queryScore(
+      String year, String term, String cookie) async {
     int _year = int.parse(year) - 1980;
     var head = {'cookie': cookie};
     RegExp scoreExp = RegExp(r'');
@@ -380,17 +381,17 @@ class HttpUtil {
         scoredetail['gpa'] = scoreListItem.group(4); // 南宁分校此处是学分
         scoreList.add(scoredetail);
       }
-      callback({'success': true, 'data': scoreList});
+      return {'success': true, 'data': scoreList};
     } catch (e) {
-      callback({'success': false, 'data': e});
+      return {'success': false, 'data': e};
     }
   }
 
-  static _getStudentId(String cookie, Function callback) async {
-    var head = {'cookie': cookie};
-    var response = await http.get(Constant.URL_GET_STUDENT_ID, headers: head);
-    RegExp exp = RegExp(r'name="stuUserId" value="(\d+?)">');
-    Iterable<Match> matches = exp.allMatches(response.body);
-    callback(matches.first.group(1));
-  }
+  // static _getStudentId(String cookie, Function callback) async {
+  //   var head = {'cookie': cookie};
+  //   var response = await http.get(Constant.URL_GET_STUDENT_ID, headers: head);
+  //   RegExp exp = RegExp(r'name="stuUserId" value="(\d+?)">');
+  //   Iterable<Match> matches = exp.allMatches(response.body);
+  //   callback(matches.first.group(1));
+  // }
 }
