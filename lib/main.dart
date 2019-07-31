@@ -1,37 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glutassistant/Pages/Home.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:glutassistant/Redux/State.dart';
 import 'package:glutassistant/Common/Constant.dart';
-import 'package:redux/redux.dart';
+import 'package:glutassistant/Model/GlobalData.dart';
+import 'package:glutassistant/View/Home/Home.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(GlutAssistant());
+Future<void> main() async {
   SystemUiOverlayStyle systemUiOverlayStyle =
       SystemUiOverlayStyle(statusBarColor: Colors.transparent);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+
+  GlobalData globalData = GlobalData();
+  await globalData.refreshGlobal();
+
+  runApp(ChangeNotifierProvider<GlobalData>.value(
+      value: globalData, child: GlutAssistant()));
 }
 
 class GlutAssistant extends StatelessWidget {
-  final store = Store<GlobalState>(appReducer,
-      initialState: GlobalState(
-        color: Constant.THEME_LIST_COLOR[0][1],
-      ));
-
   GlutAssistant({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StoreProvider(
-      store: store,
-      child: StoreBuilder<GlobalState>(builder: (context, store) {
-        return MaterialApp(
-          title: '桂工助手',
-          theme: ThemeData(primaryColor: store.state.color),
-          home: Home(),
-        );
-      }),
-    );
+    return Consumer<GlobalData>(builder: (context, globaldata, _) {
+      return MaterialApp(
+        home: Home(),
+        theme: ThemeData(
+            primaryColor: Constant.THEME_LIST_COLOR[globaldata.themeColorIndex]
+                [1]),
+      );
+    });
   }
 }
