@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:glutassistant/Utility/SQLiteUtil.dart';
-import 'package:glutassistant/Utility/SPUtil.dart';
+import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 class TodayCourseList with ChangeNotifier {
   int _dashboardType = 0;

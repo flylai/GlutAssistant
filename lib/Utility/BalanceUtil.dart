@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:glutassistant/Common/Constant.dart';
-import 'package:glutassistant/Utility/FileUtil2.dart';
+import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
-import 'package:glutassistant/Utility/SPUtil.dart';
+import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 class BalanceUtil {
   String _studentid = '';

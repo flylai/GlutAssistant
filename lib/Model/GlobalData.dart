@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
-import 'package:glutassistant/Utility/SPUtil.dart';
+import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 import 'package:image_picker/image_picker.dart';
 
 enum ScoreType { exam, fitness }

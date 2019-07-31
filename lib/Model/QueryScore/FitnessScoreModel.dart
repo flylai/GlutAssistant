@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
-import 'package:glutassistant/Utility/SPUtil.dart';
+import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 class FitnessScoreList with ChangeNotifier {
   bool _isLoading = false;

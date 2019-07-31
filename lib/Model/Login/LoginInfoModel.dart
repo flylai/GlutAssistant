@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
-import 'package:glutassistant/Utility/SPUtil.dart';
+import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 enum CampusType { guilinJW, guilinCA, nanning } //桂林教务 桂林统一身份认证 南宁分校
 
