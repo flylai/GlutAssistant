@@ -34,7 +34,7 @@ class Settings extends StatelessWidget {
             color: Colors.white.withOpacity(globalData.opacity),
             child: ListTile(
                 title: Text('当前周'),
-                subtitle: Text(globalData.currentWeek),
+                subtitle: Text(globalData.currentWeekStr),
                 onTap: () {
                   showDialog(
                       context: context,
