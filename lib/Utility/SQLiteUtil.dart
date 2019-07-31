@@ -4,34 +4,51 @@ import 'package:glutassistant/Common/Constant.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SQLiteUtil {
-  static final int _dbVersion = Constant.DB_VERSION;
-  static final String _dbFileName = Constant.FILE_DB;
-  static final String _dbTableName = Constant.VAR_TABLE_NAME;
+  final int _dbVersion = Constant.DB_VERSION;
+  final String _dbFileName = Constant.FILE_DB;
+  final String _dbTableName = Constant.VAR_TABLE_NAME;
+
   static String _dbPath;
   static Database _db;
-  static void closeDb() {
+  static SQLiteUtil _instance;
+
+  SQLiteUtil._();
+
+  static Future<SQLiteUtil> get instance async {
+    return await getInstance();
+  }
+
+  static Future<SQLiteUtil> getInstance() async {
+    if (_instance == null) {
+      _instance = new SQLiteUtil._();
+      await _instance.init();
+    }
+    return _instance;
+  }
+
+  void closeDb() {
     if (_db != null) _db.close();
     _db = null;
   }
 
-  static Future createTable() async {
+  Future createTable() async {
     await _db.execute(Constant.SQL_CREATE_TABLE);
   }
 
-  static bool dbIsOpen() {
+  bool dbIsOpen() {
     return _db == null ? false : true;
   }
 
-  static Future deleteCourse(int no) {
+  Future deleteCourse(int no) {
     return _db
         .delete(Constant.VAR_TABLE_NAME, where: 'No = ?', whereArgs: [no]);
   }
 
-  static Future dropTable() async {
+  Future dropTable() async {
     await _db.execute(Constant.SQL_DROP_TABLE);
   }
 
-  static init() async {
+  init() async {
     if (_dbPath == null) {
       _dbPath = await getDatabasesPath();
       _dbPath = _dbPath + '/' + _dbFileName;
@@ -43,37 +60,37 @@ class SQLiteUtil {
       });
   }
 
-  static insertTimetable(Map coursedetail) {
+  insertTimetable(Map coursedetail) {
     return _db.insert(_dbTableName, coursedetail);
   }
 
-  static isTableExist() async {
+  isTableExist() async {
     var res = await _db.rawQuery(
         "select * from Sqlite_master where type = 'table' and name = '$_dbTableName'");
     return res != null && res.length > 0;
   }
 
-  static Future queryCourse(int week, int weekday) async {
+  Future<List<Map<String, dynamic>>> queryCourse(int week, int weekday) async {
     String weektype = week % 2 == 0 ? 'D' : 'S';
     String sql =
         'SELECT * FROM ${Constant.VAR_TABLE_NAME} WHERE startWeek <= "$week" AND endWeek >= "$week" AND location != "" AND (weekType = "A" OR weekType = "$weektype") AND weekday = $weekday ORDER BY startTime ASC';
     return _db.rawQuery(sql);
   }
 
-  static Future queryCourseByTime(
-      int week, int weekday, int starttime, int endtime) async {
+  Future queryCourseByTime(
+      int week, int weekday, int startTime, int endTime) async {
     String weektype = week % 2 == 0 ? 'D' : 'S';
     String sql =
-        'SELECT * FROM ${Constant.VAR_TABLE_NAME} WHERE startWeek <= $week AND endWeek >= $week  AND location != "" AND (weekType = "A" OR weekType = "$weektype") AND weekday = $weekday AND startTime = $starttime AND endTime = $endtime ORDER BY startTime ASC';
+        'SELECT * FROM ${Constant.VAR_TABLE_NAME} WHERE startWeek <= $week AND endWeek >= $week  AND location != "" AND (weekType = "A" OR weekType = "$weektype") AND weekday = $weekday AND startTime = $startTime AND endTime = $endTime ORDER BY startTime ASC';
     return _db.rawQuery(sql);
   }
 
-  static Future queryCourseList() {
+  Future queryCourseList() {
     String sql = 'SELECT * FROM ${Constant.VAR_TABLE_NAME}';
     return _db.rawQuery(sql);
   }
 
-  static Future updateCourse(int no, Map coursedetail) {
+  Future updateCourse(int no, Map coursedetail) {
     return _db
         .update(_dbTableName, coursedetail, where: 'No = ?', whereArgs: [no]);
   }
