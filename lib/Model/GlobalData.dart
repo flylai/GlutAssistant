@@ -159,6 +159,7 @@ class GlobalData with ChangeNotifier {
     _themeColorIndex = await su.getInt('theme_color');
     _opacity = await su.getDouble('opacity');
     _firstWeekTimestamp = await su.getString('first_week_timestamp');
+    if (_firstWeekTimestamp == '') _firstWeekTimestamp = '1';
 
     _studentId = await su.getString('student_id');
     _passwordJW = await su.getString('password_JW');
@@ -168,18 +169,20 @@ class GlobalData with ChangeNotifier {
         : DashboardType.timeline;
 
     _currentWeekStr = await su.getString('first_week');
+    if (_currentWeekStr == '') _currentWeekStr = '1';
 
     DateTime _now = DateTime.now();
     DateTime _startWeek = DateTime(_now.year, _now.month, _now.day)
         .subtract(Duration(days: _now.weekday - 1));
-    int _subtitleCurrentWeekInt = (((_startWeek.millisecondsSinceEpoch / 1000 -
+    _currentWeek = (((_startWeek.millisecondsSinceEpoch / 1000 -
                     int.parse(_firstWeekTimestamp)) ~/
                 25200 /
                 24)
             .ceil() +
         int.parse(_currentWeekStr));
-    _currentWeekStr =
-        _subtitleCurrentWeekInt > 25 ? '1' : _subtitleCurrentWeekInt.toString();
+    if (_currentWeek > 25) _currentWeek = 1;
+    _selectedWeek = _currentWeek;
+    _currentWeekStr = _currentWeek > 25 ? '1' : _currentWeek.toString();
     _backgroundEnable = await su.getBool('background_enable')
         ? BackgroundImage.enable
         : BackgroundImage.disable;
