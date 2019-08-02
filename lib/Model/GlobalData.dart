@@ -133,7 +133,7 @@ class GlobalData with ChangeNotifier {
     else
       su.setBool('remember_pwd', false);
 
-    su.setString('password_jw', _passwordJWController.text.trim());
+    su.setString('password_JW', _passwordJWController.text.trim());
   }
 
   Future<void> setCurrentWeek() async {
