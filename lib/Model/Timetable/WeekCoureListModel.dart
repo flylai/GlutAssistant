@@ -14,12 +14,16 @@ class WeekCourseList with ChangeNotifier {
   set selectedWeek(int selectedWeek) {
     if (_selectedWeek == selectedWeek) return;
     _selectedWeek = selectedWeek;
+    refreshDateList();
+    refreshTimetable();
   }
 
   set currentWeek(int currentWeek) {
     if (_currentWeek == currentWeek) return;
     _currentWeek = currentWeek;
   }
+
+  int get selectedWeek => _selectedWeek;
 
   List<List<Map<String, dynamic>>> _weekCourse = [[], [], [], [], [], [], []];
   List<Map<String, dynamic>> _courseList = [];
@@ -48,15 +52,15 @@ class WeekCourseList with ChangeNotifier {
           '周${BaseFunctionUtil().getWeekdayByNum(i)}\n$todayStr';
       _dateList.add({'color': todayColor, 'weekday': weekdayStr});
     }
-    notifyListeners();
   }
 
   Future<void> refreshTimetable() async {
+    List<List<Map<String, dynamic>>> weekCourse = [[], [], [], [], [], [], []];
     SQLiteUtil su = await SQLiteUtil.getInstance();
     if (!su.dbIsOpen()) return;
 
     for (int i = 0; i < 7; i++) {
-      _weekCourse[i].clear();
+      weekCourse[i].clear();
       int count = 1;
       List<Map<String, dynamic>> queryResult =
           await su.queryCourse(_selectedWeek, i + 1);
@@ -68,7 +72,7 @@ class WeekCourseList with ChangeNotifier {
           if (count < startTime) {
             double marginTop = 0.5 * (startTime - count - 1);
             double height = (Constant.VAR_COURSE_HEIGHT * (startTime - count));
-            _weekCourse[i].add({
+            weekCourse[i].add({
               'empty': true,
               'marginTop': marginTop,
               'padding': 0.0,
@@ -84,7 +88,7 @@ class WeekCourseList with ChangeNotifier {
               Constant.VAR_COURSE_HEIGHT * (endTime - startTime + 1);
           String text =
               '${queryResult[j]['courseName']}@${queryResult[j]['location']}';
-          _weekCourse[i].add({
+          weekCourse[i].add({
             'empty': false,
             'marginTop': 0.5,
             'padding': 2.0,
@@ -98,7 +102,7 @@ class WeekCourseList with ChangeNotifier {
           count += endTime - startTime + 1;
         }
       } else {
-        _weekCourse[i].add({
+        weekCourse[i].add({
           'empty': true,
           'marginTop': 0.0,
           'padding': 0.0,
@@ -108,6 +112,7 @@ class WeekCourseList with ChangeNotifier {
         }); // 一整天没课 空白填充
       }
     }
+    _weekCourse = weekCourse;
     notifyListeners();
   }
 

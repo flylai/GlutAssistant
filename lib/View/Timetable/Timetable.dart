@@ -28,43 +28,47 @@ class Timetable extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return Column(
-      children: <Widget>[
-        _buildDateList(),
-        Expanded(
-          child: GestureDetector(
-              onHorizontalDragEnd: (value) {
-                // if (value.velocity.pixelsPerSecond.dx > 1000 &&
-                //     widget._selectWeek - 1 > 0)
-                //   widget.callback(widget._selectWeek - 1);
-                // if (value.velocity.pixelsPerSecond.dx < -1000 &&
-                //     widget._selectWeek + 1 < 26)
-                //   widget.callback(widget._selectWeek + 1);
-              },
-              child: ListView(
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        child: Consumer<GlobalData>(
-                            builder: (context, globalData, _) => Container(
-                                color: Colors.white
-                                    .withOpacity(globalData.opacity),
-                                child: _buildLeftTimeList())),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: _buildTimetable(),
-                        flex: 14,
-                      )
-                    ],
-                  )
-                ],
-              )),
-        )
-      ],
-    );
+    return Consumer2<WeekCourseList, GlobalData>(
+        builder: (context, weekCourseList, globalData, _) => Column(
+              children: <Widget>[
+                _buildDateList(),
+                Expanded(
+                  child: GestureDetector(
+                      onHorizontalDragEnd: (value) {
+                        if (value.velocity.pixelsPerSecond.dx > 1000 &&
+                            weekCourseList.selectedWeek - 1 > 0) {
+                          weekCourseList.selectedWeek--;
+                          globalData.selectedWeek--;
+                        }
+                        if (value.velocity.pixelsPerSecond.dx < -1000 &&
+                            weekCourseList.selectedWeek + 1 < 26) {
+                          weekCourseList.selectedWeek++;
+                          globalData.selectedWeek++;
+                        }
+                      },
+                      child: ListView(
+                        children: <Widget>[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                    color: Colors.white
+                                        .withOpacity(globalData.opacity),
+                                    child: _buildLeftTimeList()),
+                                flex: 1,
+                              ),
+                              Expanded(
+                                child: _buildTimetable(),
+                                flex: 14,
+                              )
+                            ],
+                          )
+                        ],
+                      )),
+                )
+              ],
+            ));
   }
 
   Widget _buildDateList() {
@@ -98,7 +102,7 @@ class Timetable extends StatelessWidget {
         builder: (context, weekCourseList, globalData, _) {
       List<Widget> timetable = [];
       for (int i = 0; i < 7; i++) {
-        // 一周七天
+        // ä¸€å‘¨ä¸ƒå¤©
         List<Widget> weekdayCourseList = [];
         for (int j = 0; j < weekCourseList.weekCourse[i].length; j++) {
           Widget widget = GestureDetector(
