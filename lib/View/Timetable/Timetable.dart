@@ -37,12 +37,10 @@ class Timetable extends StatelessWidget {
                       onHorizontalDragEnd: (value) {
                         if (value.velocity.pixelsPerSecond.dx > 1000 &&
                             weekCourseList.selectedWeek - 1 > 0) {
-                          weekCourseList.selectedWeek--;
                           globalData.selectedWeek--;
                         }
                         if (value.velocity.pixelsPerSecond.dx < -1000 &&
                             weekCourseList.selectedWeek + 1 < 26) {
-                          weekCourseList.selectedWeek++;
                           globalData.selectedWeek++;
                         }
                       },
