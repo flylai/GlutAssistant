@@ -57,9 +57,9 @@ class Login extends StatelessWidget {
               items: _generateCampusList(),
               isDense: true,
               isExpanded: true,
-              onChanged: (value) {
-                loginModel.changeCampus(value);
-                loginModel.refreshVerifyCodeImage();
+              onChanged: (value) async {
+                await loginModel.changeCampus(value);
+                await loginModel.refreshVerifyCodeImage();
               },
             ))));
   }
