@@ -234,14 +234,19 @@ class HttpUtil {
         'useValidateCode': '1',
         'username': studentId
       };
-
+      // 这谜一样的统一身份认证要跳转3次
+      // 先登录统一身份认证
       var response = await http
           .post(Constant.URL_LOGIN_OA, body: postData, headers: head)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       if (response.body == '') {
+        // 登录成功
+        // 第一次跳转 获取乱七八糟的认证信息
         response = await http.post(Constant.URL_OA_TO_JW, headers: head);
+        // 第二次跳转登录教务
         response = await http.post(response.headers['location']);
         head = {'cookie': (response.headers['set-cookie'].split(';'))[0]};
+        // 第三次跳转带着验证码和验证码cookie登录到教务并返回cookie，一般都是登录成功
         response = await http.post(response.headers['location'], headers: head);
         if (response.headers['location'].contains('index_new'))
           return {
