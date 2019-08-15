@@ -27,7 +27,7 @@ class SharedPreferenceUtil {
 
   Future<int> getInt(String field) async {
     var res = _pref.getInt(field);
-    if (res == null) return 1;
+    if (res == null) return 0;
     return res;
   }
 
