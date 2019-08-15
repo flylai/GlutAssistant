@@ -8,7 +8,7 @@ import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil.dart';
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
-enum CampusType { guilinJW, guilinCA, nanning } //桂林教务 桂林统一身份认证 南宁分校
+enum CampusType { guilinJW, guilinOA, nanning } //桂林教务 桂林统一身份认证 南宁分校
 
 class LoginInfo with ChangeNotifier {
   TextEditingController _verifyCodeController = TextEditingController();
@@ -46,7 +46,7 @@ class LoginInfo with ChangeNotifier {
 
   Future<void> changeCampus(int campusIndex) async {
     _campusType = CampusType.values[campusIndex];
-    if (campusIndex == 0)
+    if (campusIndex == 0 || campusIndex == 1)
       Constant.URL_JW = Constant.URL_JW_GLUT;
     else
       Constant.URL_JW = Constant.URL_JW_GLUT_NN;
@@ -55,7 +55,8 @@ class LoginInfo with ChangeNotifier {
   }
 
   Future<void> refreshVerifyCodeImage() async {
-    Map<String, dynamic> result = await HttpUtil().getCode();
+    Map<String, dynamic> result = await HttpUtil()
+        .getCode(isOA: _campusType == CampusType.guilinOA ? true : false);
     if (result['success']) {
       _verifyCodeImage = base64.decode(result['data']['image']);
       _cookie = result['data']['cookie'];
@@ -69,8 +70,13 @@ class LoginInfo with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    Map<String, dynamic> result = await HttpUtil()
-        .loginJW(studentId, password, _verifyCodeController.text, _cookie);
+    Map<String, dynamic> result;
+    if (_campusType == CampusType.guilinOA)
+      result = await HttpUtil()
+          .loginOA(studentId, password, _verifyCodeController.text, _cookie);
+    else
+      result = await HttpUtil()
+          .loginJW(studentId, password, _verifyCodeController.text, _cookie);
 
     if (result['success']) {
       SharedPreferenceUtil su = await SharedPreferenceUtil.getInstance();

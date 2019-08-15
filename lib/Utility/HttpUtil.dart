@@ -7,10 +7,12 @@ import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:http/http.dart' as http;
 
 class HttpUtil {
-  Future<Map<String, dynamic>> getCode() async {
+  Future<Map<String, dynamic>> getCode({bool isOA = false}) async {
+    String verifyCodeURL = Constant.URL_JW + Constant.URL_VERIFY_CODE;
+    if (isOA) verifyCodeURL = Constant.URL_VERIFY_CODE_OA;
     try {
       var response = await http
-          .post(Constant.URL_JW + Constant.URL_VERIFY_CODE)
+          .post(verifyCodeURL)
           .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
       var data = {
         'cookie': response.headers['set-cookie'].split(';')[0],
@@ -211,6 +213,48 @@ class HttpUtil {
     } catch (e) {
       return {'success': false, 'cookie': ''};
     }
+  }
+
+  Future<Map<String, dynamic>> loginOA(String studentId, String password,
+      String verifyCode, String cookie) async {
+    var head = {'cookie': cookie};
+    try {
+      var responseLt = await http
+          .post(Constant.URL_LOGIN_OA, headers: head)
+          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
+      RegExp ltExp = RegExp('name="lt" value="(.*)"');
+      RegExpMatch ltMatch = ltExp.firstMatch(responseLt.body);
+
+      String lt = ltMatch.group(1);
+      Map postData = {
+        '_eventId': 'submit',
+        'j_captcha_response': verifyCode,
+        'lt': lt,
+        'password': password,
+        'useValidateCode': '1',
+        'username': studentId
+      };
+
+      var response = await http
+          .post(Constant.URL_LOGIN_OA, body: postData, headers: head)
+          .timeout(Duration(milliseconds: Constant.VAR_HTTP_TIMEOUT_MS));
+      if (response.body == '') {
+        response = await http.post(Constant.URL_OA_TO_JW, headers: head);
+        response = await http.post(response.headers['location']);
+        head = {'cookie': (response.headers['set-cookie'].split(';'))[0]};
+        response = await http.post(response.headers['location'], headers: head);
+        if (response.headers['location'].contains('index_new'))
+          return {
+            'success': true,
+            'cookie': response.headers['set-cookie'].split(';')[0]
+          };
+        else
+          return {'success': false, 'cookie': ''};
+      }
+    } catch (e) {
+      return {'success': false, 'cookie': ''};
+    }
+    return {'success': false, 'cookie': ''};
   }
 
   Future<Map<String, dynamic>> queryBalance(String studentId) async {

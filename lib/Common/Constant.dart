@@ -42,7 +42,12 @@ class Constant {
   static String URL_JW = URL_JW_GLUT; //教务全局变量 可更改
 
   static final String URL_LOGIN = "/academic/j_acegi_security_check";
+  static final String URL_LOGIN_OA = "http://ca.glut.edu.cn:8888/zfca/login";
   static final String URL_VERIFY_CODE = "/academic/getCaptcha.do";
+  static final String URL_VERIFY_CODE_OA =
+      "http://ca.glut.edu.cn:8888/zfca/captcha.htm";
+  static final String URL_OA_TO_JW =
+      'http://ca.glut.edu.cn:8888/zfca/login?yhlx=all&login=0122579031373493708&url=index_new.jsp&gnmkdm=M011';
   static final String URL_GET_STUDENT_ID =
       "/academic/student/studentinfo/studentInfoModifyIndex.do?frombase=0&wantTag=0&groupId=&moduleId=2060";
   static final String URL_CLASS_SCHEDULE =
