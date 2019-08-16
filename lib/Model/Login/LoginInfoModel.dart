@@ -50,6 +50,7 @@ class LoginInfo with ChangeNotifier {
       Constant.URL_JW = Constant.URL_JW_GLUT;
     else
       Constant.URL_JW = Constant.URL_JW_GLUT_NN;
+    notifyListeners();
     SharedPreferenceUtil su = await SharedPreferenceUtil.getInstance();
     su.setInt('campus', campusIndex);
   }
