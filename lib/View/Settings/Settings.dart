@@ -170,6 +170,7 @@ class Settings extends StatelessWidget {
                             title: Text('教务密码修改'),
                             content: TextField(
                               decoration: InputDecoration(labelText: '教务密码'),
+                              obscureText: true,
                               controller: globalData.passwordJWController,
                             ),
                             actions: <Widget>[
