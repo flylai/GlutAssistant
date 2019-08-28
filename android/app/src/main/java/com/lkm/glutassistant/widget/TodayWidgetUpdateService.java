@@ -8,13 +8,12 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.SystemClock;
 
-import androidx.annotation.Nullable;
 
 public class TodayWidgetUpdateService extends Service {
 
     private final int UPDATE_DELAY = 60 * 5 * 1000;//5个小时更新一次
 
-    @Nullable
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
