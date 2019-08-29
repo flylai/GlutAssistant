@@ -1,16 +1,38 @@
-# glutassistant
+# 桂工助手
 
-A Flutter application of Glut.
+<img src="screenshot/logo.png" align="right" title="GlutAssistant" width="120" height="120">
 
-## Getting Started
+适用于桂林理工大学教务系列的 Android APP，包含了各种常用的教务查询。
 
-This project is a starting point for a Flutter application.
+## 功能
 
-A few resources to get you started if this is your first Flutter project:
+* 课程表(支持课程管理)
+* 成绩查询(课程成绩，体侧成绩)
+* 考试地点查询
+* 支持教务登录，统一身份认证登录，南宁校区
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+## 截图
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+<img src="screenshot/1.jpg">
+<img src="screenshot/2.jpg">
+<img src="screenshot/3.jpg">
+<img src="screenshot/4.jpg">
+<img src="screenshot/5.jpg">
+
+## 下载
+
+* 前往 [release](https://github.com/flylai/GlutAssistant/release) 界面
+或
+* [酷安](https://coolapk.com/apk/com.lkm.glutassistant) 进行下载
+
+## 编译
+
+```
+flutter build apk
+或者
+flutter build apk --target-platform android-arm,android-arm64 --split-per-abi
+```
+
+## 协议
+
+MIT.
