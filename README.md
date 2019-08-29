@@ -1,6 +1,6 @@
-# 桂工助手
-
 <img src="screenshot/logo.png" align="right" title="GlutAssistant" width="120" height="120">
+
+# 桂工助手
 
 适用于桂林理工大学教务系列的 Android APP，包含了各种常用的教务查询。
 
