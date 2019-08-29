@@ -13,11 +13,7 @@
 
 ## 截图
 
-<img src="screenshot/1.jpg">
-<img src="screenshot/2.jpg">
-<img src="screenshot/3.jpg">
-<img src="screenshot/4.jpg">
-<img src="screenshot/5.jpg">
+<img src="screenshot/1.jpg" width="200"><img src="screenshot/2.jpg" width="200"><img src="screenshot/3.jpg" width="200"><img src="screenshot/4.jpg" width="200"><img src="screenshot/5.jpg" width="200">
 
 ## 下载
 
