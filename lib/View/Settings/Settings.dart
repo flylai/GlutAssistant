@@ -205,7 +205,6 @@ class Settings extends StatelessWidget {
 
   Widget _buildStudentId() {
     return Consumer<GlobalData>(builder: (context, globalData, _) {
-      print('bd');
       return Container(
           color: Colors.white.withOpacity(globalData.opacity),
           child: ListTile(
