@@ -159,10 +159,15 @@ class DashboardCourseList extends StatelessWidget {
                 TextSpan(text: '就要上课啦')
               ]));
         } else if (beforeClassOverTime[0] == '-') {
+          String text = '这节课已经过去了哦';
+          if (i + 1 == courseList.courseList.length) {
+            stepPosition = i;
+            text = '今天的课已经上完了哦';
+          }
           courseText = RichText(
               text: TextSpan(
                   style: TextStyle(color: Colors.black),
-                  children: <TextSpan>[TextSpan(text: '这节课已经过去了哦')]));
+                  children: <TextSpan>[TextSpan(text: text)]));
           courseState = StepState.complete;
         }
         Step course = Step(
