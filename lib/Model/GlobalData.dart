@@ -117,17 +117,16 @@ class GlobalData with ChangeNotifier {
     su.setDouble('opacity', double.parse(_opacityController.text.trim()));
   }
 
-  Future<void> setStudentId() async {
+  Future<void> setStudentId({bool needRefresh: true}) async {
     if (_studentId == _studentidController.text.trim()) return;
     _studentId = _studentidController.text.trim();
-    notifyListeners();
+    if (needRefresh) notifyListeners();
     su.setString('student_id', _studentidController.text.trim());
   }
 
   Future<void> setJWPassword() async {
     if (_passwordJW == _passwordJWController.text.trim()) return;
     _passwordJW = _passwordJWController.text.trim();
-    notifyListeners();
     if (passwordJWController.text.trim() != '')
       su.setBool('remember_pwd', true);
     else

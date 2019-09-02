@@ -7,10 +7,10 @@ import 'package:provider/provider.dart';
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    LoginInfo loginModel = LoginInfo();
-    loginModel.init();
+    LoginInfo loginInfo = LoginInfo();
+    loginInfo.init();
     return ChangeNotifierProvider<LoginInfo>.value(
-        value: loginModel,
+        value: loginInfo,
         child: Container(
           child: _buildBody(),
           alignment: Alignment.center,
@@ -49,17 +49,17 @@ class Login extends StatelessWidget {
 
   Widget _buildCampusDropdown() {
     return Consumer<LoginInfo>(
-        builder: (context, loginModel, _) => Container(
+        builder: (context, loginInfo, _) => Container(
             margin: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 3.0),
             child: DropdownButtonHideUnderline(
                 child: DropdownButton(
-              value: loginModel.campusType.index,
+              value: loginInfo.campusType.index,
               items: _generateCampusList(),
               isDense: true,
               isExpanded: true,
               onChanged: (value) async {
-                await loginModel.changeCampus(value);
-                await loginModel.refreshVerifyCodeImage();
+                await loginInfo.changeCampus(value);
+                await loginInfo.refreshVerifyCodeImage();
               },
             ))));
   }
@@ -67,8 +67,8 @@ class Login extends StatelessWidget {
   Widget _buildCommitButton() {
     //提交按钮
     return Consumer2<LoginInfo, GlobalData>(
-        builder: (context, loginModel, globalData, _) {
-      if (loginModel.isLoading) return CircularProgressIndicator();
+        builder: (context, loginInfo, globalData, _) {
+      if (loginInfo.isLoading) return CircularProgressIndicator();
       return Container(
           width: double.infinity,
           margin: EdgeInsets.fromLTRB(15.0, 0, 15.0, 3.0),
@@ -76,17 +76,18 @@ class Login extends StatelessWidget {
             color: Color.fromARGB(255, 206, 71, 0),
             elevation: 6.0,
             child: FlatButton(
-                onPressed: (globalData.studentIdController.text.isEmpty ||
-                        globalData.passwordJWController.text.isEmpty)
-                    ? null
-                    : () async {
-                        await globalData.setStudentId();
-                        await globalData.setJWPassword();
-                        await loginModel.loginJW(
-                            globalData.studentId, globalData.passwordJW);
-                        CommonSnackBar.buildSnackBar(context, loginModel.msg);
-                      },
-                // disabledColor: Colors.blue[100],
+                onPressed: () async {
+                  if (globalData.studentIdController.text.isEmpty ||
+                      globalData.passwordJWController.text.isEmpty) {
+                    CommonSnackBar.buildSnackBar(context, '登录信息似乎没有填写完呢');
+                    return;
+                  }
+                  await globalData.setStudentId(needRefresh: false);
+                  await globalData.setJWPassword();
+                  await loginInfo.loginJW(
+                      globalData.studentId, globalData.passwordJW);
+                  CommonSnackBar.buildSnackBar(context, loginInfo.msg);
+                },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
@@ -128,7 +129,7 @@ class Login extends StatelessWidget {
   Widget _buildPasswordTextFiled() {
     //密码框
     return Consumer2<LoginInfo, GlobalData>(
-        builder: (context, loginModel, globalData, _) => Padding(
+        builder: (context, loginInfo, globalData, _) => Padding(
               padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0),
               child: TextField(
                 controller: globalData.passwordJWController,
@@ -137,12 +138,12 @@ class Login extends StatelessWidget {
                     labelText: '教务密码',
                     suffixIcon: IconButton(
                         icon: Icon(
-                          loginModel.obscure
+                          loginInfo.obscure
                               ? Icons.visibility_off
                               : Icons.visibility,
                         ),
-                        onPressed: () => loginModel.obscure = false)),
-                obscureText: loginModel.obscure,
+                        onPressed: () => loginInfo.obscure = false)),
+                obscureText: loginInfo.obscure,
               ),
             ));
   }
@@ -150,13 +151,13 @@ class Login extends StatelessWidget {
   Widget _buildSavePwdSwitch() {
     //记住密码开关
     return Consumer<LoginInfo>(
-        builder: (context, loginModel, _) => Row(
+        builder: (context, loginInfo, _) => Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Text('记住密码'),
                 Switch(
-                  value: loginModel.savePwd,
-                  onChanged: (value) => loginModel.savePwd = value,
+                  value: loginInfo.savePwd,
+                  onChanged: (value) => loginInfo.savePwd = value,
                 ),
               ],
             ));
@@ -165,7 +166,7 @@ class Login extends StatelessWidget {
   Widget _buildStudentIdTextFiled() {
     //学号输入框
     return Consumer2<LoginInfo, GlobalData>(
-        builder: (context, loginModel, globalData, _) => Padding(
+        builder: (context, loginInfo, globalData, _) => Padding(
               padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0),
               child: TextField(
                 controller: globalData.studentIdController,
@@ -179,9 +180,9 @@ class Login extends StatelessWidget {
   }
 
   Widget _buildVerifyCodeEdit() {
-    return Consumer<LoginInfo>(builder: (context, loginModel, _) {
+    return Consumer<LoginInfo>(builder: (context, loginInfo, _) {
       Widget verifyCodeEdit = TextField(
-        controller: loginModel.verifyCodeController,
+        controller: loginInfo.verifyCodeController,
         decoration: InputDecoration(
           labelText: '验证码',
         ),
@@ -195,8 +196,8 @@ class Login extends StatelessWidget {
             height: 70.0,
             child: new GestureDetector(
                 onTap: () async {
-                  await loginModel.refreshVerifyCodeImage();
-                  CommonSnackBar.buildSnackBar(context, loginModel.msg);
+                  await loginInfo.refreshVerifyCodeImage();
+                  CommonSnackBar.buildSnackBar(context, loginInfo.msg);
                 },
                 child: _buildVerifyCodeImage())),
       );
@@ -216,9 +217,9 @@ class Login extends StatelessWidget {
   }
 
   Widget _buildVerifyCodeImage() {
-    return Consumer<LoginInfo>(builder: (context, loginModel, _) {
-      if (loginModel.verifyCodeImage != null) {
-        return Image.memory(loginModel.verifyCodeImage);
+    return Consumer<LoginInfo>(builder: (context, loginInfo, _) {
+      if (loginInfo.verifyCodeImage != null) {
+        return Image.memory(loginInfo.verifyCodeImage);
       }
       return Container(
         alignment: Alignment.centerRight,
