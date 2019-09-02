@@ -27,7 +27,7 @@ class GlutAssistant extends StatelessWidget {
       return MaterialApp(
         home: Home(),
         theme: ThemeData(
-            primaryColor: Constant.THEME_LIST_COLOR[globaldata.themeColorIndex]
+            primaryColor: Constant.LIST_THEME_COLOR[globaldata.themeColorIndex]
                 [1]),
       );
     });

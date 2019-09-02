@@ -155,7 +155,7 @@ class Home extends StatelessWidget {
   Widget _buildAppBarTitle() {
     return Consumer<GlobalData>(builder: (context, globalData, _) {
       if (globalData.selectedPage != 2)
-        return Text(Constant.DRAWER_LIST[globalData.selectedPage][0]);
+        return Text(Constant.LIST_DRAWER[globalData.selectedPage][0]);
       else if (globalData.currentWeek != globalData.selectedWeek)
         return Text('第${globalData.selectedWeek}周(非本周)');
       else
@@ -179,7 +179,7 @@ class Home extends StatelessWidget {
                     removeTop: true,
                     child: Expanded(
                         child: ListView.builder(
-                      itemCount: Constant.DRAWER_LIST.length,
+                      itemCount: Constant.LIST_DRAWER.length,
                       itemBuilder: (context, index) =>
                           _buildListItem(context, index),
                     )),
@@ -193,8 +193,8 @@ class Home extends StatelessWidget {
     return Consumer<GlobalData>(builder: (context, globalData, _) {
       if (index != 0 && index != 7) {
         return ListTile(
-            leading: Icon(Constant.DRAWER_LIST[index][1]),
-            title: Text(Constant.DRAWER_LIST[index][0]),
+            leading: Icon(Constant.LIST_DRAWER[index][1]),
+            title: Text(Constant.LIST_DRAWER[index][0]),
             dense: true,
             onTap: () {
               print(index);
@@ -204,7 +204,7 @@ class Home extends StatelessWidget {
             });
       }
       return ListTile(
-        title: Text(Constant.DRAWER_LIST[index][0],
+        title: Text(Constant.LIST_DRAWER[index][0],
             style: TextStyle(color: Colors.blue, fontSize: 12.0)),
       );
     });

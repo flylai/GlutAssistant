@@ -99,9 +99,9 @@ class Settings extends StatelessWidget {
         builder: (context, globalData, _) => ListTile(
             leading: Icon(
               Icons.lens,
-              color: Constant.THEME_LIST_COLOR[index][1],
+              color: Constant.LIST_THEME_COLOR[index][1],
             ),
-            title: Text(Constant.THEME_LIST_COLOR[index][0]),
+            title: Text(Constant.LIST_THEME_COLOR[index][0]),
             dense: true,
             onTap: () {
               globalData.setThemeColorIndex(index);
@@ -250,7 +250,7 @@ class Settings extends StatelessWidget {
                           height: 500,
                           width: 100,
                           child: ListView.builder(
-                            itemCount: Constant.THEME_LIST_COLOR.length,
+                            itemCount: Constant.LIST_THEME_COLOR.length,
                             itemBuilder: (context, index) =>
                                 _buildListItem(context, index),
                           ),

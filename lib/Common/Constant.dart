@@ -68,7 +68,7 @@ class Constant {
   static final String URL_FIRNESS_TEST_INFO =
       'http://tzcs.glut.edu.cn/student/queryHealthInfo.jsp';
 
-  static final DRAWER_GENERAL_LIST = [
+  static final LIST_DRAWER_GENERAL = [
     ['常用', Icons.book],
     ['一览', Icons.dashboard],
     ['课程表', Icons.date_range],
@@ -77,15 +77,15 @@ class Constant {
     ['导入课表', Icons.import_export],
     ['登录教务', Icons.slideshow]
   ];
-  static final DRAWER_OTHER_LIST = [
+  static final LIST_DRAWER_OTHER = [
     ['其他', Icons.book],
     ['设置', Icons.build],
     ['课程管理', Icons.create],
     ['分享', Icons.share],
     ['关于', Icons.label],
   ];
-  static final DRAWER_LIST = DRAWER_GENERAL_LIST + DRAWER_OTHER_LIST;
-  static final THEME_LIST_COLOR = [
+  static final LIST_DRAWER = LIST_DRAWER_GENERAL + LIST_DRAWER_OTHER;
+  static final LIST_THEME_COLOR = [
     ['什么黑', Colors.black],
     ['姨妈红', Colors.red],
     ['蓝绿色', Colors.teal],
@@ -102,7 +102,7 @@ class Constant {
     ['石板灰', Colors.grey],
     ['火药蓝', Colors.blueGrey]
   ];
-  static final SETTING_LIST_TITLE = [
+  static final LIST_SETTING_TITLE = [
     '学号',
     '教务密码',
     '当前周',
