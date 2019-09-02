@@ -139,6 +139,7 @@ class GlobalData with ChangeNotifier {
   Future<void> setCurrentWeek() async {
     if (currentWeekStr == _currentWeekController.text.trim()) return;
     _currentWeekStr = _currentWeekController.text.trim();
+    notifyListeners();
     su.setString('first_week', _currentWeekController.text.trim());
     su.setString('first_week_timestamp',
         (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString());
