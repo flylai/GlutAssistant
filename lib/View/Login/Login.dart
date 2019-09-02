@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
 import 'package:glutassistant/Model/Login/LoginInfoModel.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
@@ -84,9 +85,22 @@ class Login extends StatelessWidget {
                   }
                   await globalData.setStudentId(needRefresh: false);
                   await globalData.setJWPassword();
-                  await loginInfo.loginJW(
-                      globalData.studentId, globalData.passwordJW);
-                  CommonSnackBar.buildSnackBar(context, loginInfo.msg);
+                  if (await loginInfo.loginJW(
+                      globalData.studentId, globalData.passwordJW)) {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (ctx) {
+                          return Container(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: _buildTodoList(ctx, globalData),
+                            ),
+                          );
+                        });
+                  } else {
+                    CommonSnackBar.buildSnackBar(context, loginInfo.msg);
+                    loginInfo.refreshVerifyCodeImage();
+                  }
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -177,6 +191,30 @@ class Login extends StatelessWidget {
                 ),
               ),
             ));
+  }
+
+  List<Widget> _buildTodoList(BuildContext context, GlobalData globalData) {
+    List<Widget> list = [];
+    list.add(ListTile(
+      title: Text('教务登录成功啦！你想？'),
+      subtitle: Text('登录了就可以使用教务系列查询啦，短时间内不必多次登录。'),
+    ));
+    for (var item in Constant.LIST_LOGIN_TODO) {
+      list.add(ListTile(
+        title: Text(item[0]),
+        leading: Icon(item[1]),
+        onTap: () {
+          globalData.selectedPage = item[2];
+          Navigator.of(context).pop();
+        },
+      ));
+    }
+    list.add(ListTile(
+        title: Text('啥也不干...'),
+        onTap: () {
+          Navigator.of(context).pop();
+        }));
+    return list;
   }
 
   Widget _buildVerifyCodeEdit() {

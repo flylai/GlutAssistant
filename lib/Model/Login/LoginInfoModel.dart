@@ -67,7 +67,7 @@ class LoginInfo with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loginJW(String studentId, String password) async {
+  Future<bool> loginJW(String studentId, String password) async {
     _isLoading = true;
     notifyListeners();
 
@@ -94,6 +94,7 @@ class LoginInfo with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+    return result['success'];
   }
 
   Future<void> init() async {

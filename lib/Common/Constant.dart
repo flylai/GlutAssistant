@@ -109,6 +109,11 @@ class Constant {
     '使用背景图',
     '选择背景图',
   ];
+  static final LIST_LOGIN_TODO = [
+    ['查成绩', Icons.photo_library, 3], // 第三个是页面标号
+    ['查考试地点', Icons.location_on, 4],
+    ['导入课表', Icons.import_export, 5]
+  ];
   static final List<List<List<int>>> CLASS_TIME = [
     [],
     [
