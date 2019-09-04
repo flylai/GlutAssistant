@@ -18,8 +18,34 @@
 ## 下载
 
 * 前往 [release](https://github.com/flylai/GlutAssistant/release) 界面
-或
-* [酷安](https://coolapk.com/apk/com.lkm.glutassistant) 进行下载
+* 通过 [酷安](https://coolapk.com/apk/com.lkm.glutassistant) 进行下载
+
+## 目录结构
+
+```
+├─Common                    // 存放一些常量
+├─Widget                    // 自定义的一些控件
+├─Utility                   // 一些工具类
+├─View                      // UI实现
+│  ├─Home                   // 主框架
+│  ├─Dashboard              // 一览
+│  ├─QueryExamLocation      // 考试地点查询
+│  ├─ImportTimetable        // 导入课表
+│  ├─QueryScore             // 成绩查询
+│  ├─CourseManage           // 课程管理
+│  ├─About                  // 关于
+│  ├─Settings               // 设置
+│  ├─Login                  // 教务登陆
+│  └─Timetable              // 课程表
+└─Model                     // UI逻辑 对应关系同 View
+   ├─Dashboard
+   ├─QueryExamLocation
+   ├─QueryScore
+   ├─ImportTimetable
+   ├─CourseManage
+   ├─Login
+   └─Timetable
+```
 
 ## 编译
 
