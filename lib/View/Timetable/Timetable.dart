@@ -100,7 +100,7 @@ class Timetable extends StatelessWidget {
         builder: (context, weekCourseList, globalData, _) {
       List<Widget> timetable = [];
       for (int i = 0; i < 7; i++) {
-        // ä¸€å‘¨ä¸ƒå¤©
+        // 遍历一周课程
         List<Widget> weekdayCourseList = [];
         for (int j = 0; j < weekCourseList.weekCourse[i].length; j++) {
           Widget widget = GestureDetector(
@@ -124,7 +124,7 @@ class Timetable extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 height: weekCourseList.weekCourse[i][j]['height'],
                 child: Text(
-                  '${weekCourseList.weekCourse[i][j]['text']}',
+                  weekCourseList.weekCourse[i][j]['text'],
                   style: TextStyle(color: Colors.white),
                 ),
               ));
@@ -176,7 +176,7 @@ class Timetable extends StatelessWidget {
             Row(
               children: <Widget>[
                 Icon(Icons.access_time, color: Colors.cyan),
-                Text('${weekCourseList.courseList[i]['week']}')
+                Text(weekCourseList.courseList[i]['week'])
               ],
             )
           ],
@@ -199,8 +199,7 @@ class Timetable extends StatelessWidget {
     return Consumer<WeekCourseList>(builder: (context, weekCourseList, _) {
       List<Widget> datelist = [];
       Widget month = Expanded(
-        child:
-            Text('${weekCourseList.dateList[0]}', textAlign: TextAlign.center),
+        child: Text(weekCourseList.dateList[0], textAlign: TextAlign.center),
         flex: 1,
       );
       datelist.add(month);
@@ -208,7 +207,7 @@ class Timetable extends StatelessWidget {
       for (int i = 1; i <= 7; i++) {
         Widget wd = Expanded(
           child: Text(
-            '${weekCourseList.dateList[i]['weekday']}',
+            weekCourseList.dateList[i]['weekday'],
             style: TextStyle(color: weekCourseList.dateList[i]['color']),
             textAlign: TextAlign.center,
           ),

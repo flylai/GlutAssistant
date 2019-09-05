@@ -48,8 +48,8 @@ class QueryExamLocation extends StatelessWidget {
             Positioned(
               top: 0,
               left: 0,
-              child: Text('${exam['course']}',
-                  style: TextStyle(color: Colors.white)),
+              child:
+                  Text(exam['course'], style: TextStyle(color: Colors.white)),
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               RichText(
@@ -57,7 +57,7 @@ class QueryExamLocation extends StatelessWidget {
                       style: TextStyle(color: Colors.white),
                       children: <TextSpan>[
                     TextSpan(text: '还有'),
-                    TextSpan(text: '${exam['leftTime']}')
+                    TextSpan(text: exam['leftTime'])
                   ]))
             ]),
             Positioned(
@@ -69,14 +69,13 @@ class QueryExamLocation extends StatelessWidget {
             Positioned(
               top: 0,
               right: 0,
-              child: Text('${exam['type']}',
-                  style: TextStyle(color: Colors.white)),
+              child: Text(exam['type'], style: TextStyle(color: Colors.white)),
             ),
             Positioned(
               bottom: 0,
               right: 0,
-              child: Text('${exam['location']}',
-                  style: TextStyle(color: Colors.white)),
+              child:
+                  Text(exam['location'], style: TextStyle(color: Colors.white)),
             )
           ],
         );

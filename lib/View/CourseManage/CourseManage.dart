@@ -44,14 +44,14 @@ class CoursesManage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  '${singleCourse.courseName}',
+                  singleCourse.courseName,
                   style: TextStyle(fontSize: 20),
                   overflow: TextOverflow.ellipsis,
                 ),
-                Text('${singleCourse.teacher}'),
+                Text(singleCourse.teacher),
                 Text(
                     '${singleCourse.startWeek} - ${singleCourse.endWeek} ${singleCourse.weekTypeStr}周 星期${singleCourse.weekdayStr} ${singleCourse.startTimeStr} - ${singleCourse.endTimeStr}节'),
-                Text('${singleCourse.location}'),
+                Text(singleCourse.location),
               ],
             ),
           ),

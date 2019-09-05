@@ -309,7 +309,7 @@ class _TimePickerState extends State<_TimePickerComponent> {
                   children: <Widget>[
                     Expanded(
                         child: Text(
-                      '${BaseFunctionUtil().getTimeByNum(index + 1)}',
+                      BaseFunctionUtil().getTimeByNum(index + 1),
                       style: TextStyle(
                           color: Color(0xFF000046),
                           fontSize: _datePickerFontSize),

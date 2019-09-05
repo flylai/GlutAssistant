@@ -37,7 +37,7 @@ class DashBoardBalance extends StatelessWidget {
                   builder: (context, balance, _) => Row(
                         children: <Widget>[
                           Text(
-                            '${balance.lastUpdate}',
+                            balance.lastUpdate,
                             style: TextStyle(color: Colors.white),
                           ),
                           GestureDetector(
