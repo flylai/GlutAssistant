@@ -17,11 +17,36 @@ class DashboardCourseList extends StatelessWidget {
     );
   }
 
+  Widget _buildCourseList() {
+    return Consumer2<TodayCourseList, GlobalData>(
+        builder: (context, todayCourseList, globalData, _) {
+      todayCourseList.init(globalData.currentWeek, DateTime.now().weekday);
+      if (todayCourseList.courseList.length > 0) {
+        if (globalData.dashboardType == DashboardType.card)
+          return _buildCourseListByCard();
+        else
+          return _buildCourseListByTimeline();
+      } else {
+        Color color = Color(Constant
+            .VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
+        return DetailCard(
+          color,
+          Container(
+              alignment: Alignment.center,
+              child: Text('今天没有课上哦(๑˙ー˙๑)',
+                  style: TextStyle(fontSize: 20, color: Colors.white))),
+          elevation: 0.5,
+          opacity: globalData.opacity,
+        );
+      }
+    });
+  }
+
   Widget _buildCourseListByCard() {
     return Consumer2<TodayCourseList, GlobalData>(
         builder: (context, todayCourseList, globalData, _) {
       List<Widget> courseListWidget = [];
-      for (var course in todayCourseList.courseList) {
+      for (var course in todayCourseList.courseList['courseList']) {
         int startTime = course['startTime'];
         int endTime = course['endTime'];
         String startTimeStr = BaseFunctionUtil().getTimeByNum(startTime);
@@ -95,91 +120,33 @@ class DashboardCourseList extends StatelessWidget {
   }
 
   Widget _buildCourseListByTimeline() {
-    DateTime nowDateTime = DateTime.now();
-    int year = nowDateTime.year;
-    int month = nowDateTime.month;
-    int day = nowDateTime.day;
-
     return Consumer<TodayCourseList>(builder: (context, courseList, _) {
       List<Step> todayCourseList = [];
-      int stepPosition = 0;
-      bool isCheck = false; // 时间早于第一节课的判定
-
-      for (int i = 0; i < courseList.courseList.length; i++) {
-        int startTime = courseList.courseList[i]['startTime'];
-        int endTime = courseList.courseList[i]['endTime'];
-        String startTimeStr = BaseFunctionUtil().getTimeByNum(startTime);
-        String endTimeStr = BaseFunctionUtil().getTimeByNum(endTime);
-
-        // 时间轴
-        int classStartHour =
-            Constant.CLASS_TIME[courseList.courseList[i]['startTime']][0][0];
-        int classStartMinute =
-            Constant.CLASS_TIME[courseList.courseList[i]['startTime']][0][1];
-
-        int classEndHour =
-            Constant.CLASS_TIME[courseList.courseList[i]['endTime']][1][0];
-        int classEndMinute =
-            Constant.CLASS_TIME[courseList.courseList[i]['endTime']][1][1];
-
-        DateTime classBeginTime =
-            DateTime(year, month, day, classStartHour, classStartMinute);
-        DateTime classOverTime =
-            DateTime(year, month, day, classEndHour, classEndMinute);
-        String beforeClassBeginTime =
-            BaseFunctionUtil().getDuration(classBeginTime, nowDateTime);
-        String beforeClassOverTime =
-            BaseFunctionUtil().getDuration(classOverTime, nowDateTime);
-
-        RichText courseText = RichText(text: TextSpan(text: '?'));
-        StepState courseState = StepState.indexed;
-        if (beforeClassBeginTime[0] == '-' && beforeClassOverTime[0] != '-') {
-          stepPosition = i;
-          courseText = RichText(
-              text: TextSpan(
-                  style: TextStyle(color: Colors.black),
-                  children: <TextSpan>[
-                TextSpan(text: '还有'),
-                TextSpan(
-                    text: '$beforeClassOverTime',
-                    style: TextStyle(fontSize: 18, color: Colors.pink)),
-                TextSpan(text: '才下课,认真听课哟~')
-              ]));
-        } else if (beforeClassBeginTime[0] != '-' && !isCheck) {
-          stepPosition = i;
-          isCheck = true;
-          courseText = RichText(
-              text: TextSpan(
-                  style: TextStyle(color: Colors.black),
-                  children: <TextSpan>[
-                TextSpan(text: '还有'),
-                TextSpan(
-                    text: '$beforeClassBeginTime',
-                    style: TextStyle(fontSize: 18, color: Colors.pink)),
-                TextSpan(text: '就要上课啦')
-              ]));
-        } else if (beforeClassOverTime[0] == '-') {
-          String text = '这节课已经过去了哦';
-          if (i + 1 == courseList.courseList.length) {
-            stepPosition = i;
-            text = '今天的课已经上完了哦';
-          }
-          courseText = RichText(
-              text: TextSpan(
-                  style: TextStyle(color: Colors.black),
-                  children: <TextSpan>[TextSpan(text: text)]));
-          courseState = StepState.complete;
-        }
-        Step course = Step(
-          state: courseState,
+      for (var course in courseList.courseList['courseList']) {
+        RichText courseText = RichText(
+            // X分钟上/下课 / 上完了
+            text: TextSpan(
+                style: TextStyle(color: Colors.black),
+                children: <TextSpan>[
+              TextSpan(text: course['text1']),
+              TextSpan(
+                  text: course['text2'],
+                  style: TextStyle(fontSize: 18, color: Colors.pink)),
+              TextSpan(text: course['text3'])
+            ]));
+        Step step = Step(
+          // 什么课 什么时间 谁上 在哪上
+          state: course['state'] == CourseState.waiting
+              ? StepState.indexed
+              : StepState.complete,
           isActive: true,
           title: RichText(
             text: TextSpan(children: <TextSpan>[
               TextSpan(
-                  text: '$startTimeStr - $endTimeStr节 ',
+                  text: course['classTime'],
                   style: TextStyle(color: Colors.black)),
               TextSpan(
-                  text: '${courseList.courseList[i]['courseName']}',
+                  text: course['course'],
                   style: TextStyle(color: Colors.black, fontSize: 20))
             ]),
           ),
@@ -188,23 +155,25 @@ class DashboardCourseList extends StatelessWidget {
                   style: TextStyle(color: Colors.black),
                   children: <TextSpan>[
                 TextSpan(
-                    text: '${courseList.courseList[i]['location']}',
+                    text: course['location'],
                     style: TextStyle(color: Theme.of(context).primaryColor)),
                 TextSpan(text: '  |  '),
                 TextSpan(
-                    text: '${courseList.courseList[i]['teacher']}',
+                    text: course['teacher'],
                     style: TextStyle(color: Colors.black))
               ])),
-          content: Center(child: courseText),
+          content: Center(
+            child: courseText,
+          ),
         );
-        todayCourseList.add(course);
+        todayCourseList.add(step);
       }
 
       return Consumer<GlobalData>(
           builder: (context, globalData, _) => Container(
               child: Stepper(
                 physics: ClampingScrollPhysics(),
-                currentStep: stepPosition,
+                currentStep: courseList.courseList['currentStep'], // 现在第几节
                 controlsBuilder: (BuildContext context,
                     {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
                   return Container();
@@ -212,31 +181,6 @@ class DashboardCourseList extends StatelessWidget {
                 steps: todayCourseList,
               ),
               color: Colors.white.withOpacity(globalData.opacity)));
-    });
-  }
-
-  Widget _buildCourseList() {
-    return Consumer2<TodayCourseList, GlobalData>(
-        builder: (context, todayCourseList, globalData, _) {
-      todayCourseList.init(globalData.currentWeek, DateTime.now().weekday);
-      if (todayCourseList.courseList.length > 0) {
-        if (globalData.dashboardType == DashboardType.card)
-          return _buildCourseListByCard();
-        else
-          return _buildCourseListByTimeline();
-      } else {
-        Color color = Color(Constant
-            .VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
-        return DetailCard(
-          color,
-          Container(
-              alignment: Alignment.center,
-              child: Text('今天没有课上哦(๑˙ー˙๑)',
-                  style: TextStyle(fontSize: 20, color: Colors.white))),
-          elevation: 0.5,
-          opacity: globalData.opacity,
-        );
-      }
     });
   }
 }
