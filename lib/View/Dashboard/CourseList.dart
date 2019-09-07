@@ -21,7 +21,7 @@ class DashboardCourseList extends StatelessWidget {
     return Consumer2<TodayCourseList, GlobalData>(
         builder: (context, todayCourseList, globalData, _) {
       todayCourseList.init(globalData.currentWeek, DateTime.now().weekday);
-      if (todayCourseList.courseList.length > 0) {
+      if (todayCourseList.courseList['courseList'].length > 0) {
         if (globalData.dashboardType == DashboardType.card)
           return _buildCourseListByCard();
         else
