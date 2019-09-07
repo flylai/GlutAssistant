@@ -38,6 +38,7 @@ class ExamScoreList with ChangeNotifier {
         await HttpUtil().queryScore(_year.toString(), _term.toString(), cookie);
 
     if (result['success'] && result['data'].length > 0) {
+      examScoreList.clear();
       int campusType = Constant.URL_JW == Constant.URL_JW_GLUT ? 1 : 2;
       for (var item in result['data']) {
         String score;
