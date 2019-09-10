@@ -123,13 +123,6 @@ class WeekCourseList with ChangeNotifier {
 
     List<Map<String, dynamic>> queryResult = await su.queryCourseByTime(
         _selectedWeek, weekday + 1, startTime, endTime);
-    for (int i = 0; i < queryResult.length; i++) {
-      _courseList.add({
-        'courseName': queryResult[i]['courseName'],
-        'teacher': queryResult[i]['teacher'],
-        'location': queryResult[i]['location'],
-        'week': '${queryResult[i]['startWeek']} - ${queryResult[i]['endWeek']}周'
-      });
-    }
+        _courseList.addAll(queryResult);
   }
 }

@@ -122,7 +122,7 @@ class SingleCourse with ChangeNotifier {
     _teacher = course['teacher'];
     _startWeek = course['startWeek'];
     _endWeek = course['endWeek'];
-    weekday = course['weekday'];
+    weekday = course['weekday']; // 与众不同是因为要赋予xxStr的值，懒得写几次。
     weekType = course['weekType'];
     startTime = course['startTime'];
     endTime = course['endTime'];
@@ -131,5 +131,10 @@ class SingleCourse with ChangeNotifier {
     _teacherController.text = _teacher;
     _locationController.text = _location;
     notifyListeners();
+  }
+
+  @override
+  String toString() {
+    return 'CourseNo: $_courseNo, CourseName: $_courseName, Teacher: $_teacher, StartWeek: $_startWeek, EndWeek: $_endWeek, Weekday: $_weekday, WeekType: $_weekType, StartTime: $_startTime, EndTime: $_endTime, Location: $_location';
   }
 }

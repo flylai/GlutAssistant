@@ -3,9 +3,11 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
+import 'package:glutassistant/Model/CourseManage/CourseModel.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
 import 'package:glutassistant/Model/Timetable/WeekCoureListModel.dart';
 import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
+import 'package:glutassistant/View/CourseManage/CourseModify.dart';
 import 'package:provider/provider.dart';
 
 class Timetable extends StatelessWidget {
@@ -144,57 +146,6 @@ class Timetable extends StatelessWidget {
     });
   }
 
-  Future<void> _queryCourseList(context, weekday, startTime, endTime) async {
-    WeekCourseList weekCourseList = Provider.of<WeekCourseList>(context);
-    await weekCourseList.queryCourseList(weekday, startTime, endTime);
-    List<Widget> courselistwidget = [];
-    for (int i = 0; i < weekCourseList.courseList.length; i++) {
-      Container course = Container(
-        margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
-        padding: EdgeInsets.all(7),
-        decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Icon(Icons.book, color: Colors.amber),
-                Text(weekCourseList.courseList[i]['courseName'])
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Icon(Icons.person, color: Colors.pink),
-                Text(weekCourseList.courseList[i]['teacher'])
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Icon(Icons.location_on, color: Colors.teal),
-                Text(weekCourseList.courseList[i]['location'])
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Icon(Icons.access_time, color: Colors.cyan),
-                Text(weekCourseList.courseList[i]['week'])
-              ],
-            )
-          ],
-        ),
-      );
-      courselistwidget.add(course);
-    }
-    showDialog(
-        context: context,
-        builder: (BuildContext ctx) {
-          return Dialog(
-              child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: courselistwidget,
-          ));
-        });
-  }
-
   Widget _gernerateDateText() {
     return Consumer<WeekCourseList>(builder: (context, weekCourseList, _) {
       List<Widget> datelist = [];
@@ -217,5 +168,75 @@ class Timetable extends StatelessWidget {
       }
       return Row(children: datelist);
     });
+  }
+
+  Future<void> _queryCourseList(context, weekday, startTime, endTime) async {
+    WeekCourseList weekCourseList = Provider.of<WeekCourseList>(context);
+    await weekCourseList.queryCourseList(weekday, startTime, endTime);
+    List<Widget> courselistwidget = [];
+    for (var course in weekCourseList.courseList) {
+      SingleCourse singleCourse = SingleCourse();
+      singleCourse.fromMap(course);
+      Container courseWidget = Container(
+          margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
+          padding: EdgeInsets.all(7),
+          decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.book, color: Colors.amber),
+                            Text(course['courseName'])
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.person, color: Colors.pink),
+                            Text(course['teacher'])
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.location_on, color: Colors.teal),
+                            Text(course['location'])
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.access_time, color: Colors.cyan),
+                            Text(
+                                '${course['startWeek']} - ${course['endWeek']}周')
+                          ],
+                        )
+                      ],
+                    ),
+                    flex: 7),
+                Expanded(
+                    child: GestureDetector(
+                      child: Icon(Icons.mode_edit, color: Colors.blueGrey),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  CourseModify(singleCourse))),
+                    ),
+                    flex: 1)
+              ]));
+      courselistwidget.add(courseWidget);
+    }
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return Dialog(
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: courselistwidget,
+          ));
+        });
   }
 }
