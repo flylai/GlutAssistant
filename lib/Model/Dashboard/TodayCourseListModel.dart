@@ -6,7 +6,7 @@ import 'package:glutassistant/Utility/SQLiteUtil.dart';
 enum CourseState { waiting, finished }
 
 class TodayCourseList with ChangeNotifier {
-  Map<String, dynamic> _courseList = {};
+  Map<String, dynamic> _courseList = {'courseList': []};
 
   bool isFirst = true;
 
