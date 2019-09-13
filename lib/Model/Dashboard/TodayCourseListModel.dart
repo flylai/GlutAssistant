@@ -6,19 +6,33 @@ import 'package:glutassistant/Utility/SQLiteUtil.dart';
 enum CourseState { waiting, finished }
 
 class TodayCourseList with ChangeNotifier {
-  Map<String, dynamic> _courseList = {'courseList': []};
+  Map<String, dynamic> _todayCourseList = {'courseList': []};
+  List<Map<String, dynamic>> _tomorrowCourseList = [];
 
-  bool isFirst = true;
+  bool _isFirst = true;
+  bool _isTodayCourseOver = false;
 
-  Map<String, dynamic> get courseList => _courseList;
+  bool get isTodayCourseOver => _isTodayCourseOver;
 
-  void init(currentWeek, weekday) {
-    if (!isFirst) return;
-    refreshCourseList(currentWeek, weekday);
-    isFirst = false;
+  Map<String, dynamic> get todayCourseList => _todayCourseList;
+  List<Map<String, dynamic>> get tomorrowCourseList => _tomorrowCourseList;
+
+  void init(currentWeek, weekday) async {
+    if (!_isFirst) return;
+    await refreshCourseList(currentWeek, weekday);
+    await queryTomorrowCourseList(currentWeek, weekday);
+    _isFirst = false;
   }
 
-  Future refreshCourseList(currentWeek, weekday) async {
+  Future<void> queryTomorrowCourseList(int currentWeek, int weekday) async {
+    SQLiteUtil su = await SQLiteUtil.getInstance();
+    List<Map<String, dynamic>> queryCourseList =
+        await su.queryCourse(currentWeek, weekday + 1);
+    _tomorrowCourseList = queryCourseList;
+    notifyListeners();
+  }
+
+  Future<void> refreshCourseList(currentWeek, weekday) async {
     SQLiteUtil su = await SQLiteUtil.getInstance();
     List<Map<String, dynamic>> queryCourseList =
         await su.queryCourse(currentWeek, weekday);
@@ -75,6 +89,7 @@ class TodayCourseList with ChangeNotifier {
       } else if (beforeClassOverTime[0] == '-') {
         text1 = '这节课已经过去了哦';
         if (i + 1 == queryCourseList.length) {
+          _isTodayCourseOver = true;
           stepPosition = i;
           text1 = '今天的课已经上完了哦';
           text2 = '';
@@ -83,12 +98,14 @@ class TodayCourseList with ChangeNotifier {
         courseState = CourseState.finished;
       }
       String classTime = '$startTimeStr - $endTimeStr节 ';
-      String course = queryCourseList[i]['courseName'];
+      String courseName = queryCourseList[i]['courseName'];
       String location = queryCourseList[i]['location'];
       String teacher = queryCourseList[i]['teacher'];
       courseList.add({
         'classTime': classTime,
-        'course': course,
+        'startTimeStr': startTimeStr,
+        'endTimeStr': endTimeStr,
+        'courseName': courseName,
         'location': location,
         'teacher': teacher,
         'state': courseState,
@@ -101,7 +118,7 @@ class TodayCourseList with ChangeNotifier {
       'currentStep': stepPosition,
       'courseList': courseList
     };
-    _courseList = data;
+    _todayCourseList = data;
     notifyListeners();
   }
 }

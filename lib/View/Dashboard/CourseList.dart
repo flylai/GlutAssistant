@@ -11,17 +11,14 @@ import 'package:provider/provider.dart';
 class DashboardCourseList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      builder: (context) => TodayCourseList(),
-      child: Container(child: _buildCourseList()),
-    );
+    return _buildCourseList();
   }
 
   Widget _buildCourseList() {
     return Consumer2<TodayCourseList, GlobalData>(
         builder: (context, todayCourseList, globalData, _) {
       todayCourseList.init(globalData.currentWeek, DateTime.now().weekday);
-      if (todayCourseList.courseList['courseList'].length > 0) {
+      if (todayCourseList.todayCourseList['courseList'].length > 0) {
         if (globalData.dashboardType == DashboardType.card)
           return _buildCourseListByCard();
         else
@@ -46,11 +43,9 @@ class DashboardCourseList extends StatelessWidget {
     return Consumer2<TodayCourseList, GlobalData>(
         builder: (context, todayCourseList, globalData, _) {
       List<Widget> courseListWidget = [];
-      for (var course in todayCourseList.courseList['courseList']) {
-        int startTime = course['startTime'];
-        int endTime = course['endTime'];
-        String startTimeStr = BaseFunctionUtil().getTimeByNum(startTime);
-        String endTimeStr = BaseFunctionUtil().getTimeByNum(endTime);
+      for (var course in todayCourseList.todayCourseList['courseList']) {
+        String startTimeStr = course['startTimeStr'];
+        String endTimeStr = course['endTimeStr'];
         Widget child = Row(
           children: <Widget>[
             Container(
@@ -122,7 +117,7 @@ class DashboardCourseList extends StatelessWidget {
   Widget _buildCourseListByTimeline() {
     return Consumer<TodayCourseList>(builder: (context, courseList, _) {
       List<Step> todayCourseList = [];
-      for (var course in courseList.courseList['courseList']) {
+      for (var course in courseList.todayCourseList['courseList']) {
         RichText courseText = RichText(
             // X分钟上/下课 / 上完了
             text: TextSpan(
@@ -146,7 +141,7 @@ class DashboardCourseList extends StatelessWidget {
                   text: course['classTime'],
                   style: TextStyle(color: Colors.black)),
               TextSpan(
-                  text: course['course'],
+                  text: course['courseName'],
                   style: TextStyle(color: Colors.black, fontSize: 20))
             ]),
           ),
@@ -173,7 +168,7 @@ class DashboardCourseList extends StatelessWidget {
           builder: (context, globalData, _) => Container(
               child: Stepper(
                 physics: ClampingScrollPhysics(),
-                currentStep: courseList.courseList['currentStep'], // 现在第几节
+                currentStep: courseList.todayCourseList['currentStep'], // 现在第几节
                 controlsBuilder: (BuildContext context,
                     {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
                   return Container();
