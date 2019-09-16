@@ -27,6 +27,7 @@ class HttpUtil {
   Future<Map<String, dynamic>> importTimetable(
       String year, String term, String cookie) async {
     int _year = int.parse(year) - 1980;
+    if (term == '2' && Constant.URL_JW == Constant.URL_JW_GLUT_NN) term = '3'; // 南宁分校秋季是3
     var head = {'cookie': cookie};
     try {
       var response = await http

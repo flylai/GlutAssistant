@@ -100,6 +100,7 @@ class LoginInfo with ChangeNotifier {
   Future<void> init() async {
     SharedPreferenceUtil su = await SharedPreferenceUtil.getInstance();
     _campusType = CampusType.values[await su.getInt('campus')];
+    changeCampus(_campusType.index);
     await refreshVerifyCodeImage();
   }
 }
