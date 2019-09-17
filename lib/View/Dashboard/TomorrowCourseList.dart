@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Model/Dashboard/TodayCourseListModel.dart';
+import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:provider/provider.dart';
 
 class TomorrowCourseList extends StatelessWidget {
@@ -41,7 +42,8 @@ class TomorrowCourseList extends StatelessWidget {
                 ),
                 Container(
                     padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                    child: Text('${item['startTime']} - ${item['endTime']}节')),
+                    child: Text(
+                        '${BaseFunctionUtil().getTimeByNum(item['startTime'])} - ${BaseFunctionUtil().getTimeByNum(item['endTime'])}节')),
                 Text(
                   item['courseName'],
                   style: TextStyle(fontSize: 20),
