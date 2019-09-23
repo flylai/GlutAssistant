@@ -115,7 +115,10 @@ class Constant {
     ['导入课表', Icons.import_export, 5]
   ];
   static final List<List<List<int>>> CLASS_TIME = [
-    [],
+    [
+      [00, 00],
+      [00, 00]
+    ],
     [
       [08, 30],
       [09, 15]
