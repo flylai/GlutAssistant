@@ -27,7 +27,8 @@ class HttpUtil {
   Future<Map<String, dynamic>> importTimetable(
       String year, String term, String cookie) async {
     int _year = int.parse(year) - 1980;
-    if (term == '2' && Constant.URL_JW == Constant.URL_JW_GLUT_NN) term = '3'; // 南宁分校秋季是3
+    if (term == '2' && Constant.URL_JW == Constant.URL_JW_GLUT_NN)
+      term = '3'; // 南宁分校秋季是3
     var head = {'cookie': cookie};
     try {
       var response = await http
@@ -95,11 +96,12 @@ class HttpUtil {
                   startTime = int.parse(timeByDot[0]);
                   endTime = int.parse(timeByDot[1]);
                 }
-              } else {
-                if (timeByHyphen.length > 1) {
-                  startTime = int.parse(timeByHyphen[0]);
-                  endTime = int.parse(timeByHyphen[1]);
-                }
+              } else if (timeByHyphen.length > 1) {
+                startTime = int.parse(timeByHyphen[0]);
+                endTime = int.parse(timeByHyphen[1]);
+              } else if (timeListItem.group(3) == '中午') { // 奇葩写法 中午两节课直接写中午
+                startTime = 100;
+                endTime = 200;
               }
 
               //对5,6节特殊处理 变7 8节
