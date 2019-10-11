@@ -28,6 +28,7 @@ class ExamScoreList with ChangeNotifier {
   }
 
   Future<void> queryExamScore() async {
+    if (_isLoading) return;
     _isLoading = true;
     notifyListeners();
 

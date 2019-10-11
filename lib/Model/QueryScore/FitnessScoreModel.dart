@@ -14,6 +14,7 @@ class FitnessScoreList with ChangeNotifier {
   String get msg => _msg;
 
   Future<void> queryFitnessScore() async {
+    if (_isLoading) return;
     _isLoading = true;
     notifyListeners();
 

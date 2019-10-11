@@ -29,10 +29,11 @@ class ImportTimetableModel with ChangeNotifier {
   }
 
   Future<void> importTimetable() async {
+    if (_isLoading) return;
     _isLoading = true;
+    notifyListeners();
 
     Map<String, dynamic> result;
-    notifyListeners();
 
     FileUtil fp = await FileUtil.getInstance();
     String cookie = fp.readFile(Constant.FILE_SESSION);
