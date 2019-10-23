@@ -74,12 +74,14 @@ class TodayCourseList with ChangeNotifier {
       String text1 = '';
       String text2 = '';
       String text3 = '';
+
       CourseState courseState = CourseState.waiting;
       if (beforeClassBeginTime[0] == '-' && beforeClassOverTime[0] != '-') {
         stepPosition = i;
         text1 = '还有 ';
         text2 = beforeClassOverTime;
         text3 = ' 才下课,认真听课哟~';
+        isCheck = true;
       } else if (beforeClassBeginTime[0] != '-' && !isCheck) {
         stepPosition = i;
         isCheck = true;

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Model/Dashboard/TodayCourseListModel.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
-import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:glutassistant/Widget/DetailCard.dart';
 import 'package:provider/provider.dart';
 
