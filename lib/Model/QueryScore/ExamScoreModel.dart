@@ -66,7 +66,7 @@ class ExamScoreList with ChangeNotifier {
       }
       _msg = '查询成功';
     } else {
-      _msg = '获取成绩失败了，也许是你没登录教务或者连接不上教务';
+      _msg = '获取成绩失败了，也许是你没登录教务或者连接不上教务或者成绩还没出来';
     }
 
     _isLoading = false;
