@@ -15,6 +15,7 @@ class ExamLocation with ChangeNotifier {
   List<Map<String, dynamic>> get examList => _examList;
 
   Future queryExamList() async {
+    if (_isLoading) return; // 如果在查询，就别继续查了
     _isLoading = true;
     notifyListeners();
 
@@ -22,7 +23,6 @@ class ExamLocation with ChangeNotifier {
     String cookie = fp.readFile(Constant.FILE_SESSION);
     _examList.clear();
     Map<String, dynamic> result = await HttpUtil().queryExamLocation(cookie);
-    print(result);
     if (!result['success']) {
       _status = false;
       _msg = '未查到考试信息, 也许是你没登入教务或者最近没有考试';
