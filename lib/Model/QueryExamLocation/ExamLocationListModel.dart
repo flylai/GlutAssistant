@@ -32,7 +32,9 @@ class ExamLocation with ChangeNotifier {
       DateTime now = DateTime.now();
       List<Map<dynamic, dynamic>> tmpList = result['data'];
       for (var exam in tmpList) {
-        DateTime examTime = DateTime.parse(exam['datetime']);
+        DateTime examTime = DateTime.parse((exam['datetime'] +
+            " " +
+            exam['interval'].toString().split('--')[0]));
         int days = examTime.difference(now).inDays;
         int hours = examTime.difference(now).inHours - days * 24;
         int minutes =
