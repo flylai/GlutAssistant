@@ -1,4 +1,4 @@
-import 'dart:core';
+﻿import 'dart:core';
 
 import 'package:flutter/foundation.dart';
 import 'package:glutassistant/Utility/BalanceUtil.dart';
@@ -29,6 +29,7 @@ class Balance with ChangeNotifier {
   set isLoading(bool newVal) => _isLoading = newVal;
 
   Future refreshBalance() async {
+    if (_isLoading) return;
     _isLoading = true;
     notifyListeners();
     BalanceUtil bu = BalanceUtil();
