@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class Constant {
   static final String FILE_SESSION = "Session";
@@ -11,7 +11,7 @@ class Constant {
   static final int VAR_HTTP_TIMEOUT_MS = 6000;
   static final double VAR_COURSE_HEIGHT = 63.0;
   static final double VAR_DEFAULT_OPACITY = 0.7;
-  static final String VAR_VERSION = '1.4.3';
+  static final String VAR_VERSION = '1.4.4';
   static final List<int> VAR_COLOR = [
     0x5CB3CC,
     0x4F383E,
@@ -64,9 +64,9 @@ class Constant {
   static final String URL_CAIWU_INTERFACE =
       "http://cwjf.glut.edu.cn/interface/index";
   static final String URL_FITNESS_TEST =
-      "http://tzcs.glut.edu.cn/servlet/adminservlet";
+      "http://tzcs.glut.edu.cn/servlet/adminservletX";
   static final String URL_FIRNESS_TEST_INFO =
-      'http://tzcs.glut.edu.cn/student/queryHealthInfo.jsp';
+      'http://tzcs.glut.edu.cn/student/queryHealthInfoX.jsp';
 
   static final LIST_DRAWER_GENERAL = [
     ['常用', Icons.book],
