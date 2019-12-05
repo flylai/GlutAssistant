@@ -138,7 +138,7 @@ class Home extends StatelessWidget {
                         alignment: Alignment.center,
                         height: 40,
                         child: Text(
-                          '体侧成绩',
+                          '体测成绩',
                           style: TextStyle(
                               fontSize: 17,
                               color: Theme.of(context).primaryColorBrightness ==

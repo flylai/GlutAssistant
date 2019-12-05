@@ -17,7 +17,7 @@
 
 ## 下载
 
-* 前往 [release](https://github.com/flylai/GlutAssistant/release) 界面
+* 前往 [releases](https://github.com/flylai/GlutAssistant/releases) 界面
 * 通过 [酷安](https://coolapk.com/apk/com.lkm.glutassistant) 进行下载
 
 ## 目录结构
