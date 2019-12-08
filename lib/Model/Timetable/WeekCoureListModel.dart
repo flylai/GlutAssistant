@@ -49,7 +49,7 @@ class WeekCourseList with ChangeNotifier {
               : today.day.toString();
       Color todayColor = todayStr == '今天' ? Color(0xffEF3473) : Colors.black;
       String weekdayStr =
-          '周${BaseFunctionUtil().getWeekdayByNum(i)}\n$todayStr';
+          '周${BaseFunctionUtil.getWeekdayByNum(i)}\n$todayStr';
       _dateList.add({'color': todayColor, 'weekday': weekdayStr});
     }
   }

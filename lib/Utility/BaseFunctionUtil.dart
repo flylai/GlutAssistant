@@ -1,5 +1,10 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart' show Color;
+import 'package:glutassistant/Common/Constant.dart';
+
 class BaseFunctionUtil {
-  String getDuration(DateTime t1, DateTime t2) {
+  static String getDuration(DateTime t1, DateTime t2) {
     int diff =
         t1.millisecondsSinceEpoch ~/ 1000 - t2.millisecondsSinceEpoch ~/ 1000;
     int day = diff ~/ 86400;
@@ -20,7 +25,7 @@ class BaseFunctionUtil {
     return duration;
   }
 
-  int getNumByWeekday(String weekday) {
+  static int getNumByWeekday(String weekday) {
     switch (weekday) {
       case '星期一':
         return 1;
@@ -42,7 +47,12 @@ class BaseFunctionUtil {
     return 0;
   }
 
-  String getTimeByNum(int i) {
+  static Color getRandomColor() {
+    return Color(
+        Constant.VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
+  }
+
+  static String getTimeByNum(int i) {
     String _i;
     if (i > 4 && i < 7)
       _i = '中午${i - 4}';
@@ -53,7 +63,7 @@ class BaseFunctionUtil {
     return _i;
   }
 
-  String getWeekdayByNum(int weekday) {
+  static String getWeekdayByNum(int weekday) {
     switch (weekday) {
       case 1:
         return '一';

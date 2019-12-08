@@ -78,7 +78,7 @@ class SingleCourse with ChangeNotifier {
   set weekday(int weekday) {
     if (_weekday == weekday) return;
     _weekday = weekday;
-    _weekdayStr = BaseFunctionUtil().getWeekdayByNum(_weekday);
+    _weekdayStr = BaseFunctionUtil.getWeekdayByNum(_weekday);
     notifyListeners();
   }
 
@@ -98,14 +98,14 @@ class SingleCourse with ChangeNotifier {
   set startTime(int startTime) {
     if (_startTime == startTime) return;
     _startTime = startTime;
-    _startTimeStr = BaseFunctionUtil().getTimeByNum(_startTime);
+    _startTimeStr = BaseFunctionUtil.getTimeByNum(_startTime);
     notifyListeners();
   }
 
   set endTime(int endTime) {
     if (_endTime == endTime) return;
     _endTime = endTime;
-    _endTimeStr = BaseFunctionUtil().getTimeByNum(_endTime);
+    _endTimeStr = BaseFunctionUtil.getTimeByNum(_endTime);
     notifyListeners();
   }
 

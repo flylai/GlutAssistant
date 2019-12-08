@@ -85,7 +85,7 @@ class Timetable extends StatelessWidget {
         alignment: Alignment.center,
         height: Constant.VAR_COURSE_HEIGHT,
         child: Text(
-          BaseFunctionUtil().getTimeByNum(i),
+          BaseFunctionUtil.getTimeByNum(i),
           textAlign: TextAlign.center,
         ),
       );

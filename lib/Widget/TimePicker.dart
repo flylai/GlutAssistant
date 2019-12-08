@@ -250,7 +250,7 @@ class _TimePickerState extends State<_TimePickerComponent> {
                 height: _datePickerItemHeight,
                 alignment: Alignment.center,
                 child: Text(
-                  '${BaseFunctionUtil().getTimeByNum(index + 1)}',
+                  '${BaseFunctionUtil.getTimeByNum(index + 1)}',
                   style: TextStyle(
                       color: Color(0xFF000046), fontSize: _datePickerFontSize),
                   textAlign: TextAlign.start,
@@ -309,7 +309,7 @@ class _TimePickerState extends State<_TimePickerComponent> {
                   children: <Widget>[
                     Expanded(
                         child: Text(
-                      BaseFunctionUtil().getTimeByNum(index + 1),
+                      BaseFunctionUtil.getTimeByNum(index + 1),
                       style: TextStyle(
                           color: Color(0xFF000046),
                           fontSize: _datePickerFontSize),
@@ -401,7 +401,7 @@ class _TimePickerState extends State<_TimePickerComponent> {
               height: _datePickerItemHeight,
               alignment: Alignment.center,
               child: Text(
-                '星期${BaseFunctionUtil().getWeekdayByNum(index + 1)}',
+                '星�BaseFunctionUtilil().getWeekdayByNum(index + 1)}',
                 style: TextStyle(
                     color: Color(0xFF000046), fontSize: _datePickerFontSize),
                 textAlign: TextAlign.start,
