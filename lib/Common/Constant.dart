@@ -2,6 +2,7 @@
 
 class Constant {
   static final String FILE_SESSION = "Session";
+  static final String FILE_EXAM_LOCATION = "exam_location";
   static final String FILE_DATA_CAIWU = "caiwu_data";
   static final String FILE_DB = "db.db3";
   static final String FILE_BACKGROUND_IMG = "background";

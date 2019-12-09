@@ -13,7 +13,7 @@ class QueryExamLocation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        builder: (context) => ExamLocation(), child: _buildBody());
+        builder: (context) => ExamLocationModel(), child: _buildBody());
   }
 
   Widget _buildBody() {
@@ -32,7 +32,7 @@ class QueryExamLocation extends StatelessWidget {
   }
 
   Widget _buildExamWidgetList() {
-    return Consumer2<ExamLocation, GlobalData>(
+    return Consumer2<ExamLocationModel, GlobalData>(
         builder: (context, examLocation, globalData, _) {
       if (examLocation.isLoading)
         return Center(child: CircularProgressIndicator());
@@ -49,7 +49,7 @@ class QueryExamLocation extends StatelessWidget {
               top: 0,
               left: 0,
               child:
-                  Text(exam['course'], style: TextStyle(color: Colors.white)),
+                  Text(exam.courseName, style: TextStyle(color: Colors.white)),
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               RichText(
@@ -57,25 +57,25 @@ class QueryExamLocation extends StatelessWidget {
                       style: TextStyle(color: Colors.white),
                       children: <TextSpan>[
                     TextSpan(text: '还有'),
-                    TextSpan(text: exam['leftTime'])
+                    TextSpan(text: exam.leftTime)
                   ]))
             ]),
             Positioned(
               bottom: 0,
               left: 0,
-              child: Text('${exam['datetime']} ${exam['interval']}',
+              child: Text('${exam.timeStr}',
                   style: TextStyle(color: Colors.white)),
             ),
             Positioned(
               top: 0,
               right: 0,
-              child: Text(exam['type'], style: TextStyle(color: Colors.white)),
+              child: Text(exam.type, style: TextStyle(color: Colors.white)),
             ),
             Positioned(
               bottom: 0,
               right: 0,
               child:
-                  Text(exam['location'], style: TextStyle(color: Colors.white)),
+                  Text(exam.location, style: TextStyle(color: Colors.white)),
             )
           ],
         );
@@ -87,7 +87,7 @@ class QueryExamLocation extends StatelessWidget {
   }
 
   Widget _buildQueryButton() {
-    return Consumer<ExamLocation>(
+    return Consumer<ExamLocationModel>(
         builder: (context, examLocation, _) => RaisedButton(
             onPressed: () async {
               await examLocation.queryExamList();
