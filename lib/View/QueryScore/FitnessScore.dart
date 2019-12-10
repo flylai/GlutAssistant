@@ -23,7 +23,7 @@ class FitnessScore extends StatelessWidget {
         Color.fromARGB(255, 0, 188, 212).withOpacity(globalData.opacity),
         Center(
           child: Text(
-              '成绩: ${fitnessScoreList.result['total']}\n结论: ${fitnessScoreList.result['conclusion']}',
+              '成绩: ${fitnessScoreList.result.total}\n结论: ${fitnessScoreList.result.conclusion}',
               style: TextStyle(fontSize: 18, color: Colors.white)),
         ),
         elevation: 0,
@@ -35,10 +35,10 @@ class FitnessScore extends StatelessWidget {
               color: Colors.white.withOpacity(globalData.opacity),
               child: ListTile(
                 onTap: () {},
-                title: Text(item['name']),
-                subtitle: Text(item['subtitle']),
+                title: Text(item.name),
+                subtitle: Text('成绩: ${item.record} 结论:${item.result}'),
                 trailing:
-                    Text(item['score'], style: TextStyle(color: Colors.green)),
+                    Text(item.score, style: TextStyle(color: Colors.green)),
               )),
         );
       }

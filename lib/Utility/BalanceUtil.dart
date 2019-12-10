@@ -4,7 +4,7 @@ import 'dart:core';
 
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
-import 'package:glutassistant/Utility/HttpUtil.dart';
+import 'package:glutassistant/Utility/HttpUtil2.dart' as http;
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 class BalanceUtil {
@@ -46,17 +46,16 @@ class BalanceUtil {
     };
     if (_studentid != '') {
       //有cookie和学号，先查一波
-      Map<String, dynamic> queryResult =
-          await HttpUtil().queryBalance(_studentid);
+      Map<String, dynamic> queryResult = await queryBalance(_studentid);
       if (!queryResult['success']) {
-        //cookie过期或者学号不对或者财务炸了
+        // cookie过期或者学号不对或者财务炸了 // 目前来说只有财务炸了和学号不对这两种可能
         returnResult['success'] = false;
         returnResult['msg'] = '查询失败,未知原因,请稍后再试';
       } else {
         //cookie没过期有结果
         _lastupdate =
             '${DateTime.now().month}-${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}';
-        _balance = queryResult['balance'];
+        _balance = queryResult['data'];
         returnResult['success'] = true;
         returnResult['msg'] = '查询成功';
         returnResult['balance'] = _balance;
@@ -76,5 +75,24 @@ class BalanceUtil {
     data['balance'] = _balance;
     data['lastupdate'] = _lastupdate;
     _fp.writeFile(jsonEncode(data), Constant.FILE_DATA_CAIWU);
+  }
+
+  Future<Map<String, dynamic>> queryBalance(String studentId) async {
+    try {
+      var postData = {
+        'method': 'getecardinfo',
+        'stuid': '0',
+        'carno': studentId
+      };
+      var response = await http.post(Constant.URL_CAIWU_INTERFACE, postData);
+      if (response.body.contains('true')) {
+        Map<String, dynamic> json = jsonDecode(response.body);
+        String balance = json['data']['Balance'];
+        return {'success': true, 'data': balance};
+      } else
+        return {'success': false, 'data': ''};
+    } catch (e) {
+      return {'success': false, 'data': ''};
+    }
   }
 }

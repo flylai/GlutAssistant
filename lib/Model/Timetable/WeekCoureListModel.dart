@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
+import 'package:glutassistant/Model/CourseManage/Course.dart';
 import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:glutassistant/Utility/SQLiteUtil.dart';
 
@@ -48,8 +49,7 @@ class WeekCourseList with ChangeNotifier {
               ? '今天'
               : today.day.toString();
       Color todayColor = todayStr == '今天' ? Color(0xffEF3473) : Colors.black;
-      String weekdayStr =
-          '周${BaseFunctionUtil.getWeekdayByNum(i)}\n$todayStr';
+      String weekdayStr = '周${BaseFunctionUtil.getWeekdayByNum(i)}\n$todayStr';
       _dateList.add({'color': todayColor, 'weekday': weekdayStr});
     }
   }
@@ -62,13 +62,12 @@ class WeekCourseList with ChangeNotifier {
     for (int i = 0; i < 7; i++) {
       weekCourse[i].clear();
       int count = 1;
-      List<Map<String, dynamic>> queryResult =
-          await su.queryCourse(_selectedWeek, i + 1);
+      List<Course> queryResult = await su.queryCourse(_selectedWeek, i + 1);
 
       if (queryResult.length > 0) {
         for (int j = 0; j < queryResult.length; j++) {
-          int startTime = queryResult[j]['startTime'];
-          int endTime = queryResult[j]['endTime'];
+          int startTime = queryResult[j].startTime;
+          int endTime = queryResult[j].endTime;
           if (count < startTime) {
             double marginTop = 0.5 * (startTime - count - 1);
             double height = (Constant.VAR_COURSE_HEIGHT * (startTime - count));
@@ -87,7 +86,7 @@ class WeekCourseList with ChangeNotifier {
           double height =
               Constant.VAR_COURSE_HEIGHT * (endTime - startTime + 1);
           String text =
-              '${queryResult[j]['courseName']}@${queryResult[j]['location']}';
+              '${queryResult[j].courseName}@${queryResult[j].location}';
           weekCourse[i].add({
             'empty': false,
             'marginTop': 0.5,
@@ -121,8 +120,8 @@ class WeekCourseList with ChangeNotifier {
     SQLiteUtil su = await SQLiteUtil.getInstance();
     if (!su.dbIsOpen()) return;
 
-    List<Map<String, dynamic>> queryResult = await su.queryCourseByTime(
+    List<Course> queryResult = await su.queryCourseByTime(
         _selectedWeek, weekday + 1, startTime, endTime);
-        _courseList.addAll(queryResult);
+    _courseList.addAll(queryResult.map((f) => f.toJson()));
   }
 }

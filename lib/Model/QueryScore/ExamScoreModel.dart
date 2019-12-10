@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
+
 import 'package:glutassistant/Common/Constant.dart';
+import 'package:glutassistant/Model/QueryScore/ExamScore.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
-import 'package:glutassistant/Utility/HttpUtil.dart';
+import 'package:glutassistant/Utility/HttpUtil2.dart' as http;
 
 class ExamScoreList with ChangeNotifier {
   int _year = DateTime.now().year;
   int _term = 2;
   bool _isLoading = false;
   String _msg = '';
-  List<Map<String, dynamic>> examScoreList = [];
+  List<ExamScore> examScoreList = [];
 
-  int get year => _year;
-  int get term => _term;
   bool get isLoading => _isLoading;
   String get msg => _msg;
+  int get term => _term;
+  set term(int term) {
+    if (term == _year) return;
+    _term = term;
+    notifyListeners();
+  }
+
+  int get year => _year;
 
   set year(int year) {
     if (year == _year) return;
     _year = year;
-    notifyListeners();
-  }
-
-  set term(int term) {
-    if (term == _year) return;
-    _term = term;
     notifyListeners();
   }
 
@@ -36,7 +38,7 @@ class ExamScoreList with ChangeNotifier {
     String cookie = fp.readFile(Constant.FILE_SESSION);
 
     Map<String, dynamic> result =
-        await HttpUtil().queryScore(_year.toString(), _term.toString(), cookie);
+        await queryScore(_year.toString(), _term.toString(), cookie);
 
     if (result['success'] && result['data'].length > 0) {
       examScoreList.clear();
@@ -57,12 +59,14 @@ class ExamScoreList with ChangeNotifier {
                   RegExp(r'.*>(\d+|不及格)<.*'), (Match m) => '${m[1]}')
               .replaceAll('&nbsp;', '');
         }
+
         item['score'] = score;
         item['subtitle'] = item['teacher'] +
             (item['teacher'] == '' ? '' : '    ') +
             (campusType == 1 ? '绩点: ' : '学分: ') +
             item['gpa'];
-        examScoreList.add(item);
+
+        examScoreList.add(ExamScore.fromJson(item));
       }
       _msg = '查询成功';
     } else {
@@ -71,5 +75,41 @@ class ExamScoreList with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<Map<String, dynamic>> queryScore(
+      String year, String term, String cookie) async {
+    int _year = int.parse(year) - 1980;
+    RegExp scoreExp = RegExp(r'');
+    if (Constant.URL_JW == Constant.URL_JW_GLUT)
+      scoreExp = RegExp(
+          r'<td>[春秋]</td>.*?<td>\d+?</td><td>(.*?)</td><td>\d+?</td><td>(.*?)</td><td>(.*?)</td><td>(\d?\.\d?)</td>',
+          caseSensitive: false);
+    else {
+      scoreExp = RegExp(
+          r'<td>[春秋]</td><td>.*?</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>',
+          caseSensitive: false);
+      term = term == '2' ? '3' : '1'; // 南宁分校秋季学期是3
+    }
+    var postData = {'year': _year.toString(), 'term': term, 'para': '0'};
+    try {
+      var response = await http.post(
+          Constant.URL_JW + Constant.URL_QUERY_SCORE, postData,
+          cookie: cookie);
+      List<Map> scoreList = [];
+      String html = response.body.replaceAll(RegExp(r'\s'), '');
+      Iterable<Match> scoreMatches = scoreExp.allMatches(html);
+      for (var scoreListItem in scoreMatches) {
+        Map<String, String> scoredetail = new Map();
+        scoredetail['courseName'] = scoreListItem.group(1);
+        scoredetail['teacher'] = scoreListItem.group(2);
+        scoredetail['score'] = scoreListItem.group(3);
+        scoredetail['gpa'] = scoreListItem.group(4); // 南宁分校此处是学分
+        scoreList.add(scoredetail);
+      }
+      return {'success': true, 'data': scoreList};
+    } catch (e) {
+      return {'success': false, 'data': e};
+    }
   }
 }

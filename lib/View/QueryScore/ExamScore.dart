@@ -20,12 +20,12 @@ class ExamScore extends StatelessWidget {
         Widget scoreWidget = Container(
             color: Colors.white.withOpacity(globalData.opacity),
             child: ListTile(
-              title: Text(score['course']),
-              subtitle: Text(score['subtitle']),
+              title: Text(score.courseName),
+              subtitle: Text(score.subtitle),
               trailing: Text(
-                score['score'],
+                score.score,
                 style: TextStyle(
-                    color: double.parse(score['gpa']) == 0
+                    color: double.parse(score.gpa) == 0
                         ? Colors.red
                         : Colors.green),
               ),

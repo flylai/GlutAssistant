@@ -26,8 +26,6 @@ class Balance with ChangeNotifier {
     notifyListeners();
   }
 
-  set isLoading(bool newVal) => _isLoading = newVal;
-
   Future refreshBalance() async {
     if (_isLoading) return;
     _isLoading = true;

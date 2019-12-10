@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:glutassistant/Model/CourseManage/Course.dart';
 import 'package:glutassistant/Model/CourseManage/CourseModel.dart';
 import 'package:glutassistant/Utility/SQLiteUtil.dart';
 import 'package:glutassistant/Widget/TimePicker.dart';
@@ -63,31 +65,28 @@ class CourseModify extends StatelessWidget {
               child: FlatButton(
                 shape: Border.all(color: Colors.blue),
                 onPressed: () async {
-                  Map<String, dynamic> courseDetail = {};
                   singleCourse.courseName =
                       singleCourse.courseNameController.text;
                   singleCourse.teacher = singleCourse.teacherController.text;
                   singleCourse.location = singleCourse.locationController.text;
 
-                  courseDetail['courseName'] =
-                      singleCourse.courseNameController.text;
-                  courseDetail['teacher'] = singleCourse.teacherController.text;
-                  courseDetail['startWeek'] = singleCourse.startWeek;
-                  courseDetail['endWeek'] = singleCourse.endWeek;
-                  courseDetail['weekType'] = singleCourse.weekType;
-                  courseDetail['weekday'] = singleCourse.weekday;
-                  courseDetail['startTime'] = singleCourse.startTime;
-                  courseDetail['endTime'] = singleCourse.endTime;
-                  courseDetail['location'] =
-                      singleCourse.locationController.text;
+                  Course course = Course(
+                      singleCourse.courseNameController.text,
+                      singleCourse.teacherController.text,
+                      singleCourse.startWeek,
+                      singleCourse.endWeek,
+                      singleCourse.weekday,
+                      singleCourse.weekType,
+                      singleCourse.startTime,
+                      singleCourse.endTime,
+                      singleCourse.locationController.text);
 
-                  print(singleCourse.courseNo);
                   SQLiteUtil su = await SQLiteUtil.getInstance();
 
                   if (type == 0)
-                    await su.insertTimetable(courseDetail);
+                    await su.insertTimetable(course);
                   else
-                    await su.updateCourse(singleCourse.courseNo, courseDetail);
+                    await su.updateCourse(singleCourse.courseNo, course);
                   Navigator.of(context).pop();
                 },
                 child: Text('保存'),

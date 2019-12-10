@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:glutassistant/Model/CourseManage/Course.dart';
 import 'package:glutassistant/Model/CourseManage/CourseModel.dart';
 import 'package:glutassistant/Utility/SQLiteUtil.dart';
 
@@ -10,12 +11,12 @@ class CoursePool with ChangeNotifier {
 
   Future<void> queryCoursePool() async {
     _courses.clear();
-    List<Map<String, dynamic>> result = [];
+    List<Course> result = [];
     SQLiteUtil su = await SQLiteUtil.getInstance();
     result = await su.queryCourseList();
     for (var course in result) {
       SingleCourse singleCourse = SingleCourse();
-      singleCourse.fromMap(course);
+      singleCourse.fromMap(course.toJson());
       _courses.add(singleCourse);
     }
     notifyListeners();
