@@ -1,9 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Model/CourseManage/Course.dart';
+import 'package:glutassistant/Model/Timetable/CourseBox.dart';
 import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:glutassistant/Utility/SQLiteUtil.dart';
 
@@ -26,12 +26,12 @@ class WeekCourseList with ChangeNotifier {
 
   int get selectedWeek => _selectedWeek;
 
-  List<List<Map<String, dynamic>>> _weekCourse = [[], [], [], [], [], [], []];
-  List<Map<String, dynamic>> _courseList = [];
+  List<List<CourseBox>> _weekCourse = [[], [], [], [], [], [], []];
+  List<Course> _courseList = [];
 
   List<dynamic> get dateList => _dateList;
-  List<Map<String, dynamic>> get courseList => _courseList;
-  List<List<Map<String, dynamic>>> get weekCourse => _weekCourse;
+  List<Course> get courseList => _courseList;
+  List<List<CourseBox>> get weekCourse => _weekCourse;
 
   void refreshDateList() {
     _dateList.clear();
@@ -55,7 +55,7 @@ class WeekCourseList with ChangeNotifier {
   }
 
   Future<void> refreshTimetable() async {
-    List<List<Map<String, dynamic>>> weekCourse = [[], [], [], [], [], [], []];
+    List<List<CourseBox>> weekCourse = [[], [], [], [], [], [], []];
     SQLiteUtil su = await SQLiteUtil.getInstance();
     if (!su.dbIsOpen()) return;
 
@@ -71,44 +71,23 @@ class WeekCourseList with ChangeNotifier {
           if (count < startTime) {
             double marginTop = 0.5 * (startTime - count - 1);
             double height = (Constant.VAR_COURSE_HEIGHT * (startTime - count));
-            weekCourse[i].add({
-              'empty': true,
-              'marginTop': marginTop,
-              'padding': 0.0,
-              'color': Colors.transparent,
-              'text': '',
-              'height': height
-            }); //没到有课的时间段 加个空白填充
+            weekCourse[i].add(CourseBox(true, marginTop, 0.0,
+                Colors.transparent, '', height)); // 没到有课的时间段 加个空白填充
             count += startTime - count;
           }
           if (count > startTime) continue;
-          int colorIndex = Random.secure().nextInt(Constant.VAR_COLOR.length);
           double height =
               Constant.VAR_COURSE_HEIGHT * (endTime - startTime + 1);
           String text =
               '${queryResult[j].courseName}@${queryResult[j].location}';
-          weekCourse[i].add({
-            'empty': false,
-            'marginTop': 0.5,
-            'padding': 2.0,
-            'color': Color(Constant.VAR_COLOR[colorIndex]),
-            'text': text,
-            'height': height,
-            'weekday': i,
-            'startTime': startTime,
-            'endTime': endTime
-          });
+          weekCourse[i].add(CourseBox(
+              false, 0.5, 2.0, BaseFunctionUtil.getRandomColor(), text, height,
+              weekday: i, startTime: startTime, endTime: endTime));
           count += endTime - startTime + 1;
         }
       } else {
-        weekCourse[i].add({
-          'empty': true,
-          'marginTop': 0.0,
-          'padding': 0.0,
-          'color': Colors.transparent,
-          'text': '',
-          'height': Constant.VAR_COURSE_HEIGHT
-        }); // 一整天没课 空白填充
+        weekCourse[i].add(CourseBox(true, 0.0, 0.0, Colors.transparent, '',
+            Constant.VAR_COURSE_HEIGHT)); // 一整天没课 空白填充
       }
     }
     _weekCourse = weekCourse;
@@ -122,6 +101,6 @@ class WeekCourseList with ChangeNotifier {
 
     List<Course> queryResult = await su.queryCourseByTime(
         _selectedWeek, weekday + 1, startTime, endTime);
-    _courseList.addAll(queryResult.map((f) => f.toJson()));
+    _courseList.addAll(queryResult);
   }
 }

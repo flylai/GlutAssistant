@@ -55,7 +55,7 @@ class SQLiteUtil {
   }
 
   Future<int> insertTimetable(Course coursedetail) {
-    return _db.insert(_dbTableName, coursedetail.toJson());
+    return _db.insert(_dbTableName, coursedetail.toJsonInsert());
   }
 
   Future<bool> isTableExist() async {
@@ -81,7 +81,7 @@ class SQLiteUtil {
         'SELECT * FROM ${Constant.VAR_TABLE_NAME} WHERE startWeek <= $week AND endWeek >= $week AND location != "" AND (weekType = "A" OR weekType = "$weektype") AND weekday = $weekday AND startTime = $startTime AND endTime = $endTime ORDER BY startTime ASC';
     List<Course> courseList = [];
     await _db.rawQuery(sql)
-      ..forEach((f) => courseList.add(Course.fromJson(f)));
+      ..forEach((f) => courseList.add(Course.fromJson(f)..courseNo = f['No']));
     return courseList;
   }
 
@@ -95,7 +95,7 @@ class SQLiteUtil {
   }
 
   Future updateCourse(int no, Course coursedetail) async {
-    return _db.update(_dbTableName, coursedetail.toJson(),
+    return _db.update(_dbTableName, coursedetail.toJsonInsert(),
         where: 'No = ?', whereArgs: [no]);
   }
 

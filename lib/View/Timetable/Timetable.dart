@@ -107,26 +107,26 @@ class Timetable extends StatelessWidget {
         for (int j = 0; j < weekCourseList.weekCourse[i].length; j++) {
           Widget widget = GestureDetector(
               onTap: () async {
-                if (weekCourseList.weekCourse[i][j]['empty']) return;
+                if (weekCourseList.weekCourse[i][j].empty) return;
                 await _queryCourseList(
                     context,
-                    weekCourseList.weekCourse[i][j]['weekday'],
-                    weekCourseList.weekCourse[i][j]['startTime'],
-                    weekCourseList.weekCourse[i][j]['endTime']);
+                    weekCourseList.weekCourse[i][j].weekday,
+                    weekCourseList.weekCourse[i][j].startTime,
+                    weekCourseList.weekCourse[i][j].endTime);
               },
               child: Container(
                 padding:
-                    EdgeInsets.all(weekCourseList.weekCourse[i][j]['padding']),
-                margin: EdgeInsets.fromLTRB(0.5,
-                    weekCourseList.weekCourse[i][j]['marginTop'], 0.5, 0.5),
-                color: weekCourseList.weekCourse[i][j]['color'].withOpacity(
-                    weekCourseList.weekCourse[i][j]['empty']
+                    EdgeInsets.all(weekCourseList.weekCourse[i][j].padding),
+                margin: EdgeInsets.fromLTRB(
+                    0.5, weekCourseList.weekCourse[i][j].marginTop, 0.5, 0.5),
+                color: weekCourseList.weekCourse[i][j].color.withOpacity(
+                    weekCourseList.weekCourse[i][j].empty
                         ? 0.0
                         : globalData.opacity),
                 alignment: Alignment.topLeft,
-                height: weekCourseList.weekCourse[i][j]['height'],
+                height: weekCourseList.weekCourse[i][j].height,
                 child: Text(
-                  weekCourseList.weekCourse[i][j]['text'],
+                  weekCourseList.weekCourse[i][j].text,
                   style: TextStyle(color: Colors.white),
                 ),
               ));
@@ -175,8 +175,6 @@ class Timetable extends StatelessWidget {
     await weekCourseList.queryCourseList(weekday, startTime, endTime);
     List<Widget> courselistwidget = [];
     for (var course in weekCourseList.courseList) {
-      SingleCourse singleCourse = SingleCourse();
-      singleCourse.fromMap(course);
       Container courseWidget = Container(
           margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
           padding: EdgeInsets.all(7),
@@ -191,26 +189,25 @@ class Timetable extends StatelessWidget {
                         Row(
                           children: <Widget>[
                             Icon(Icons.book, color: Colors.amber),
-                            Text(course['courseName'])
+                            Text(course.courseName)
                           ],
                         ),
                         Row(
                           children: <Widget>[
                             Icon(Icons.person, color: Colors.pink),
-                            Text(course['teacher'])
+                            Text(course.teacher)
                           ],
                         ),
                         Row(
                           children: <Widget>[
                             Icon(Icons.location_on, color: Colors.teal),
-                            Text(course['location'])
+                            Text(course.location)
                           ],
                         ),
                         Row(
                           children: <Widget>[
                             Icon(Icons.access_time, color: Colors.cyan),
-                            Text(
-                                '${course['startWeek']} - ${course['endWeek']}周')
+                            Text('${course.startWeek} - ${course.endWeek}周')
                           ],
                         )
                       ],
@@ -222,8 +219,8 @@ class Timetable extends StatelessWidget {
                       onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  CourseModify(singleCourse))),
+                              builder: (BuildContext context) => CourseModify(
+                                  SingleCourse.fromJson(course.toJson())))),
                     ),
                     flex: 1)
               ]));

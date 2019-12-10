@@ -46,4 +46,17 @@ class Course {
         'endTime': endTime,
         'location': location
       };
+
+  /// 数据库更新时候用到，不带courseNo
+  Map<String, dynamic> toJsonInsert() => {
+        'courseName': courseName,
+        'teacher': teacher,
+        'startWeek': startWeek,
+        'endWeek': endWeek,
+        'weekday': weekday,
+        'weekType': weekType,
+        'startTime': startTime,
+        'endTime': endTime,
+        'location': location
+      };
 }
