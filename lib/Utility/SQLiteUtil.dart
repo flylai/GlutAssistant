@@ -89,7 +89,8 @@ class SQLiteUtil {
     String sql = 'SELECT * FROM ${Constant.VAR_TABLE_NAME}';
     List<Course> courseList = [];
     await _db.rawQuery(sql)
-      ..forEach((f) => {courseList.add(Course.fromJson(f))});
+      ..forEach(
+          (f) => {courseList.add(Course.fromJson(f)..courseNo = f['No'])});
     return courseList;
   }
 

@@ -35,6 +35,7 @@ class Course {
         location = json['location'];
 
   Map<String, dynamic> toJson() => {
+        'courseNo': courseNo,
         'courseName': courseName,
         'teacher': teacher,
         'startWeek': startWeek,

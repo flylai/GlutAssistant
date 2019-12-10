@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:glutassistant/Model/CourseManage/CourseModel.dart';
 import 'package:glutassistant/Model/CourseManage/CoursePoolModel.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
-import 'package:glutassistant/Utility/SQLiteUtil.dart';
 import 'package:glutassistant/View/CourseManage/CourseModify.dart';
 import 'package:glutassistant/Widget/DetailCard.dart';
 import 'package:provider/provider.dart';
@@ -20,19 +19,24 @@ class CoursesManage extends StatelessWidget {
   Widget _buildBody() {
     return Consumer<CoursePool>(builder: (context, coursePool, _) {
       coursePool.init();
+      List<SingleCourse> x = coursePool.courses;
       return ListView.builder(
-          itemCount: coursePool.courses.length,
+          itemCount: x.length,
           itemBuilder: (context, index) {
-            SingleCourse singleCourse = coursePool.courses[index];
+            SingleCourse singleCourse = x[index];
             return ChangeNotifierProvider<SingleCourse>.value(
               value: singleCourse,
-              child: _buildCourseItem(),
+              child: _buildCourseItem(confirmCallback: (confirm) {
+                if (confirm)
+                  coursePool.deleteCourse(index, singleCourse.courseNo);
+                return; // 不写 return 报警告
+              }),
             );
           });
     });
   }
 
-  Widget _buildCourseItem() {
+  Widget _buildCourseItem({Function confirmCallback(confirm)}) {
     return Consumer2<SingleCourse, GlobalData>(
         builder: (context, singleCourse, globalData, _) {
       Widget child = Center(
@@ -65,8 +69,13 @@ class CoursesManage extends StatelessWidget {
               GestureDetector(
                 child: Icon(Icons.delete_forever,
                     size: 30, color: Colors.redAccent),
-                onTap: () => _deleteCourse(
-                    context, singleCourse.courseNo, singleCourse.courseName),
+                onTap: () {
+                  _deleteCourse(
+                      context,
+                      singleCourse.courseNo,
+                      singleCourse.courseName,
+                      (confirm) => confirmCallback(confirm));
+                },
               )
             ],
           )
@@ -82,7 +91,8 @@ class CoursesManage extends StatelessWidget {
     });
   }
 
-  void _deleteCourse(BuildContext context, int no, String courseName) async {
+  void _deleteCourse(BuildContext context, int no, String courseName,
+      Function confirmCallback(confirm)) {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
@@ -90,10 +100,9 @@ class CoursesManage extends StatelessWidget {
             content: Text('确定要删除《$courseName》吗？'),
             actions: <Widget>[
               FlatButton(
-                  onPressed: () async {
-                    SQLiteUtil su = await SQLiteUtil.getInstance();
-                    await su.deleteCourse(no);
+                  onPressed: () {
                     Navigator.pop(context);
+                    confirmCallback(true); // 确定删除回调
                   },
                   child: Text('确定')),
               FlatButton(

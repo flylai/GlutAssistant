@@ -116,8 +116,10 @@ class SingleCourse with ChangeNotifier {
     notifyListeners();
   }
 
-  void fromMap(Map<String, dynamic> course) {
-    _courseNo = course['No'];
+  SingleCourse();
+
+  SingleCourse.fromJson(Map<String, dynamic> course) {
+    _courseNo = course['courseNo'];
     _courseName = course['courseName'];
     _teacher = course['teacher'];
     _startWeek = course['startWeek'];

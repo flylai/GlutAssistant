@@ -9,22 +9,27 @@ class CoursePool with ChangeNotifier {
 
   List<SingleCourse> get courses => _courses;
 
-  Future<void> queryCoursePool() async {
-    _courses.clear();
-    List<Course> result = [];
+  Future<void> deleteCourse(int idx, int courseNo) async {
     SQLiteUtil su = await SQLiteUtil.getInstance();
-    result = await su.queryCourseList();
-    for (var course in result) {
-      SingleCourse singleCourse = SingleCourse();
-      singleCourse.fromMap(course.toJson());
-      _courses.add(singleCourse);
-    }
-    notifyListeners();
+    await su.deleteCourse(courseNo); // 数据库删
+    _courses.removeAt(idx); // 列表删
+    notifyListeners(); // 通知更新
   }
 
   Future<void> init() async {
     if (!_isFirst) return;
     await queryCoursePool();
     _isFirst = false;
+  }
+
+  Future<void> queryCoursePool() async {
+    _courses.clear();
+    List<Course> result = [];
+    SQLiteUtil su = await SQLiteUtil.getInstance();
+    result = await su.queryCourseList();
+    for (var course in result) {
+      _courses.add(SingleCourse.fromJson(course.toJson()));
+    }
+    notifyListeners();
   }
 }
