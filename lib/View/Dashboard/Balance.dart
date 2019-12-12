@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Model/Dashboard/BalanceModel.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
+import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:glutassistant/Widget/DetailCard.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ class DashBoardBalance extends StatelessWidget {
 
   Widget _buildBalanceArea() {
     Widget child = ChangeNotifierProvider(
-        builder: (context) => Balance(),
+        create: (BuildContext context) => Balance(),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -25,11 +26,7 @@ class DashBoardBalance extends StatelessWidget {
               left: 0,
               child: Text('一卡通余额', style: TextStyle(color: Colors.white)),
             ),
-            // Consumer<Balance>(builder: (context, balance, _) {
-            //   balance.init();
-            // return
             _buildBalanceText(),
-            // }),
             Positioned(
               bottom: 0,
               right: 0,
@@ -56,11 +53,9 @@ class DashBoardBalance extends StatelessWidget {
             )
           ],
         ));
-    Color color = Color(
-        Constant.VAR_COLOR[Random.secure().nextInt(Constant.VAR_COLOR.length)]);
     return Consumer<GlobalData>(
         builder: (context, globalData, _) => DetailCard(
-              color,
+              BaseFunctionUtil.getRandomColor(),
               child,
               elevation: 0.5,
               opacity: globalData.opacity,
@@ -69,7 +64,6 @@ class DashBoardBalance extends StatelessWidget {
 
   Widget _buildBalanceText() {
     return Consumer<Balance>(builder: (context, balance, _) {
-      balance.init();
       if (balance.isLoading) return CircularProgressIndicator();
       return Text(
         '￥${balance.balance}',

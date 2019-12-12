@@ -9,7 +9,7 @@ class ImportTimetable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        builder: (context) => ImportTimetableModel(),
+        create: (BuildContext context) => ImportTimetableModel(),
         child: Container(
             padding: EdgeInsets.fromLTRB(30, 10, 30, 0), child: _buildBody()));
   }

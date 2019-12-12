@@ -13,7 +13,8 @@ class QueryExamLocation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        builder: (context) => ExamLocationModel(), child: _buildBody());
+        create: (BuildContext context) => ExamLocationModel(),
+        child: _buildBody());
   }
 
   Widget _buildBody() {
@@ -74,8 +75,7 @@ class QueryExamLocation extends StatelessWidget {
             Positioned(
               bottom: 0,
               right: 0,
-              child:
-                  Text(exam.location, style: TextStyle(color: Colors.white)),
+              child: Text(exam.location, style: TextStyle(color: Colors.white)),
             )
           ],
         );

@@ -8,16 +8,11 @@ import 'package:provider/provider.dart';
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    LoginInfo loginInfo = LoginInfo();
-    loginInfo.init();
-    return ChangeNotifierProvider<LoginInfo>.value(
-        value: loginInfo,
+    return ChangeNotifierProvider<LoginInfo>(
+        create: (BuildContext context) => LoginInfo(),
         child: Container(
           child: _buildBody(),
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Color(0xff00c9ff), Color(0xff92fe9d)])),
         ));
   }
 
@@ -30,7 +25,15 @@ class Login extends StatelessWidget {
           margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
           padding: EdgeInsets.fromLTRB(0, 0, 0, 12),
           alignment: Alignment.center,
-          decoration: BoxDecoration(color: Colors.white),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: Color.fromARGB(102, 0, 150, 255),
+                  offset: Offset(1.5, 1.5),
+                  blurRadius: 6.0),
+            ],
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -54,12 +57,12 @@ class Login extends StatelessWidget {
             margin: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 3.0),
             child: DropdownButtonHideUnderline(
                 child: DropdownButton(
-              value: loginInfo.campusType.index,
+              value: loginInfo.loginType.index,
               items: _generateCampusList(),
               isDense: true,
               isExpanded: true,
               onChanged: (value) async {
-                await loginInfo.changeCampus(value);
+                await loginInfo.changeLoginType(value);
                 await loginInfo.refreshVerifyCodeImage();
               },
             ))));
@@ -78,15 +81,14 @@ class Login extends StatelessWidget {
             elevation: 6.0,
             child: FlatButton(
                 onPressed: () async {
-                  if (globalData.studentIdController.text.isEmpty ||
-                      globalData.passwordJWController.text.isEmpty) {
+                  if (loginInfo.studentIdController.text.isEmpty ||
+                      loginInfo.passwordController.text.isEmpty) {
                     CommonSnackBar.buildSnackBar(context, '登录信息似乎没有填写完呢');
                     return;
                   }
-                  await globalData.setStudentId(needRefresh: false);
-                  await globalData.setJWPassword();
-                  if (await loginInfo.loginJW(
-                      globalData.studentId, globalData.passwordJW)) {
+                  // await globalData.setStudentId(needRefresh: false);
+                  // await loginInfo.setPassword();
+                  if (await loginInfo.login()) {
                     showModalBottomSheet(
                         context: context,
                         builder: (ctx) {
@@ -124,7 +126,7 @@ class Login extends StatelessWidget {
               'G',
               style: TextStyle(fontSize: 50),
             ),
-            foregroundColor: Colors.white,
+            foregroundColor: Colors.pink,
             backgroundColor: Color(0xfff0)),
         width: 110.0,
         height: 110.0,
@@ -146,10 +148,10 @@ class Login extends StatelessWidget {
         builder: (context, loginInfo, globalData, _) => Padding(
               padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0),
               child: TextField(
-                controller: globalData.passwordJWController,
+                controller: loginInfo.passwordController,
                 maxLength: 20,
                 decoration: InputDecoration(
-                    labelText: '教务密码',
+                    labelText: '密码',
                     suffixIcon: IconButton(
                         icon: Icon(
                           loginInfo.obscure
@@ -267,16 +269,11 @@ class Login extends StatelessWidget {
   }
 
   List<DropdownMenuItem> _generateCampusList() {
-    List<DropdownMenuItem> items = List();
-    DropdownMenuItem item =
-        DropdownMenuItem(value: 0, child: Text('桂林理工大学(教务)'));
-    items.add(item);
-    DropdownMenuItem item2 =
-        DropdownMenuItem(value: 1, child: Text('桂林理工大学(统一身份认证)'));
-    items.add(item2);
-    DropdownMenuItem item3 =
-        DropdownMenuItem(value: 2, child: Text('桂林理工大学南宁分校'));
-    items.add(item3);
+    List<DropdownMenuItem> items = [];
+    for (int i = 0; i < Constant.LIST_LOGIN_TITLE.length; i++) {
+      items.add(DropdownMenuItem(
+          value: i, child: Text(Constant.LIST_LOGIN_TITLE[i][0])));
+    }
     return items;
   }
 }

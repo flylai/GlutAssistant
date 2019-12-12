@@ -4,6 +4,10 @@ import 'package:glutassistant/Model/CourseManage/CourseModel.dart';
 import 'package:glutassistant/Utility/SQLiteUtil.dart';
 
 class CoursePool with ChangeNotifier {
+  CoursePool() {
+    init();
+  }
+
   List<SingleCourse> _courses = [];
   bool _isFirst = true;
 

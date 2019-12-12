@@ -14,10 +14,10 @@ class QueryScore extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
       ChangeNotifierProvider<ExamScoreList>(
-        builder: (_) => ExamScoreList(),
+        create: (BuildContext context) => ExamScoreList(),
       ),
       ChangeNotifierProvider<FitnessScoreList>(
-          builder: (_) => FitnessScoreList())
+          create: (BuildContext context) => FitnessScoreList())
     ], child: Container(child: _buildBody()));
   }
 

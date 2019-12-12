@@ -4,6 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:glutassistant/Utility/BalanceUtil.dart';
 
 class Balance with ChangeNotifier {
+  Balance() {
+    init();
+  }
+
   bool _status = false;
   String _studentId;
   String _balance = '未知';
@@ -52,9 +56,9 @@ class Balance with ChangeNotifier {
     notifyListeners();
   }
 
-  init() {
+  init() async {
     if (!isFirst) return;
-    getCacheBalance();
+    await getCacheBalance();
     isFirst = false;
   }
 }

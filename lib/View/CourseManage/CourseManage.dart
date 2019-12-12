@@ -10,7 +10,7 @@ class CoursesManage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CoursePool>(
-        builder: (context) => CoursePool(),
+        create: (BuildContext context) => CoursePool(),
         child: Container(
           child: _buildBody(),
         ));
@@ -18,7 +18,6 @@ class CoursesManage extends StatelessWidget {
 
   Widget _buildBody() {
     return Consumer<CoursePool>(builder: (context, coursePool, _) {
-      coursePool.init();
       List<SingleCourse> x = coursePool.courses;
       return ListView.builder(
           itemCount: x.length,
