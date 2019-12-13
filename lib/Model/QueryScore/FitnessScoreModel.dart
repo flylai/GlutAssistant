@@ -1,10 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Model/QueryScore/FitnessScore.dart';
 import 'package:glutassistant/Utility/HttpUtil2.dart' as http;
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
-
-// TODO 由于不可抗力的原因，体侧登录有验证码了，得改
 
 class FitnessScoreList with ChangeNotifier {
   bool _isLoading = false;
@@ -27,7 +27,7 @@ class FitnessScoreList with ChangeNotifier {
     SharedPreferenceUtil sp = await SharedPreferenceUtil.getInstance();
     String studentID = await sp.getString('student_id');
 
-    Map<String, dynamic> result = await queryFitnessTestScore(studentID);
+    Map<String, dynamic> result = await queryFitnessTestScoreWeChat(studentID);
     if (result['success'] && result['data'].length > 0) {
       _result = result['result'];
       _fitnessDetail = result['data'];
@@ -40,6 +40,7 @@ class FitnessScoreList with ChangeNotifier {
     notifyListeners();
   }
 
+  /// 原来网页接口 要登录才能用 登录需要验证码
   Future<Map<String, dynamic>> queryFitnessTestScore(String studentId) async {
     // 登录部分
     var postData = {
@@ -49,7 +50,6 @@ class FitnessScoreList with ChangeNotifier {
       'userName': studentId,
       'passwd': studentId
     };
-
     try {
       var response = await http.post(Constant.URL_FITNESS_TEST, postData);
 
@@ -100,6 +100,45 @@ class FitnessScoreList with ChangeNotifier {
       return {'success': true, 'data': fitnessList, 'result': result};
     } catch (e) {
       return {'success': false, 'data': e};
+    }
+  }
+
+  /// 微信接口
+  Future<Map<String, dynamic>> queryFitnessTestScoreWeChat(
+      String studentId) async {
+    var postData = {
+      'method': 'healthscore',
+      'stuNo': base64Encode(utf8.encode(studentId)),
+      'schoolid': '100001'
+    };
+    try {
+      // 走 get 也行
+      var response =
+          await http.post(Constant.URL_FITNESS_TEST_INFO_WECHAT, postData);
+      String html =
+          response.body.replaceAll(RegExp(r'\s'), '').replaceAll('&nbsp;', '');
+      // 匹配项目
+      RegExp itemExp = RegExp(
+          r'<tr><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td></tr>',
+          caseSensitive: false,
+          unicode: true);
+      List<FitnessDetail> fitnessList = [];
+
+      Iterable<Match> itemMatches = itemExp.allMatches(html);
+      itemMatches.forEach((f) => fitnessList
+          .add(FitnessDetail(f.group(1), f.group(2), f.group(3), f.group(4))));
+      fitnessList.removeLast(); // 删掉最后一个, 那个是总成绩
+
+      RegExp resultExp = RegExp(
+          r'<td><b>总成绩</b></td><td><b>(.*?)</b></td><td><b>(.*?)</b></td>');
+      FitnessResult result;
+      RegExpMatch resultMatch = resultExp.firstMatch(html);
+      result =
+          FitnessResult('0', '0', resultMatch.group(1), resultMatch.group(2));
+
+      return {'success': true, 'data': fitnessList, 'result': result};
+    } catch (e) {
+      return {'success': false, 'data': ''};
     }
   }
 }
