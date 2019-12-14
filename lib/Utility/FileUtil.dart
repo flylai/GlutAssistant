@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class FileUtil {
-  static String _dir;
+  static String _dir = '/data/data/com.lkm.glutassistant/app_flutter';
   static FileUtil _instance;
   static Future<FileUtil> get instance async {
     return await getInstance();
