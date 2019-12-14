@@ -6,7 +6,16 @@ import 'package:provider/provider.dart';
 class TomorrowCourseList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return _buildTomorrowCourseList();
+    return _buildTomorrowCourseListNew();
+  }
+
+  Widget _buildTitle() {
+    return Text(
+      'Tomorrow',
+      style: TextStyle(
+        color: Colors.deepOrange,
+      ),
+    );
   }
 
   Widget _buildTomorrowCourseList() {
@@ -43,9 +52,9 @@ class TomorrowCourseList extends StatelessWidget {
                 Container(
                     padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: Text(
-                        '${BaseFunctionUtil().getTimeByNum(item['startTime'])} - ${BaseFunctionUtil().getTimeByNum(item['endTime'])}节')),
+                        '${BaseFunctionUtil.getTimeByNum(item.startTime)} - ${BaseFunctionUtil.getTimeByNum(item.endTime)}节')),
                 Text(
-                  item['courseName'],
+                  item.courseName,
                   style: TextStyle(fontSize: 20),
                 )
               ],
@@ -55,10 +64,68 @@ class TomorrowCourseList extends StatelessWidget {
       return list.length == 1
           ? Container()
           : Container(
-              child: ListView(
+              child: Column(
               children: list,
-              shrinkWrap: true,
             )); // 只有一个就是明天没课 不显示
     });
+  }
+
+  Widget _buildTomorrowCourseListNew() {
+    return Consumer<TodayCourseList>(builder: (context, todayCourseList, _) {
+      List<Widget> widgetList = [];
+      widgetList..add(_buildTitle())..add(SizedBox(height: 10)); // 添加标题
+      todayCourseList.tomorrowCourseList.forEach((item) => widgetList
+        ..add(_buildTomorrowCourseRow(item.courseName,
+            '${BaseFunctionUtil.getTimeByNum(item.startTime)} - ${BaseFunctionUtil.getTimeByNum(item.endTime)}节'))
+        ..add(SizedBox(height: 5)));
+
+      if (widgetList.length == 2) {
+        // 只有标题和占位格子 / 明天没课
+        widgetList.add(InkWell(
+          child: Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              height: 30,
+              child: Text(
+                '明天没有课上哦',
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+              )),
+          onTap: () {},
+        ));
+      }
+
+      return Container(
+        padding: EdgeInsets.all(16),
+        alignment: Alignment.centerLeft,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: widgetList,
+        ),
+      );
+    });
+  }
+
+  Widget _buildTomorrowCourseRow(String course, String time) {
+    return Row(
+      children: <Widget>[
+        CircleAvatar(
+            maxRadius: 17,
+            child: Text(
+              course[0],
+              style: TextStyle(fontSize: 16),
+            ),
+            foregroundColor: Colors.white,
+            backgroundColor: BaseFunctionUtil.getRandomColor().withOpacity(1)),
+        const SizedBox(width: 10.0),
+        Text(
+          time + '  ' + course,
+          style: TextStyle(
+            color: Colors.grey.shade700,
+            fontWeight: FontWeight.bold,
+          ),
+        )
+      ],
+    );
   }
 }

@@ -1,10 +1,11 @@
 ﻿import 'dart:core';
 
 import 'package:flutter/foundation.dart';
+import 'package:glutassistant/Model/Dashboard/RecentExamModel.dart';
 import 'package:glutassistant/Utility/BalanceUtil.dart';
 
-class Balance with ChangeNotifier {
-  Balance() {
+class BalanceModel with ChangeNotifier {
+  BalanceModel() {
     init();
   }
 
@@ -31,6 +32,7 @@ class Balance with ChangeNotifier {
   }
 
   Future refreshBalance() async {
+    RecentExamModel();
     if (_isLoading) return;
     _isLoading = true;
     notifyListeners();
