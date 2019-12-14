@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:glutassistant/Common/Constant.dart';
-import 'package:glutassistant/Model/QueryScore/ExamScore.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
 import 'package:glutassistant/Utility/HttpUtil2.dart' as http;
 
@@ -10,7 +8,8 @@ class ExamScoreList with ChangeNotifier {
   int _term = 2;
   bool _isLoading = false;
   String _msg = '';
-  List<ExamScore> examScoreList = [];
+  List<Score> _examScoreList = [];
+  List<Score> get examScoreList => _examScoreList;
 
   bool get isLoading => _isLoading;
   String get msg => _msg;
@@ -66,7 +65,20 @@ class ExamScoreList with ChangeNotifier {
             (campusType == 1 ? '绩点: ' : '学分: ') +
             item['gpa'];
 
-        examScoreList.add(ExamScore.fromJson(item));
+        double gpa = double.parse(item['gpa']);
+        int color = 0;
+        if (gpa >= 4.0)
+          color = 0xFF1B5E20; // 深绿
+        else if (gpa >= 3.0)
+          color = 0xFF558B2F; // 绿
+        else if (gpa >= 2.0)
+          color = 0xFFFDD835; // 黄
+        else if (gpa >= 1.0)
+          color = 0xFFFF8F00; // 橙黄
+        else
+          color = 0xFFE83015; // 红
+        item['color'] = color;
+        examScoreList.add(Score.fromJson(item));
       }
       _msg = '查询成功';
     } else {
@@ -100,7 +112,7 @@ class ExamScoreList with ChangeNotifier {
       String html = response.body.replaceAll(RegExp(r'\s'), '');
       Iterable<Match> scoreMatches = scoreExp.allMatches(html);
       for (var scoreListItem in scoreMatches) {
-        Map<String, String> scoredetail = new Map();
+        Map<String, dynamic> scoredetail = {};
         scoredetail['courseName'] = scoreListItem.group(1);
         scoredetail['teacher'] = scoreListItem.group(2);
         scoredetail['score'] = scoreListItem.group(3);
@@ -112,4 +124,24 @@ class ExamScoreList with ChangeNotifier {
       return {'success': false, 'data': e};
     }
   }
+}
+
+class Score {
+  final String courseName;
+  final String teacher;
+  final String subtitle;
+  final String score;
+  final String gpa;
+  final int color;
+
+  Score(this.courseName, this.teacher, this.subtitle, this.score, this.gpa,
+      this.color);
+
+  Score.fromJson(Map<String, dynamic> json)
+      : courseName = json['courseName'],
+        teacher = json['teacher'],
+        subtitle = json['subtitle'],
+        score = json['score'],
+        gpa = json['gpa'],
+        color = json['color'];
 }

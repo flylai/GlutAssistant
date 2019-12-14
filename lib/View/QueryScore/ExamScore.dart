@@ -16,24 +16,49 @@ class ExamScore extends StatelessWidget {
 
       if (examScoreList.isLoading)
         return Center(child: CircularProgressIndicator());
-      for (var score in examScoreList.examScoreList) {
-        Widget scoreWidget = Container(
-            color: Colors.white.withOpacity(globalData.opacity),
-            child: ListTile(
-              title: Text(score.courseName),
-              subtitle: Text(score.subtitle),
-              trailing: Text(
-                score.score,
-                style: TextStyle(
-                    color: double.parse(score.gpa) == 0
-                        ? Colors.red
-                        : Colors.green),
-              ),
-              onTap: () {},
-            ));
+      for (Score score in examScoreList.examScoreList) {
+        Widget scoreWidget = _buildItem(score, globalData.opacity);
         scoreList.add(scoreWidget);
       }
       return ListView(children: scoreList);
     });
+  }
+
+  Widget _buildItem(Score examScore, double opacity) {
+    return Card(
+      color: Colors.white.withOpacity(opacity),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(0))),
+      elevation: 4,
+      margin: EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+              child: ListTile(
+                title: Text(examScore.courseName),
+                subtitle: Text(examScore.teacher),
+              ),
+              flex: 5),
+          Expanded(
+              child: Container(
+                  alignment: Alignment.center,
+                  height: 80,
+                  color: Color(examScore.color).withOpacity(opacity),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          examScore.score,
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                        Text(
+                          examScore.gpa,
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                      ])),
+              flex: 2)
+        ],
+      ),
+    );
   }
 }
