@@ -13,13 +13,11 @@ enum DashboardType { card, timeline }
 class GlobalData with ChangeNotifier {
   SharedPreferenceUtil su;
 
-  TextEditingController _studentidController = TextEditingController();
-  TextEditingController _passwordJWController = TextEditingController();
+  TextEditingController _studentIdController = TextEditingController();
   TextEditingController _currentWeekController = TextEditingController();
   TextEditingController _opacityController = TextEditingController();
 
-  TextEditingController get studentIdController => _studentidController;
-  TextEditingController get passwordJWController => _passwordJWController;
+  TextEditingController get studentIdController => _studentIdController;
   TextEditingController get currentWeekController => _currentWeekController;
   TextEditingController get opacityController => _opacityController;
 
@@ -33,7 +31,6 @@ class GlobalData with ChangeNotifier {
   DashboardType _dashboardType = DashboardType.timeline;
   String _cookie = '';
   String _studentId = '';
-  String _passwordJW = '';
 
   String _firstWeek = '';
   String _firstWeekTimestamp = '';
@@ -51,7 +48,6 @@ class GlobalData with ChangeNotifier {
   BackgroundImage get backgroundEnable => _backgroundEnable;
   String get cookie => _cookie;
   String get studentId => _studentId;
-  String get passwordJW => _passwordJW;
 
   String get firstWeek => _firstWeek;
   String get firstWeekTimestamp => _firstWeekTimestamp;
@@ -118,21 +114,10 @@ class GlobalData with ChangeNotifier {
   }
 
   Future<void> setStudentId({bool needRefresh: true}) async {
-    if (_studentId == _studentidController.text.trim()) return;
-    _studentId = _studentidController.text.trim();
+    if (_studentId == _studentIdController.text.trim()) return;
+    _studentId = _studentIdController.text.trim();
     if (needRefresh) notifyListeners();
-    su.setString('student_id', _studentidController.text.trim());
-  }
-
-  Future<void> setJWPassword() async {
-    if (_passwordJW == _passwordJWController.text.trim()) return;
-    _passwordJW = _passwordJWController.text.trim();
-    if (passwordJWController.text.trim() != '')
-      su.setBool('remember_pwd', true);
-    else
-      su.setBool('remember_pwd', false);
-
-    su.setString('password_JW', _passwordJWController.text.trim());
+    su.setString('student_id', _studentIdController.text.trim());
   }
 
   Future<void> setCurrentWeek() async {
@@ -162,7 +147,6 @@ class GlobalData with ChangeNotifier {
     if (_firstWeekTimestamp == '') _firstWeekTimestamp = '1';
 
     _studentId = await su.getString('student_id');
-    _passwordJW = await su.getString('password_JW');
 
     _dashboardType = await su.getInt('dashboard_type') == 0
         ? DashboardType.card
@@ -187,11 +171,11 @@ class GlobalData with ChangeNotifier {
         ? BackgroundImage.enable
         : BackgroundImage.disable;
 
-    _studentidController.text = _studentId;
-    _passwordJWController.text = _passwordJW;
-    _currentWeekController.text = _currentWeekStr;
-    _opacityController.text = _opacity.toString();
+    _opacity = _backgroundEnable == BackgroundImage.enable
+        ? await su.getDouble('opacity')
+        : 1.0; // 透明度尽在开启背景图时生效
 
+    _studentIdController.text = _studentId;
     notifyListeners();
   }
 }
