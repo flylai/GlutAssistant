@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Model/Dashboard/BalanceModel.dart';
 import 'package:glutassistant/Model/Dashboard/RecentExamModel.dart';
+import 'package:glutassistant/Model/GlobalData.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 import 'package:provider/provider.dart';
 
@@ -67,42 +68,46 @@ class DashboardSummary extends StatelessWidget {
                           color: Colors.black,
                         ),
                   )),
-              Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(0))),
-                elevation: 4.0,
-                color: Colors.white,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Consumer<RecentExamModel>(
-                          builder: (context, recentExamModel, _) => _buildItem(
-                              '近期有',
-                              '${recentExamModel.count} 门考试',
-                              Colors.red)),
-                    ),
-                    VerticalDivider(),
-                    Expanded(
-                      child: Consumer<BalanceModel>(
-                          builder: (context, balanceModel, _) {
-                        if (balanceModel.isLoading)
-                          return Column(children: <Widget>[
-                            CircularProgressIndicator()
-                          ]); // 不用 column 包裹会畸形
-                        else
-                          return GestureDetector(
-                              onTap: () async {
-                                await balanceModel.refreshBalance();
-                                CommonSnackBar.buildSnackBar(
-                                    context, balanceModel.msg);
-                              },
-                              child: _buildItem('饭卡余额',
-                                  '${balanceModel.balance} 元', Colors.green));
-                      }),
-                    ),
-                  ],
-                ),
-              )
+              Consumer<GlobalData>(
+                  builder: (context, globalData, _) => Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(0))),
+                        elevation: 4.0,
+                        color: Colors.white.withOpacity(globalData.opacity),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Consumer<RecentExamModel>(
+                                  builder: (context, recentExamModel, _) =>
+                                      _buildItem(
+                                          '近期有',
+                                          '${recentExamModel.count} 门考试',
+                                          Colors.red)),
+                            ),
+                            VerticalDivider(),
+                            Expanded(
+                              child: Consumer<BalanceModel>(
+                                  builder: (context, balanceModel, _) {
+                                if (balanceModel.isLoading)
+                                  return Column(children: <Widget>[
+                                    CircularProgressIndicator()
+                                  ]); // 不用 column 包裹会畸形
+                                else
+                                  return GestureDetector(
+                                      onTap: () async {
+                                        await balanceModel.refreshBalance();
+                                        CommonSnackBar.buildSnackBar(
+                                            context, balanceModel.msg);
+                                      },
+                                      child: _buildItem(
+                                          '饭卡余额',
+                                          '${balanceModel.balance} 元',
+                                          Colors.green));
+                              }),
+                            ),
+                          ],
+                        ),
+                      ))
             ]));
   }
 }
