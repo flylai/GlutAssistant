@@ -9,7 +9,7 @@ class DetailCard extends StatelessWidget {
   final Color color;
 
   DetailCard(this.color, this.child,
-      {this.margin = const EdgeInsets.fromLTRB(13, 13, 13, 3),
+      {this.margin = const EdgeInsets.fromLTRB(16, 16, 16, 3),
       this.elevation = 2.0,
       this.opacity = 0.7,
       this.height = 80,
@@ -21,6 +21,8 @@ class DetailCard extends StatelessWidget {
     return Card(
         margin: margin,
         color: color.withOpacity(opacity),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(0))),
         elevation: elevation,
         child: Container(
             margin: EdgeInsets.all(10),
