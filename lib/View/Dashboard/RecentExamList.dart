@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Model/Dashboard/RecentExamModel.dart';
+import 'package:glutassistant/Model/GlobalData.dart';
 import 'package:provider/provider.dart';
 
 class RecentExamList extends StatelessWidget {
@@ -32,7 +33,8 @@ class RecentExamList extends StatelessWidget {
   }
 
   Widget _buildList() {
-    return Consumer<RecentExamModel>(builder: (context, recentExamModel, _) {
+    return Consumer2<RecentExamModel, GlobalData>(
+        builder: (context, recentExamModel, globalData, _) {
       List<Widget> examList = []..add(Text(
           'Recent Exam(s)',
           style: TextStyle(
@@ -46,7 +48,7 @@ class RecentExamList extends StatelessWidget {
         if (i % 2 == 0) row = [];
         row.add(Expanded(
             child: _buildItem(
-                Colors.green,
+                Colors.green.withOpacity(globalData.opacity),
                 recentExamModel.examList[i].courseName,
                 recentExamModel.examList[i].leftTime)));
         if (i % 2 == 0 && i != len - 1)
