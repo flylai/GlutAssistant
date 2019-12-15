@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 enum ScoreType { exam, fitness }
 enum BackgroundImage { disable, enable }
 enum DashboardType { card, timeline }
+enum CampusType { yanshan, pingfeng }
 
 class GlobalData with ChangeNotifier {
   SharedPreferenceUtil su;
@@ -29,6 +30,7 @@ class GlobalData with ChangeNotifier {
   double _opacity = Constant.VAR_DEFAULT_OPACITY;
   BackgroundImage _backgroundEnable = BackgroundImage.disable;
   DashboardType _dashboardType = DashboardType.timeline;
+  CampusType _campusType = CampusType.yanshan;
   String _cookie = '';
   String _studentId = '';
 
@@ -46,6 +48,7 @@ class GlobalData with ChangeNotifier {
   int get selectedPage => _selectedPage;
   DashboardType get dashboardType => _dashboardType;
   BackgroundImage get backgroundEnable => _backgroundEnable;
+  CampusType get campusType => _campusType;
   String get cookie => _cookie;
   String get studentId => _studentId;
 
@@ -97,6 +100,14 @@ class GlobalData with ChangeNotifier {
     _dashboardType = tmp;
     notifyListeners();
     su.setInt('dashboard_type', _dashboardType == DashboardType.card ? 0 : 1);
+  }
+
+  Future<void> setCampusType(int campusType) async {
+    CampusType tmp = campusType == 0 ? CampusType.yanshan : CampusType.pingfeng;
+    if (_campusType == tmp) return;
+    _campusType = tmp;
+    notifyListeners();
+    su.setInt('campus_type', campusType);
   }
 
   Future<void> setThemeColorIndex(int themeColorIndex) async {
@@ -174,6 +185,10 @@ class GlobalData with ChangeNotifier {
     _opacity = _backgroundEnable == BackgroundImage.enable
         ? await su.getDouble('opacity')
         : 1.0; // 透明度尽在开启背景图时生效
+
+    _campusType = await su.getInt('campus') == 0
+        ? CampusType.yanshan
+        : CampusType.pingfeng;
 
     _studentIdController.text = _studentId;
     notifyListeners();

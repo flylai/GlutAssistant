@@ -90,7 +90,8 @@ class DashboardCourseList extends StatelessWidget {
   Widget _buildCourseList() {
     return Consumer2<TodayCourseList, GlobalData>(
         builder: (context, todayCourseList, globalData, _) {
-      todayCourseList.init(globalData.currentWeek, DateTime.now().weekday);
+      todayCourseList.init(globalData.currentWeek, DateTime.now().weekday,
+          globalData.campusType.index);
       if (todayCourseList.todayCourseList['courseList'].length > 0) {
         if (globalData.dashboardType == DashboardType.card)
           return _buildCourseListByCardNew();

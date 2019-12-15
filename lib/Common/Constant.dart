@@ -1,8 +1,10 @@
 ﻿import 'package:flutter/material.dart';
 
 class Constant {
-  static final String FILE_SESSION = "Session";
-  static final String FILE_EXAM_LOCATION = "exam_location";
+  static final String FILE_SESSION = "session";
+  static final String FILE_SESSION_FITNESS = 'session_fitness';
+  static final String FILE_SESSION_ATTENDANCE = 'session_attendance';
+  static final String FILE_EXAM_LIST = "exam_location";
   static final String FILE_DATA_CAIWU = "caiwu_data";
   static final String FILE_DB = "db.db3";
   static final String FILE_BACKGROUND_IMG = "background";
@@ -44,9 +46,13 @@ class Constant {
 
   static final String URL_LOGIN = "/academic/j_acegi_security_check";
   static final String URL_LOGIN_OA = "http://ca.glut.edu.cn:8888/zfca/login";
-  static final String URL_VERIFY_CODE = "/academic/getCaptcha.do";
+  static final String URL_VERIFY_CODE_JW = "/academic/getCaptcha.do";
   static final String URL_VERIFY_CODE_OA =
       "http://ca.glut.edu.cn:8888/zfca/captcha.htm";
+  static final String URL_VERIFY_CODE_FITNESS =
+      'http://tzcs.glut.edu.cn/servlet/UpdateDate?method=validateCode';
+  static final String URL_VERIFY_CODE_ATTENDANCE =
+      'http://xxfw.glut.edu.cn/kaoqin/rest/user/login/validateCodeServlet';
   static final String URL_OA_TO_JW =
       'http://ca.glut.edu.cn:8888/zfca/login?yhlx=all&login=0122579031373493708&url=index_new.jsp&gnmkdm=M011';
   static final String URL_GET_STUDENT_ID =
@@ -65,9 +71,15 @@ class Constant {
   static final String URL_CAIWU_INTERFACE =
       "http://cwjf.glut.edu.cn/interface/index";
   static final String URL_FITNESS_TEST =
-      "http://tzcs.glut.edu.cn/servlet/adminservletX";
+      'http://tzcs.glut.edu.cn/servlet/adminservlet';
   static final String URL_FIRNESS_TEST_INFO =
-      'http://tzcs.glut.edu.cn/student/queryHealthInfoX.jsp';
+      'http://tzcs.glut.edu.cn/student/queryHealthInfo.jsp';
+
+  /// 不登也能查啊
+  static final String URL_FITNESS_TEST_LOGIN_WECHAT =
+      'http://tzcs.glut.edu.cn/wxlogin?method=login';
+  static final String URL_FITNESS_TEST_INFO_WECHAT =
+      'http://tzcs.glut.edu.cn/spQuery';
 
   static final LIST_DRAWER_GENERAL = [
     ['常用', Icons.book],
@@ -115,66 +127,89 @@ class Constant {
     ['查考试地点', Icons.location_on, 4],
     ['导入课表', Icons.import_export, 5]
   ];
+  static final LIST_LOGIN_TITLE = [
+    ['教务', 'password_JW', URL_JW_GLUT + URL_VERIFY_CODE_JW, FILE_SESSION],
+    ['统一身份认证', 'password_OA', URL_VERIFY_CODE_OA, FILE_SESSION],
+    [
+      '南宁分校教务',
+      'password_JW',
+      URL_JW_GLUT_NN + URL_VERIFY_CODE_JW,
+      FILE_SESSION
+    ],
+    // ['体测系统', 'password_FITNESS', URL_VERIFY_CODE_FITNESS, FILE_SESSION_FITNESS],
+    // [
+    //   '考勤系统',
+    //   'password_ATTENDANCE',
+    //   URL_VERIFY_CODE_ATTENDANCE,
+    //   FILE_SESSION_ATTENDANCE
+    // ],
+  ];
   static final List<List<List<int>>> CLASS_TIME = [
     [
+      // 雁山
       [00, 00],
-      [00, 00]
-    ],
-    [
+      [00, 00],
       [08, 30],
-      [09, 15]
-    ],
-    [
+      [09, 15],
       [09, 20],
-      [10, 05]
-    ],
-    [
+      [10, 05],
       [10, 25],
-      [11, 10]
-    ],
-    [
+      [11, 10],
       [11, 15],
-      [12, 00]
-    ],
-    [
+      [12, 00],
       [12, 30],
-      [13, 15]
-    ],
-    [
+      [13, 15],
       [13, 20],
-      [14, 05]
-    ],
-    [
+      [14, 05],
       [14, 30],
-      [15, 15]
-    ],
-    [
+      [15, 15],
       [15, 20],
-      [16, 05]
-    ],
-    [
+      [16, 05],
       [16, 15],
-      [17, 00]
-    ],
-    [
+      [17, 00],
       [17, 05],
-      [17, 50]
-    ],
-    [
+      [17, 50],
       [18, 20],
-      [19, 05]
-    ],
-    [
+      [19, 05],
       [19, 10],
-      [19, 55]
-    ],
-    [
+      [19, 55],
       [20, 05],
-      [20, 50]
+      [20, 50],
+      [20, 55],
+      [21, 40],
     ],
     [
-      [20, 55],
-      [21, 40]
-    ],
+      // 屏风
+      [00, 00],
+      [00, 00],
+      [08, 10],
+      [08, 55],
+      [09, 05],
+      [09, 50],
+      [10, 20],
+      [11, 05],
+      [11, 15],
+      [12, 00],
+      [12, 30], // 未知的屏风中午上课时间
+      [13, 15],
+      [13, 20],
+      [14, 05], // 结束
+      [14, 30],
+      [15, 15],
+      [15, 25],
+      [16, 10],
+      [16, 20],
+      [17, 05],
+      [17, 15],
+      [18, 00],
+      [18, 30],
+      [19, 15],
+      [19, 25],
+      [20, 10],
+      [20, 20],
+      [21, 05],
+      [21, 15],
+      [22, 00]
+    ]
   ];
 }

@@ -43,8 +43,11 @@ class TodayCourseList with ChangeNotifier {
   Map<String, dynamic> get todayCourseList => _todayCourseList;
   List<Course> get tomorrowCourseList => _tomorrowCourseList;
 
-  void init(currentWeek, weekday) async {
+  int _campusType = 0;
+
+  void init(int currentWeek, int weekday, int campusType) async {
     if (!_isFirst) return;
+    _campusType = campusType; // 校区
     await refreshCourseList(currentWeek, weekday);
     await queryTomorrowCourseList(currentWeek, weekday);
     _isFirst = false;
@@ -78,13 +81,14 @@ class TodayCourseList with ChangeNotifier {
 
       // 时间轴
       int classStartHour =
-          Constant.CLASS_TIME[queryCourseList[i].startTime][0][0];
+          Constant.CLASS_TIME[_campusType][queryCourseList[i].startTime * 2][0];
       int classStartMinute =
-          Constant.CLASS_TIME[queryCourseList[i].startTime][0][1];
+          Constant.CLASS_TIME[_campusType][queryCourseList[i].startTime * 2][1];
 
-      int classEndHour = Constant.CLASS_TIME[queryCourseList[i].endTime][1][0];
-      int classEndMinute =
-          Constant.CLASS_TIME[queryCourseList[i].endTime][1][1];
+      int classEndHour = Constant.CLASS_TIME[_campusType]
+          [queryCourseList[i].endTime * 2 + 1][0];
+      int classEndMinute = Constant.CLASS_TIME[_campusType]
+          [queryCourseList[i].endTime * 2 + 1][1];
 
       DateTime classBeginTime =
           DateTime(year, month, day, classStartHour, classStartMinute);
