@@ -4,7 +4,7 @@ import 'dart:core';
 
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
-import 'package:glutassistant/Utility/HttpUtil2.dart' as http;
+import 'package:glutassistant/Utility/HttpUtil.dart' as http;
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 class BalanceUtil {

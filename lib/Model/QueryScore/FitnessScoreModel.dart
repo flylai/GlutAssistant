@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Model/QueryScore/FitnessScore.dart';
-import 'package:glutassistant/Utility/HttpUtil2.dart' as http;
+import 'package:glutassistant/Utility/HttpUtil.dart' as http;
 import 'package:glutassistant/Utility/SharedPreferencesUtil.dart';
 
 class FitnessScoreList with ChangeNotifier {

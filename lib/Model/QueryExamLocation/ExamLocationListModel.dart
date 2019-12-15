@@ -5,7 +5,7 @@ import 'package:gbk2utf8/gbk2utf8.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Model/QueryExamLocation/ExamLocation.dart';
 import 'package:glutassistant/Utility/FileUtil.dart';
-import 'package:glutassistant/Utility/HttpUtil2.dart' as http;
+import 'package:glutassistant/Utility/HttpUtil.dart' as http;
 
 class ExamLocationModel with ChangeNotifier {
   bool _isLoading = false;
@@ -60,7 +60,7 @@ class ExamLocationModel with ChangeNotifier {
       }
     }
 
-    fp.writeFile(jsonEncode(_examList), Constant.FILE_EXAM_LOCATION);
+    fp.writeFile(jsonEncode(_examList), Constant.FILE_EXAM_LIST);
 
     _isLoading = false;
     notifyListeners();
