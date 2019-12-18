@@ -186,7 +186,7 @@ class GlobalData with ChangeNotifier {
         ? await su.getDouble('opacity')
         : 1.0; // 透明度尽在开启背景图时生效
 
-    _campusType = await su.getInt('campus') == 0
+    _campusType = await su.getInt('campus_type') == 0
         ? CampusType.yanshan
         : CampusType.pingfeng;
 

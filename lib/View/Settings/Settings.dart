@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
+import 'package:glutassistant/Model/Settings/PasswordData.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 import 'package:provider/provider.dart';
 
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<GlobalData>(
-        builder: (context, globalData, _) => _buildSettingsList());
+    return MultiProvider(providers: [
+      ChangeNotifierProvider<PasswordData>(
+        create: (BuildContext context) => PasswordData(),
+      )
+    ], child: _buildSettingsList());
   }
 
   Widget _buildBackgroundImage() {
@@ -94,7 +98,44 @@ class Settings extends StatelessWidget {
             )));
   }
 
-  Widget _buildListItem(BuildContext context, int index) {
+  Widget _buildCampusType() {
+    return Consumer<GlobalData>(
+        builder: (context, globalData, _) => Container(
+            color: Colors.white.withOpacity(globalData.opacity),
+            child: ListTile(
+              title: Text('校区(雁山/屏风)'),
+              subtitle: Text(
+                  '${globalData.campusType == CampusType.yanshan ? '雁山' : '屏风'}'),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext ctx) {
+                      return Dialog(
+                          child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            title: Text('雁山'),
+                            onTap: () {
+                              globalData.setCampusType(0);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          ListTile(
+                            title: Text('屏风'),
+                            onTap: () {
+                              globalData.setCampusType(1);
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      ));
+                    });
+              },
+            )));
+  }
+
+  Widget _buildColorListItem(BuildContext context, int index) {
     return Consumer<GlobalData>(
         builder: (context, globalData, _) => ListTile(
             leading: Icon(
@@ -114,14 +155,14 @@ class Settings extends StatelessWidget {
         builder: (context, globalData, _) => Container(
             color: Colors.white.withOpacity(globalData.opacity),
             child: ListTile(
-                title: Text('控件透明度'),
+                title: Text('控件透明度(仅在背景图启用时生效)'),
                 subtitle: Text(globalData.opacity.toString()),
                 onTap: () {
                   showDialog(
                       context: context,
                       builder: (BuildContext ctx) {
                         return AlertDialog(
-                          title: Text('透明度修改修改'),
+                          title: Text('透明度修改'),
                           content: TextField(
                             decoration:
                                 InputDecoration(labelText: '透明度(0.0-1.0)'),
@@ -155,29 +196,43 @@ class Settings extends StatelessWidget {
             )));
   }
 
-  Widget _buildPwdJW() {
+  Widget _buildPasswordEditList() {
+    return Consumer<PasswordData>(
+        builder: (context, passwordData, _) => Column(children: <Widget>[
+              for (int i = 0; i < Constant.LIST_LOGIN_TITLE.length; i++)
+                if (i != 2) // 排除南宁分校的 教务密码都是同一个
+                  _buildPasswordEdit(
+                      Constant.LIST_LOGIN_TITLE[i][0],
+                      passwordData.passwordEditController[i],
+                      (pwd) => passwordData.setPassword(pwd, i))
+            ]));
+  }
+
+  Widget _buildPasswordEdit(String title, TextEditingController controller,
+      Function callback(password)) {
     return Consumer<GlobalData>(
         builder: (context, globalData, _) => Container(
               color: Colors.white.withOpacity(globalData.opacity),
               child: ListTile(
-                  title: Text('教务处密码'),
+                  title: Text(title + '密码'),
                   subtitle: Text('密码就不告诉你啦'),
                   onTap: () {
                     showDialog(
                         context: context,
                         builder: (BuildContext ctx) {
                           return AlertDialog(
-                            title: Text('教务密码修改'),
+                            title: Text(title + '密码修改'),
                             content: TextField(
-                              decoration: InputDecoration(labelText: '教务密码'),
+                              decoration:
+                                  InputDecoration(labelText: title + '密码'),
                               obscureText: true,
-                              controller: globalData.passwordJWController,
+                              controller: controller,
                             ),
                             actions: <Widget>[
                               FlatButton(
                                 child: Text('确定'),
                                 onPressed: () {
-                                  globalData.setJWPassword();
+                                  callback(controller.text.trim());
                                   Navigator.pop(context);
                                 },
                               )
@@ -192,8 +247,9 @@ class Settings extends StatelessWidget {
     return ListView(
       children: <Widget>[
         _buildStudentId(),
-        _buildPwdJW(),
+        _buildPasswordEditList(),
         _buildCurrentWeek(),
+        _buildCampusType(),
         _buildDashboardDisplayType(),
         _buildBackgroundImage(),
         _buildPickImage(),
@@ -252,7 +308,7 @@ class Settings extends StatelessWidget {
                           child: ListView.builder(
                             itemCount: Constant.LIST_THEME_COLOR.length,
                             itemBuilder: (context, index) =>
-                                _buildListItem(context, index),
+                                _buildColorListItem(context, index),
                           ),
                         ),
                       );
