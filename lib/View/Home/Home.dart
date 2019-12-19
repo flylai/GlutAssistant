@@ -9,6 +9,7 @@ import 'package:glutassistant/View/About/About.dart';
 import 'package:glutassistant/View/CourseManage/CourseManage.dart';
 import 'package:glutassistant/View/CourseManage/CourseModify.dart';
 import 'package:glutassistant/View/Dashboard/Dashboard.dart';
+import 'package:glutassistant/View/Faq/Faq.dart';
 import 'package:glutassistant/View/ImportTimetable/ImportTimetable.dart';
 import 'package:glutassistant/View/Login/Login.dart';
 import 'package:glutassistant/View/QueryExamLocation/QueryExamLocation.dart';
@@ -189,27 +190,6 @@ class Home extends StatelessWidget {
             ));
   }
 
-  Widget _buildListItem(BuildContext context, int index) {
-    return Consumer<GlobalData>(builder: (context, globalData, _) {
-      if (index != 0 && index != 7) {
-        return ListTile(
-            leading: Icon(Constant.LIST_DRAWER[index][1]),
-            title: Text(Constant.LIST_DRAWER[index][0]),
-            dense: true,
-            onTap: () {
-              print(index);
-              globalData.selectedWeek = globalData.currentWeek;
-              Navigator.pop(context);
-              globalData.selectedPage = index;
-            });
-      }
-      return ListTile(
-        title: Text(Constant.LIST_DRAWER[index][0],
-            style: TextStyle(color: Colors.blue, fontSize: 12.0)),
-      );
-    });
-  }
-
   Widget _buildGridView() {
     return Consumer<GlobalData>(builder: (context, globalData, _) {
       List<Widget> chooser = [];
@@ -251,6 +231,27 @@ class Home extends StatelessWidget {
     });
   }
 
+  Widget _buildListItem(BuildContext context, int index) {
+    return Consumer<GlobalData>(builder: (context, globalData, _) {
+      if (index != 0 && index != 7) {
+        return ListTile(
+            leading: Icon(Constant.LIST_DRAWER[index][1]),
+            title: Text(Constant.LIST_DRAWER[index][0]),
+            dense: true,
+            onTap: () {
+              print(index);
+              globalData.selectedWeek = globalData.currentWeek;
+              Navigator.pop(context);
+              globalData.selectedPage = index;
+            });
+      }
+      return ListTile(
+        title: Text(Constant.LIST_DRAWER[index][0],
+            style: TextStyle(color: Colors.blue, fontSize: 12.0)),
+      );
+    });
+  }
+
   Widget _getBodyView() {
     return Consumer<GlobalData>(builder: (context, globalData, _) {
       switch (globalData.selectedPage) {
@@ -270,9 +271,10 @@ class Home extends StatelessWidget {
           return Settings();
         case 9:
           return CoursesManage();
+        case 10:
+          return Faq();
         case 11:
           return About();
-
         default:
           return Dashboard();
       }

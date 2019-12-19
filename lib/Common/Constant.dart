@@ -94,7 +94,7 @@ class Constant {
     ['其他', Icons.book],
     ['设置', Icons.build],
     ['课程管理', Icons.create],
-    ['分享', Icons.share],
+    ['FAQ', Icons.question_answer],
     ['关于', Icons.label],
   ];
   static final LIST_DRAWER = LIST_DRAWER_GENERAL + LIST_DRAWER_OTHER;
