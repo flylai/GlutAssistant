@@ -10,7 +10,8 @@ class RecentExamList extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(16, 0, 16, 16), child: _buildList());
   }
 
-  Widget _buildItem(Color color, String name, String leftTime) {
+  Widget _buildItem(
+      Color color, String name, String location, String leftTime) {
     return Container(
       padding: EdgeInsets.all(8.0),
       height: 80,
@@ -20,11 +21,11 @@ class RecentExamList extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Text(
-            name,
+            name + '\n' + location,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           Text(
-            leftTime,
+            '还有 $leftTime 就要开考啦',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ],
@@ -35,7 +36,10 @@ class RecentExamList extends StatelessWidget {
   Widget _buildList() {
     return Consumer2<RecentExamModel, GlobalData>(
         builder: (context, recentExamModel, globalData, _) {
-      List<Widget> examList = []..add(Text(
+      int len = recentExamModel.count;
+      List<Widget> examList = [];
+      if (len > 0)
+        examList.add(Text(
           'Recent Exam(s)',
           style: TextStyle(
             color: Colors.deepOrange,
@@ -43,13 +47,14 @@ class RecentExamList extends StatelessWidget {
         ));
 
       List<Widget> row;
-      int len = recentExamModel.count;
+
       for (int i = 0; i < len; i++) {
         if (i % 2 == 0) row = [];
         row.add(Expanded(
             child: _buildItem(
                 Colors.green.withOpacity(globalData.opacity),
                 recentExamModel.examList[i].courseName,
+                recentExamModel.examList[i].location,
                 recentExamModel.examList[i].leftTime)));
         if (i % 2 == 0 && i != len - 1)
           row.add(SizedBox(width: 16.0)); // 加了一个就加个占位置的

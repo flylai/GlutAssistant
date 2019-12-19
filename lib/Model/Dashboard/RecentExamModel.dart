@@ -25,10 +25,10 @@ class RecentExamModel with ChangeNotifier {
         if (tmp.timestamps > nowTimeStamps) {
           String leftTimeStr;
           int diff = tmp.timestamps - nowTimeStamps;
-          if (tmp.timestamps ~/ 86400 > 0)
+          if (diff ~/ 86400 > 0)
             leftTimeStr = '${diff ~/ 86400}天';
-          else if (tmp.timestamps ~/ 360 > 0)
-            leftTimeStr = '${diff ~/ 360}小时';
+          else if (diff ~/ 3600 > 0)
+            leftTimeStr = '${diff ~/ 3600}小时';
           else if (tmp.timestamps ~/ 60 > 0) leftTimeStr = '${diff ~/ 60}分钟';
           _examList.add(tmp..leftTime = leftTimeStr);
         }
