@@ -7,13 +7,13 @@
 ## 功能
 
 * 课程表(支持课程管理)
-* 成绩查询(课程成绩，体侧成绩)
+* 成绩查询(课程成绩，体测成绩)
 * 考试地点查询
 * 支持教务登录，统一身份认证登录，南宁校区
 
 ## 截图
 
-<img src="screenshot/1.jpg" width="200"><img src="screenshot/2.jpg" width="200"><img src="screenshot/3.jpg" width="200"><img src="screenshot/4.jpg" width="200"><img src="screenshot/5.jpg" width="200">
+<img src="screenshot/1.jpg" width="200"><img src="screenshot/2.jpg" width="200"><img src="screenshot/3.jpg" width="200"><img src="screenshot/4.jpg" width="200"><img src="screenshot/5.jpg" width="200"><img src="screenshot/6.jpg" width="200"><img src="screenshot/7.jpg" width="200"><img src="screenshot/8.jpg" width="200">
 
 ## 下载
 
@@ -36,7 +36,8 @@
 │  ├─About                  // 关于
 │  ├─Settings               // 设置
 │  ├─Login                  // 教务登陆
-│  └─Timetable              // 课程表
+│  ├─Timetable              // 课程表
+│  └─Faq                    // 帮助
 └─Model                     // UI逻辑 对应关系同 View
    ├─Dashboard
    ├─QueryExamLocation
@@ -44,7 +45,8 @@
    ├─ImportTimetable
    ├─CourseManage
    ├─Login
-   └─Timetable
+   ├─Timetable
+   └─Settings
 ```
 
 ## 编译
