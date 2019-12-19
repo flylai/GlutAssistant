@@ -3,6 +3,11 @@ import 'package:glutassistant/Common/Constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class About extends StatelessWidget {
+  final list = [
+    [Icons.update, '检查更新', 'https://www.coolapk.com/apk/com.lkm.glutassistant'],
+    [Icons.code, 'GitHub', 'https://github.com/flylai/GlutAssistant']
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -32,25 +37,8 @@ class About extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
               children: <Widget>[
-                ListTile(
-                  leading: Icon(Icons.update),
-                  onTap: () => _checkUpdateByCoolapk(),
-                  title: Text('检查更新'),
-                  trailing: Icon(Icons.keyboard_arrow_right),
-                ),
+                for (var item in list) _buildItem(item[0], item[1], item[2])
               ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(15),
-            child: InkWell(
-              onTap: () {
-                showLicensePage(
-                  context: context,
-                  applicationVersion: Constant.VAR_VERSION,
-                );
-              },
-              child: Text('查看许可证'),
             ),
           )
         ],
@@ -58,8 +46,16 @@ class About extends StatelessWidget {
     );
   }
 
-  _checkUpdateByCoolapk() async {
-    const url = 'https://www.coolapk.com/apk/com.lkm.glutassistant';
+  Widget _buildItem(IconData icon, String title, String url) {
+    return ListTile(
+      leading: Icon(icon),
+      onTap: () => _launchUrl(url),
+      title: Text(title),
+      trailing: Icon(Icons.keyboard_arrow_right),
+    );
+  }
+
+  void _launchUrl(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
