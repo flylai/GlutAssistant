@@ -260,12 +260,13 @@ class Settings extends StatelessWidget {
   }
 
   Widget _buildStudentId() {
-    return Consumer<GlobalData>(builder: (context, globalData, _) {
+    return Consumer2<PasswordData, GlobalData>(
+        builder: (context, passwordData, globalData, _) {
       return Container(
           color: Colors.white.withOpacity(globalData.opacity),
           child: ListTile(
               title: Text('学号'),
-              subtitle: Text(globalData.studentId),
+              subtitle: Text(passwordData.studentId),
               onTap: () => showDialog(
                   context: context,
                   builder: (BuildContext ctx) {
@@ -273,13 +274,13 @@ class Settings extends StatelessWidget {
                       title: Text('学号修改'),
                       content: TextField(
                         decoration: InputDecoration(labelText: "学号"),
-                        controller: globalData.studentIdController,
+                        controller: passwordData.studentIdController,
                       ),
                       actions: <Widget>[
                         FlatButton(
                           child: Text('确定'),
                           onPressed: () {
-                            globalData.setStudentId();
+                            passwordData.setStudentId();
                             Navigator.pop(context);
                           },
                         )

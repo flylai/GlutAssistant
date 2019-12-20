@@ -14,11 +14,9 @@ enum CampusType { yanshan, pingfeng }
 class GlobalData with ChangeNotifier {
   SharedPreferenceUtil su;
 
-  TextEditingController _studentIdController = TextEditingController();
   TextEditingController _currentWeekController = TextEditingController();
   TextEditingController _opacityController = TextEditingController();
 
-  TextEditingController get studentIdController => _studentIdController;
   TextEditingController get currentWeekController => _currentWeekController;
   TextEditingController get opacityController => _opacityController;
 
@@ -32,7 +30,6 @@ class GlobalData with ChangeNotifier {
   DashboardType _dashboardType = DashboardType.timeline;
   CampusType _campusType = CampusType.yanshan;
   String _cookie = '';
-  String _studentId = '';
 
   String _firstWeek = '';
   String _firstWeekTimestamp = '';
@@ -50,7 +47,6 @@ class GlobalData with ChangeNotifier {
   BackgroundImage get backgroundEnable => _backgroundEnable;
   CampusType get campusType => _campusType;
   String get cookie => _cookie;
-  String get studentId => _studentId;
 
   String get firstWeek => _firstWeek;
   String get firstWeekTimestamp => _firstWeekTimestamp;
@@ -124,13 +120,6 @@ class GlobalData with ChangeNotifier {
     su.setDouble('opacity', double.parse(_opacityController.text.trim()));
   }
 
-  Future<void> setStudentId({bool needRefresh: true}) async {
-    if (_studentId == _studentIdController.text.trim()) return;
-    _studentId = _studentIdController.text.trim();
-    if (needRefresh) notifyListeners();
-    su.setString('student_id', _studentIdController.text.trim());
-  }
-
   Future<void> setCurrentWeek() async {
     if (currentWeekStr == _currentWeekController.text.trim()) return;
     _currentWeekStr = _currentWeekController.text.trim();
@@ -156,8 +145,6 @@ class GlobalData with ChangeNotifier {
     _opacity = await su.getDouble('opacity');
     _firstWeekTimestamp = await su.getString('first_week_timestamp');
     if (_firstWeekTimestamp == '') _firstWeekTimestamp = '1';
-
-    _studentId = await su.getString('student_id');
 
     _dashboardType = await su.getInt('dashboard_type') == 0
         ? DashboardType.card
@@ -190,7 +177,6 @@ class GlobalData with ChangeNotifier {
         ? CampusType.yanshan
         : CampusType.pingfeng;
 
-    _studentIdController.text = _studentId;
     notifyListeners();
   }
 }
