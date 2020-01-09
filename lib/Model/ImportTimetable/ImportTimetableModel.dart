@@ -157,7 +157,13 @@ class ImportTimetableModel with ChangeNotifier {
                     endWeek = int.parse(weekByHyphen[1]);
                   } else
                     startWeek = endWeek = int.parse(weekByHyphen[0]);
+                  // 适配 x-x, x 这种奇葩周 先这么写，后面看看再说
+                  // 如果有上述的奇葩写法，插入数据库
+                  courseList.add(Course(courseName, teacher, startWeek, endWeek,
+                      weekday, weekType, startTime, endTime, location));
                 }
+                // 跑完了就直接下一轮循环, 以免重复插入
+                continue;
               } else {
                 List<String> weekByHyphen = timeListItem
                     .group(1)
