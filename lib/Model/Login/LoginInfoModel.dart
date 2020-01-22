@@ -63,13 +63,12 @@ class LoginInfo with ChangeNotifier {
   /// 更换登录方式
   Future<void> changeLoginType(int loginTypeIndex) async {
     _loginType = LoginType.values[loginTypeIndex];
-    if (loginTypeIndex <= 2) {
-      if (loginTypeIndex == 0 || loginTypeIndex == 1)
-        Constant.URL_JW = Constant.URL_JW_GLUT;
-      else
-        Constant.URL_JW = Constant.URL_JW_GLUT_NN;
-      su.setInt('login_type', loginTypeIndex);
-    }
+    if (loginTypeIndex < 2)
+      Constant.URL_JW = Constant.URL_JW_GLUT;
+    else
+      Constant.URL_JW = Constant.URL_JW_GLUT_NN;
+    su.setInt('login_type', loginTypeIndex);
+
     setControllerPassword();
     notifyListeners();
   }
