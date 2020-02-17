@@ -13,15 +13,15 @@ environment:
   sdk: ">=2.2.2"
 
 dependencies:
-  http: ^0.12.0+2
+  http: ^0.12.0+4
   sqflite: ^1.2.0
   gbk2utf8: ^1.0.1
-  provider: ^3.2.0
+  provider: ^4.0.4
   url_launcher: ^5.4.1
-  image_picker: ^0.6.2+3
-  path_provider: ^1.5.1
-  webview_flutter: ^0.3.18+1
-  shared_preferences: ^0.5.6
+  image_picker: ^0.6.3+1
+  path_provider: ^1.6.0
+  webview_flutter: ^0.3.19+7
+  shared_preferences: ^0.5.6+1
   flutter:
     sdk: flutter
 
