@@ -14,7 +14,7 @@ class Constant {
   static final int VAR_HTTP_TIMEOUT_MS = 6000;
   static final double VAR_COURSE_HEIGHT = 63.0;
   static final double VAR_DEFAULT_OPACITY = 0.7;
-  static final String VAR_VERSION = '1.5.0';
+  static final String VAR_VERSION = '1.5.1';
 
   /// 每次启动检查更新标记
   static int VAR_UPDATE_CHECKED = 0;
@@ -64,6 +64,7 @@ class Constant {
       "/academic/manager/coursearrange/showTimetable.do?timetableType=STUDENT&sectionType=BASE";
   static final String URL_CLASS_SCHEDULE_ALL =
       "/academic/student/currcourse/currcourse.jsdo";
+
   //     static final String URL_CLASS_SCHEDULE_ALL = "http://192.168.6.73/c/c.html";
   static final String URL_QUERY_SCORE =
       "/academic/manager/score/studentOwnScore.do?groupId=&moduleId=2020";
