@@ -15,6 +15,9 @@ class Constant {
   static final double VAR_COURSE_HEIGHT = 63.0;
   static final double VAR_DEFAULT_OPACITY = 0.7;
   static final String VAR_VERSION = '1.5.0';
+
+  /// 每次启动检查更新标记
+  static int VAR_UPDATE_CHECKED = 0;
   static final List<int> VAR_COLOR = [
     0x5CB3CC,
     0x4F383E,
@@ -81,6 +84,9 @@ class Constant {
   static final String URL_FITNESS_TEST_INFO_WECHAT =
       'http://tzcs.glut.edu.cn/spQuery';
 
+  static final String URL_CHECK_UPDDATE =
+      'https://raw.githubusercontent.com/flylai/GlutAssistant/master/version.json';
+
   static final LIST_DRAWER_GENERAL = [
     ['常用', Icons.book],
     ['一览', Icons.dashboard],
@@ -143,6 +149,10 @@ class Constant {
     //   URL_VERIFY_CODE_ATTENDANCE,
     //   FILE_SESSION_ATTENDANCE
     // ],
+  ];
+  static final LIST_ABOUT_ITEM = [
+    [Icons.update, '检查更新', 'https://www.coolapk.com/apk/com.lkm.glutassistant'],
+    [Icons.code, 'GitHub', 'https://github.com/flylai/GlutAssistant']
   ];
   static final List<List<List<int>>> CLASS_TIME = [
     [

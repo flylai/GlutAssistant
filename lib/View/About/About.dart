@@ -3,11 +3,6 @@ import 'package:glutassistant/Common/Constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class About extends StatelessWidget {
-  final list = [
-    [Icons.update, '检查更新', 'https://www.coolapk.com/apk/com.lkm.glutassistant'],
-    [Icons.code, 'GitHub', 'https://github.com/flylai/GlutAssistant']
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -37,7 +32,8 @@ class About extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
               children: <Widget>[
-                for (var item in list) _buildItem(item[0], item[1], item[2])
+                for (var item in Constant.LIST_ABOUT_ITEM)
+                  _buildItem(item[0], item[1], item[2])
               ],
             ),
           )

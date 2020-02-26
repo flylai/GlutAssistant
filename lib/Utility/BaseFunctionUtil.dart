@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/material.dart' show Color;
+import 'package:flutter/material.dart';
+import 'package:glutassistant/Utility/HttpUtil.dart' as http;
 import 'package:glutassistant/Common/Constant.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BaseFunctionUtil {
   static String getDuration(DateTime t1, DateTime t2) {
@@ -81,5 +84,44 @@ class BaseFunctionUtil {
         return '日';
     }
     return '未知';
+  }
+
+  /// 每次启动看心情检查更新
+  static checkUpdate(BuildContext context) async {
+    // 随机个数看心情检查更新
+    if (Random.secure().nextInt(4) != 2 || Constant.VAR_UPDATE_CHECKED != 0)
+      return;
+    Constant.VAR_UPDATE_CHECKED = 1;
+    var result;
+    try {
+      result = await http.get(Constant.URL_CHECK_UPDDATE, '');
+    } catch (e) {
+      return;
+    }
+    var json = jsonDecode(result.body);
+    if (json['version'] == Constant.VAR_VERSION) return;
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: Text('检查更新'),
+            content: Text(json['msg']),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('下次再说'),
+                onPressed: () => Navigator.pop(context),
+              ),
+              FlatButton(
+                child: Text('前往下载'),
+                onPressed: () async {
+                  if (await canLaunch(Constant.LIST_ABOUT_ITEM[0][2])) {
+                    await launch(Constant.LIST_ABOUT_ITEM[0][2]);
+                  }
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
   }
 }
