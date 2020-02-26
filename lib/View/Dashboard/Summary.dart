@@ -63,7 +63,7 @@ class DashboardSummary extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                   child: Text(
                     'Summary',
-                    style: Theme.of(context).textTheme.display1.copyWith(
+                    style: Theme.of(context).textTheme.headline4.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),

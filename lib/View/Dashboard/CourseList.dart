@@ -15,7 +15,7 @@ class DashboardCourseList extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Text(
                 'Today',
-                style: Theme.of(context).textTheme.display1.copyWith(
+                style: Theme.of(context).textTheme.headline4.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
