@@ -186,7 +186,6 @@ class LoginInfo with ChangeNotifier {
 
   Future<Map<String, dynamic>> _loginOA(String studentId, String password,
       String verifyCode, String cookie) async {
-    print('?');
     try {
       var responseLt = await http.get(Constant.URL_LOGIN_OA, cookie);
       RegExp ltExp = RegExp('name="lt" value="(.*)"');

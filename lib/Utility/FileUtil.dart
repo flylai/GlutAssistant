@@ -20,7 +20,8 @@ class FileUtil {
   }
 
   Future init() async {
-    if (_dir == null) _dir = (await getApplicationDocumentsDirectory()).path;
+    String tmpDir = (await getApplicationDocumentsDirectory()).path;
+    if (tmpDir == null) _dir = tmpDir;
   }
 
   String readFile(String filename) {
@@ -41,6 +42,7 @@ class FileUtil {
       file.writeAsStringSync(contents);
       return true;
     } catch (e) {
+      print(e);
       return false;
     }
   }
