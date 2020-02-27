@@ -14,7 +14,7 @@ class Constant {
   static final int VAR_HTTP_TIMEOUT_MS = 6000;
   static final double VAR_COURSE_HEIGHT = 63.0;
   static final double VAR_DEFAULT_OPACITY = 0.7;
-  static final String VAR_VERSION = '1.5.1';
+  static final String VAR_VERSION = '1.5.2';
 
   /// 每次启动检查更新标记
   static int VAR_UPDATE_CHECKED = 0;
