@@ -192,10 +192,8 @@ class DashboardCourseList extends StatelessWidget {
         builder: (context, todayCourseList, globalData, _) {
       List<Widget> courseListWidget = []; // 课程的列表
       List<Widget> row;
-      int curCoursePos = todayCourseList.todayCourseList['currentStep'];
-      print(curCoursePos);
-
       int len = todayCourseList.todayCourseList['courseList'].length;
+
       for (int i = 0; i < len; i++) {
         TodayCourse course = todayCourseList.todayCourseList['courseList'][i];
         if (i % 2 == 0) row = []; // 初始化一个新的列表
@@ -210,7 +208,7 @@ class DashboardCourseList extends StatelessWidget {
               course.courseName,
               '$startTimeStr-$endTimeStr节',
               course.location,
-              (i < curCoursePos || (i == curCoursePos && i == len - 1) // 判断当前第几节
+              (course.text2 == '' // 灰色判断，如果上完了 text2和text3为空，只有text1有内容
                       ? Colors.grey
                       : BaseFunctionUtil.getRandomColor())
                   .withOpacity(globalData.opacity)),
