@@ -111,21 +111,30 @@ class TodayCourseList with ChangeNotifier {
       String text3 = '';
 
       CourseState courseState = CourseState.waiting;
+
       if (beforeClassBeginTime[0] == '-' && beforeClassOverTime[0] != '-') {
+        // 距开始上课时间是个负数，但是下课时间是正数，那就正在上课
         stepPosition = i;
         text1 = '还有 ';
         text2 = beforeClassOverTime;
         text3 = ' 才下课,认真听课哟~';
         isCheck = true;
-      } else if (beforeClassBeginTime[0] != '-' && !isCheck) {
-        stepPosition = i;
-        isCheck = true;
+      } else if (beforeClassBeginTime[0] != '-') {
+        // 距上课时间是正数
+        if (!isCheck) {
+          // 当前是 第X节课 是否已确定
+          stepPosition = i;
+          isCheck = true;
+        }
         text1 = '还有 ';
         text2 = beforeClassBeginTime;
         text3 = ' 就要上课啦';
+        //
       } else if (beforeClassOverTime[0] == '-') {
+        // 距离上课时间是负数，那这节课上过了
         text1 = '这节课已经过去了哦';
         if (i + 1 == queryCourseList.length) {
+          // 如果这是今天最后一节课
           _isTodayCourseOver = true;
           stepPosition = i;
           text1 = '今天的课已经上完了哦';
