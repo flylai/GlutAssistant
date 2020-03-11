@@ -55,6 +55,13 @@ class TodayCourseList with ChangeNotifier {
 
   Future<void> queryTomorrowCourseList(int currentWeek, int weekday) async {
     SQLiteUtil su = await SQLiteUtil.getInstance();
+    // 如果 今天 + 1 大于 7 (星期8) 那就到下个星期了, 明天就是 星期1
+    // 这里的星期一是 0
+    if (weekday + 1 > 7) {
+      currentWeek++;
+      weekday = 0;
+    }
+
     List<Course> queryCourseList =
         await su.queryCourse(currentWeek, weekday + 1);
     _tomorrowCourseList = queryCourseList;
