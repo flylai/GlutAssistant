@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
@@ -34,7 +33,7 @@ class LoginInfo with ChangeNotifier {
   LoginType _loginType = LoginType.guilinJW;
 
   Uint8List _verifyCodeImage;
-  String _cookie = '';
+  Map<String, String> _cookie = Map();
   String _msg = '';
 
   TextEditingController get studentIdController => _studentIdController;
@@ -44,7 +43,6 @@ class LoginInfo with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get obscure => _obscure;
   bool get savePwd => _savePwd;
-  String get cookie => _cookie;
   String get msg => _msg;
   Uint8List get verifyCodeImage => _verifyCodeImage;
 
@@ -84,9 +82,11 @@ class LoginInfo with ChangeNotifier {
 
     Map<String, dynamic> result;
     if (_loginType == LoginType.guilinOA)
-      result = await _loginOA(studentId, password, verifyCode, _cookie);
+      result =
+          await _loginOA(studentId, password, verifyCode, mapCookieToString());
     else
-      result = await _loginJW(studentId, password, verifyCode, _cookie);
+      result =
+          await _loginJW(studentId, password, verifyCode, mapCookieToString());
 
     if (result['success']) {
       FileUtil fp = await FileUtil.getInstance();
@@ -129,8 +129,7 @@ class LoginInfo with ChangeNotifier {
   Future<void> refreshVerifyCodeImage() async {
     Map<String, dynamic> result = await _getCode();
     if (result['success']) {
-      _verifyCodeImage = base64.decode(result['data']['image']);
-      _cookie = result['data']['cookie'];
+      _verifyCodeImage = result['data']['image'];
       _msg = '刷新成功';
     } else
       _msg = '网络有点问题，获取验证码失败啦';
@@ -152,14 +151,27 @@ class LoginInfo with ChangeNotifier {
     String verifyCodeURL = Constant.LIST_LOGIN_TITLE[_loginType.index][2];
     try {
       var response = await http.get(verifyCodeURL, '');
-      var data = {
-        'cookie': response.headers['set-cookie'].split(';')[0],
-        'image': base64.encode(response.bodyBytes)
-      };
+      _parseRawCookies(response.headers['set-cookie']);
+      var data = {'image': response.bodyBytes};
       return {'success': true, 'data': data};
     } catch (e) {
       return {'success': false, 'data': e};
     }
+  }
+
+  void _parseRawCookies(String rawCookie) {
+    for (var item in rawCookie.split(',')) {
+      List<String> cookie = item.split(';')[0].split('=');
+      _cookie[cookie[0]] = cookie[1];
+    }
+  }
+
+  String mapCookieToString() {
+    String result = '';
+    _cookie.forEach((key, value) {
+      result += '$key=$value; ';
+    });
+    return result;
   }
 
   Future<Map<String, dynamic>> _loginJW(String studentId, String password,
@@ -172,12 +184,10 @@ class LoginInfo with ChangeNotifier {
       };
       var response = await http
           .post(Constant.URL_JW + Constant.URL_LOGIN, postData, cookie: cookie);
-      if (response.headers['location'].contains('index_new'))
-        return {
-          'success': true,
-          'cookie': response.headers['set-cookie'].split(';')[0]
-        };
-      else
+      if (response.headers['location'].contains('index_new')) {
+        _parseRawCookies(response.headers['set-cookie']);
+        return {'success': true, 'cookie': mapCookieToString()};
+      } else
         return {'success': false, 'cookie': ''};
     } catch (e) {
       return {'success': false, 'cookie': ''};
@@ -213,14 +223,13 @@ class LoginInfo with ChangeNotifier {
         // 第二次跳转登录教务
         response = await http.post(response.headers['location'], {'test': '1'});
         // 第三次跳转带着验证码和验证码cookie登录到教务并返回cookie，一般都是登录成功
+        _parseRawCookies(response.headers['set-cookie']);
         response = await http.post(response.headers['location'], {'test': '1'},
-            cookie: (response.headers['set-cookie'].split(';'))[0]);
-        if (response.headers['location'].contains('index_new'))
-          return {
-            'success': true,
-            'cookie': response.headers['set-cookie'].split(';')[0]
-          };
-        else
+            cookie: mapCookieToString());
+        if (response.headers['location'].contains('index_new')) {
+          _parseRawCookies(response.headers['set-cookie']);
+          return {'success': true, 'cookie': mapCookieToString()};
+        } else
           return {'success': false, 'cookie': ''};
       }
     } catch (e) {

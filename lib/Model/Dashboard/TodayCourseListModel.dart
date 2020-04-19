@@ -143,7 +143,7 @@ class TodayCourseList with ChangeNotifier {
         }
         courseState = CourseState.finished;
       }
-      String classTime = '$startTimeStr - $endTimeStr节 ';
+      String classTime = '$startTimeStr - $endTimeStr节';
       String courseName = queryCourseList[i].courseName;
       String location = queryCourseList[i].location;
       String teacher = queryCourseList[i].teacher;
