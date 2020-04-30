@@ -86,11 +86,10 @@ class BaseFunctionUtil {
     return '未知';
   }
 
-  /// 每次启动看心情检查更新
+  /// 每次启动都检查更新 1.5.4起 不看心情了 每次启动都检查
   static checkUpdate(BuildContext context) async {
-    // 随机个数看心情检查更新
-    if (Random.secure().nextInt(4) != 2 || Constant.VAR_UPDATE_CHECKED != 0)
-      return;
+    // 检查更新
+    if (Constant.VAR_UPDATE_CHECKED != 0) return;
     Constant.VAR_UPDATE_CHECKED = 1;
     var result;
     try {
