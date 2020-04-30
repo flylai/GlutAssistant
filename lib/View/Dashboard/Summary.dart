@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:glutassistant/Model/Dashboard/BalanceModel.dart';
 import 'package:glutassistant/Model/Dashboard/RecentExamModel.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
-import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:glutassistant/Widget/SnackBar.dart';
 import 'package:provider/provider.dart';
 
 class DashboardSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // 自动检查更新
-    BaseFunctionUtil.checkUpdate(context);
     return ChangeNotifierProvider(
         create: (BuildContext context) => BalanceModel(),
         child: Container(child: _buildSummary(context)));

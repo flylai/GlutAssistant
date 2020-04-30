@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:glutassistant/Common/Constant.dart';
 import 'package:glutassistant/Model/CourseManage/CourseModel.dart';
 import 'package:glutassistant/Model/GlobalData.dart';
+import 'package:glutassistant/Utility/BaseFunctionUtil.dart';
 import 'package:glutassistant/View/About/About.dart';
 import 'package:glutassistant/View/CourseManage/CourseManage.dart';
 import 'package:glutassistant/View/CourseManage/CourseModify.dart';
@@ -22,6 +23,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<GlobalData>(builder: (context, globalData, _) {
+      BaseFunctionUtil.checkUpdate(context);
       return Container(
         decoration: globalData.backgroundEnable == BackgroundImage.enable
             ? BoxDecoration(
