@@ -151,6 +151,7 @@ class ImportTimetableModel with ChangeNotifier {
               //判断周
               if (weekByComma.length > 1) {
                 for (String _weekByComma in weekByComma) {
+                  if (_weekByComma.isEmpty) continue;
                   List<String> weekByHyphen = _weekByComma.split('-');
                   if (weekByHyphen.length > 1) {
                     startWeek = int.parse(weekByHyphen[0]);
