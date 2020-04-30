@@ -11,8 +11,8 @@ class FileUtil {
   }
 
   FileUtil._();
-  Future<bool> fileExist(String filename) async {
-    return await File(_dir + '/' + filename).exists();
+  bool fileExist(String filename) {
+    return File(_dir + '/' + filename).existsSync();
   }
 
   String getDir() {
@@ -25,10 +25,10 @@ class FileUtil {
   }
 
   String readFile(String filename) {
-    String content;
+    String content = 'ERROR';
     try {
       File file = new File(_dir + '/' + filename);
-      content = file.readAsStringSync();
+      if (fileExist(filename)) content = file.readAsStringSync();
     } catch (e) {
       print(e);
       content = 'ERROR';
