@@ -6,7 +6,7 @@ class PasswordData with ChangeNotifier {
   SharedPreferenceUtil su;
 
   TextEditingController _studentIdController = TextEditingController();
-  String _studentId;
+  String _studentId = '';
 
   List<TextEditingController> passwordEditController = [
     TextEditingController(),
