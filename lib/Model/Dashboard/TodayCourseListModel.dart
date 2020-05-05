@@ -59,11 +59,11 @@ class TodayCourseList with ChangeNotifier {
     // 这里的星期一是 1
     if (weekday + 1 > 7) {
       currentWeek++;
-      weekday = 1;
+      weekday = 0;
     }
 
     List<Course> queryCourseList =
-        await su.queryCourse(currentWeek, weekday);
+        await su.queryCourse(currentWeek, weekday + 1);
     _tomorrowCourseList = queryCourseList;
     notifyListeners();
   }
