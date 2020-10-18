@@ -36,7 +36,7 @@ class Login extends StatelessWidget {
                   blurRadius: 6.0),
             ],
           ),
-          child: Stack(overflow: Overflow.clip, children: [
+          child: Stack(children: [
             Positioned(
               child: _buildLock(),
               right: 0,
