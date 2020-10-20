@@ -100,7 +100,8 @@ class ImportTimetableModel with ChangeNotifier {
                 .group(0)
                 .replaceAll(RegExp(r'周|第|节|&nbsp;'), '')
                 .replaceAll(RegExp(r'中午1'), '100')
-                .replaceAll(RegExp(r'中午2'), '200'));
+                .replaceAll(RegExp(r'中午2'), '200')
+                .replaceAll("，", ","));
             for (var timeListItem in timeMatches) {
               //详细上课时间 1为 第几周上 2为星期几 3为第几节 4为上课地点
               int startTime = 0, endTime = 0, startWeek = 0, endWeek = 0;
